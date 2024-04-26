@@ -2,12 +2,10 @@ package com.example.itcenter.activity
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.itcenter.R
 import com.example.itcenter.databinding.ActivitySplashBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {
     lateinit var binding: ActivitySplashBinding
@@ -17,7 +15,12 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.animationViews.postDelayed({
-            startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser == null) {
+                startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+            } else {
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            }
             finish()
         },3195)
     }
