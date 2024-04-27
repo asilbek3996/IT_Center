@@ -13,6 +13,7 @@ import com.example.itcenter.model.DarslarModel
 
 class DarslarActivity : AppCompatActivity() {
     lateinit var binding: ActivityDarslarBinding
+    var check: Boolean =false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDarslarBinding.inflate(layoutInflater)
@@ -51,9 +52,14 @@ class DarslarActivity : AppCompatActivity() {
         binding.webView.loadData(item.video,"text/html","utf-8")
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.webChromeClient = WebChromeClient()
-
+        check = true
 
         binding.main2.transitionToEnd()
+    }
+
+    override fun onBackPressed() {
+        binding.main2.transitionToStart()
+        super.onBackPressed()
     }
 
 

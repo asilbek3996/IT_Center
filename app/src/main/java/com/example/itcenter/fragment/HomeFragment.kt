@@ -37,7 +37,7 @@ lateinit var binding: FragmentHomeBinding
         imageList.add(SlideModel("https://bit.ly/3fLJf72", ScaleTypes.CENTER_CROP))
 
         val imageSlider = requireActivity().findViewById<ImageSlider>(R.id.image_slider)
-        imageSlider.setImageList(imageList)
+        imageSlider.setImageList(imageList);
 
         val searchView: SearchView = requireActivity().findViewById(R.id.search_view)
         val editText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
