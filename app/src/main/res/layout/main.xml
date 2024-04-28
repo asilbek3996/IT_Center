@@ -17,13 +17,12 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardToolbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        app:cardBackgroundColor="#0096D141"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="14dp"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:background="@drawable/toolbar_background"
+            android:background="@drawable/appcompat_buttonss"
             android:paddingHorizontal="8dp"
             android:orientation="horizontal">
 
@@ -74,7 +73,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardToolbar" />
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:id="@+id/ll2" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bnvCard"
@@ -84,25 +91,25 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         app:cardBackgroundColor="#0096D141"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bottom_nav_view_background">
+            android:background="@drawable/appcompat_buttonss">
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavigationView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom"
-                app:backgroundTint="@android:color/transparent"
-                android:background="@drawable/bottom_nav_view_background"
+                android:background="@drawable/appcompat_buttonss"
                 app:itemIconTint="@drawable/bottom_nav_view_item"
                 app:itemRippleColor="@color/light_green"
-                app:labelVisibilityMode="unlabeled"
+                app:labelVisibilityMode="selected"
+                app:itemTextColor="@color/black"
                 app:menu="@menu/nav_view" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
