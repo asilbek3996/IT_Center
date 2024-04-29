@@ -3,25 +3,42 @@ package com.example.homepage.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.itcenter.R
+import com.example.itcenter.activity.AllCategoryActivity
+import com.example.itcenter.activity.AllStudentActivity
 import com.example.itcenter.activity.DarslarActivity
+import com.example.itcenter.adapter.ImageAdapter
 import com.example.itcenter.databinding.FragmentHomeBinding
 import com.example.itcenter.model.AllStudentModel
+import com.example.itcenter.model.ImageItem
+import com.example.itcenter.model.viewmodel.MainViewModel
+import java.util.UUID
 
 
 class HomeFragment : Fragment() {
 lateinit var binding: FragmentHomeBinding
-    var proccec = 90
-    var handler = Handler()
+ var handler = Handler()
+
+    lateinit var pageChangeList: ViewPager2.OnPageChangeCallback
+    private lateinit var imageChangeRunnable: Runnable
+    private val handler2 = Handler(Looper.getMainLooper())
+    lateinit var viewModel: MainViewModel
+
     var allStudentsList = listOf(
         AllStudentModel(1,"Muxtorov Javohirbek",100,R.drawable.ahmad_aka,"android"),
         AllStudentModel(2,"Rahmataliyev Shamshodbek",50,R.drawable.ahmad_aka,"android"),
@@ -43,6 +60,12 @@ lateinit var binding: FragmentHomeBinding
         AllStudentModel(17,"Muxtorov Javohirbek",12,R.drawable.ahmad_aka,"python"),
         AllStudentModel(18,"Muxtorov Javohirbek",45,R.drawable.ahmad_aka,"python"),
     )
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,14 +77,57 @@ lateinit var binding: FragmentHomeBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val imageList = ArrayList<SlideModel>()
+//        val imageList = ArrayList<SlideModel>()
+//
+//        imageList.add(SlideModel("https://bit.ly/2YoJ77H",ScaleTypes.CENTER_CROP))
+//        imageList.add(SlideModel("https://bit.ly/2BteuF2",ScaleTypes.CENTER_CROP))
+//        imageList.add(SlideModel("https://bit.ly/3fLJf72", ScaleTypes.CENTER_CROP))
+//
+//        val imageSlider = requireActivity().findViewById<ImageSlider>(R.id.image_slider)
+//        imageSlider.setImageList(imageList)
 
-        imageList.add(SlideModel("https://bit.ly/2YoJ77H",ScaleTypes.CENTER_CROP))
-        imageList.add(SlideModel("https://bit.ly/2BteuF2",ScaleTypes.CENTER_CROP))
-        imageList.add(SlideModel("https://bit.ly/3fLJf72", ScaleTypes.CENTER_CROP))
+        val imageAdapter = ImageAdapter()
+        binding.viewPager.adapter = imageAdapter
+        viewModel.adsData.observe(requireActivity(), Observer {
 
-        val imageSlider = requireActivity().findViewById<ImageSlider>(R.id.image_slider)
-        imageSlider.setImageList(imageList);
+            imageAdapter.submitList(it)
+            val dotsImage = Array(it.size) { ImageView(requireContext()) }
+
+            dotsImage.forEach {item->
+                item.setImageResource(
+                    R.drawable.non_active_dot
+                )
+                binding.slideDot.addView(item)
+            }
+            dotsImage[0].setImageResource(R.drawable.active_dot)
+
+
+            imageChangeRunnable = object : Runnable {
+                override fun run() {
+                    val nextIndex = (binding.viewPager.currentItem + 1) % it.size
+                    binding.viewPager.currentItem = nextIndex
+                    handler2.postDelayed(this, 2000) // Change image every 3 seconds
+
+                }
+            }
+
+            handler2.postDelayed(imageChangeRunnable, 3000)
+
+
+            pageChangeList = object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    dotsImage.forEachIndexed { index, imageView ->
+                        imageView.setImageResource(
+                            if (position == index) R.drawable.active_dot else R.drawable.non_active_dot
+                        )
+                    }
+                    super.onPageSelected(position)
+                }
+            }
+        })
+
+
+
 
         val searchView: SearchView = requireActivity().findViewById(R.id.search_view)
         val editText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
@@ -99,6 +165,35 @@ lateinit var binding: FragmentHomeBinding
             }
             startActivity(intent)
         }
+        binding.tvAll.setOnClickListener {
+            startActivity(Intent(requireContext(),AllCategoryActivity::class.java))
+        }
+        val intent2 = Intent(requireContext(), AllStudentActivity::class.java)
+        binding.tvAllAndroid.setOnClickListener {
+            intent2.apply {
+                putExtra("Group","Android")
+            }
+            startActivity(intent2)
+        }
+        binding.tvAllPython.setOnClickListener {
+            intent2.apply {
+                putExtra("Group","Python")
+            }
+            startActivity(intent2)
+        }
+        binding.tvAllScratch.setOnClickListener {
+            intent2.apply {
+                putExtra("Group","Scratch")
+            }
+            startActivity(intent2)
+        }
+        binding.tvAllLiteracy.setOnClickListener {
+            intent2.apply {
+                putExtra("Group","Literacy")
+            }
+            startActivity(intent2)
+        }
+
         var android = arrayListOf<AllStudentModel>()
         var python = arrayListOf<AllStudentModel>()
         var scratch = arrayListOf<AllStudentModel>()
@@ -114,6 +209,7 @@ lateinit var binding: FragmentHomeBinding
                 literacy.add(student)
             }
         }
+        loadData()
 
         val androidThread = Thread { topAndroid(android) }
         androidThread.start()
@@ -123,14 +219,15 @@ lateinit var binding: FragmentHomeBinding
         scratchThread.start()
         val literacyThread = Thread { topLiteracy(literacy) }
         literacyThread.start()
-
-
     }
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()
     }
 
+    fun  loadData(){
+        viewModel.getOffers()
+    }
     private fun topAndroid(students: ArrayList<AllStudentModel>) {
         val top = students.sortedByDescending { it.foiz }.take(3)
         binding.imgAndroid1.setImageResource(top[0].img)

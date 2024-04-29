@@ -28,7 +28,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:background="@drawable/appcompat_buttons">
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -36,15 +36,27 @@
                     android:layout_margin="3dp"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="20dp">
-                    <com.denzcoskun.imageslider.ImageSlider
-                        android:id="@+id/image_slider"
+<!--                    <com.denzcoskun.imageslider.ImageSlider-->
+<!--                        android:id="@+id/image_slider"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        app:iss_corner_radius="20"-->
+<!--                        app:iss_auto_cycle="true"-->
+<!--                        app:iss_period="1000"-->
+<!--                        app:iss_delay="1000"/>-->
+
+                    <androidx.viewpager2.widget.ViewPager2
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:iss_corner_radius="20"
-                        app:iss_auto_cycle="true"
-                        app:iss_period="1000"
-                        app:iss_delay="1000"/>
-
+                        android:id="@+id/viewPager"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:id="@+id/slideDot"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="30dp"
+                        android:orientation="horizontal"/>
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
