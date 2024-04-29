@@ -38,6 +38,9 @@ class DarslarActivity : AppCompatActivity() {
                 kotlin.add(darslar)
             }
         }
+        binding.back.setOnClickListener {
+            finish()
+        }
         binding.recyclerDars.layoutManager = GridLayoutManager(this,3)
         binding.recyclerDars.adapter = DarsAdapter(kotlin)
         binding.back2.setOnClickListener {

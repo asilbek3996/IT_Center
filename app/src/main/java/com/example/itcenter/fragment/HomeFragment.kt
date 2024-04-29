@@ -100,14 +100,29 @@ lateinit var binding: FragmentHomeBinding
             startActivity(intent)
         }
         var android = arrayListOf<AllStudentModel>()
+        var python = arrayListOf<AllStudentModel>()
+        var scratch = arrayListOf<AllStudentModel>()
+        var literacy = arrayListOf<AllStudentModel>()
         for (student in allStudentsList){
             if (student.language=="android"){
                 android.add(student)
+            }else if (student.language=="python"){
+                python.add(student)
+            }else if (student.language=="scratch"){
+                scratch.add(student)
+            }else if (student.language=="literacy"){
+                literacy.add(student)
             }
         }
 
-        val thread = Thread { topAndroid(android) }
-        thread.start()
+        val androidThread = Thread { topAndroid(android) }
+        androidThread.start()
+        val pythonThread = Thread { topPython(python) }
+        pythonThread.start()
+        val scratchThread = Thread { topScratch(scratch) }
+        scratchThread.start()
+        val literacyThread = Thread { topLiteracy(literacy) }
+        literacyThread.start()
 
 
     }
@@ -158,6 +173,141 @@ lateinit var binding: FragmentHomeBinding
             var topAndroidtxt = value.toString()
             handler.post(Runnable {
                 binding.foizAndroid3.text = topAndroidtxt
+            })
+        }
+    }
+    private fun topPython(students: ArrayList<AllStudentModel>) {
+        val top = students.sortedByDescending { it.foiz }.take(3)
+        binding.imgPython1.setImageResource(top[0].img)
+        binding.imgPython2.setImageResource(top[1].img)
+        binding.imgPython3.setImageResource(top[2].img)
+        binding.namePython1.text = top[0].name
+        binding.namePython2.text = top[1].name
+        binding.namePython3.text = top[2].name
+        for (value in 0..top[0].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressPython1.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizPython1.text = topAndroidtxt
+            })
+        }
+        for (value in 0..top[1].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressPython2.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizPython2.text = topAndroidtxt
+            })
+        }
+        for (value in 0..top[2].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressPython3.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizPython3.text = topAndroidtxt
+            })
+        }
+    }
+    private fun topScratch(students: ArrayList<AllStudentModel>) {
+        val top = students.sortedByDescending { it.foiz }.take(3)
+        binding.imgScratch1.setImageResource(top[0].img)
+        binding.imgScratch2.setImageResource(top[1].img)
+        binding.imgScratch3.setImageResource(top[2].img)
+        binding.nameScratch1.text = top[0].name
+        binding.nameScratch2.text = top[1].name
+        binding.nameScratch3.text = top[2].name
+        for (value in 0..top[0].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressScratch1.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizScratch1.text = topAndroidtxt
+            })
+        }
+        for (value in 0..top[1].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressScratch2.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizScratch2.text = topAndroidtxt
+            })
+        }
+        for (value in 0..top[2].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressScratch3.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizScratch3.text = topAndroidtxt
+            })
+        }
+    }
+    private fun topLiteracy(students: ArrayList<AllStudentModel>) {
+        val top = students.sortedByDescending { it.foiz }.take(3)
+        binding.imgLiteracy1.setImageResource(top[0].img)
+        binding.imgLiteracy2.setImageResource(top[1].img)
+        binding.imgLiteracy3.setImageResource(top[2].img)
+        binding.nameLiteracy1.text = top[0].name
+        binding.nameLiteracy2.text = top[1].name
+        binding.nameLiteracy3.text = top[2].name
+        for (value in 0..top[0].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressLiteracy1.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizLiteracy1.text = topAndroidtxt
+            })
+        }
+        for (value in 0..top[1].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressLiteracy2.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizLiteracy2.text = topAndroidtxt
+            })
+        }
+        for (value in 0..top[2].foiz){
+            try {
+                Thread.sleep(10)
+                binding.progressLiteracy3.progress = value
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            var topAndroidtxt = value.toString()
+            handler.post(Runnable {
+                binding.foizLiteracy3.text = topAndroidtxt
             })
         }
     }
