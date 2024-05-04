@@ -93,5 +93,5 @@ dependencies {
 
     implementation ("com.google.code.gson:gson:2.10")
 
-
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
 }

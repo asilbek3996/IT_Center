@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                     .show(favoriteFragment).commit()
                 activeFragment = favoriteFragment
                 tvMain.text = "Tanlanganlar"
-            } else if (it.itemId == R.id.settings) {
+            } else if (it.itemId == R.id.game) {
                 supportFragmentManager.beginTransaction().hide(activeFragment).show(quizFragment)
                     .commit()
                 activeFragment = quizFragment
@@ -72,14 +72,6 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        drawerLayout = findViewById(R.id.drawer)
-        val more = findViewById<ImageView>(R.id.more)
-        binding.includeMain.menu.setOnClickListener {
-            drawerLayout.openDrawer(binding.navView)
-        }
-        more.setOnClickListener {
-            showCustomDialogBox()
-        }
 
     }
 

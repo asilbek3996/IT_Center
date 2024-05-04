@@ -10,24 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.denzcoskun.imageslider.ImageSlider
-import com.denzcoskun.imageslider.constants.ScaleTypes
-import com.denzcoskun.imageslider.models.SlideModel
+import com.bumptech.glide.Glide
 import com.example.itcenter.R
 import com.example.itcenter.activity.AllCategoryActivity
 import com.example.itcenter.activity.AllStudentActivity
-import com.example.itcenter.activity.DarslarActivity
 import com.example.itcenter.adapter.ImageAdapter
 import com.example.itcenter.databinding.FragmentHomeBinding
 import com.example.itcenter.model.AllStudentModel
-import com.example.itcenter.model.ImageItem
+import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.viewmodel.MainViewModel
-import java.util.UUID
 
 
 class HomeFragment : Fragment() {
@@ -77,15 +72,8 @@ lateinit var binding: FragmentHomeBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val imageList = ArrayList<SlideModel>()
-//
-//        imageList.add(SlideModel("https://bit.ly/2YoJ77H",ScaleTypes.CENTER_CROP))
-//        imageList.add(SlideModel("https://bit.ly/2BteuF2",ScaleTypes.CENTER_CROP))
-//        imageList.add(SlideModel("https://bit.ly/3fLJf72", ScaleTypes.CENTER_CROP))
-//
-//        val imageSlider = requireActivity().findViewById<ImageSlider>(R.id.image_slider)
-//        imageSlider.setImageList(imageList)
 
+        loadData()
         val imageAdapter = ImageAdapter()
         binding.viewPager.adapter = imageAdapter
         viewModel.adsData.observe(requireActivity(), Observer {
@@ -125,46 +113,21 @@ lateinit var binding: FragmentHomeBinding
                 }
             }
         })
+        viewModel.categoriesData.observe(requireActivity(), Observer {
+            categories(it)
+        })
 
-
-
-
+        binding.swipe.setOnRefreshListener {
+            loadData()
+        }
+        viewModel.progress.observe(requireActivity(), Observer {
+            binding.swipe.isRefreshing = it
+        })
         val searchView: SearchView = requireActivity().findViewById(R.id.search_view)
         val editText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
         editText.setTextColor(resources.getColor(android.R.color.black))
         editText.setHintTextColor(resources.getColor(R.color.gray))
 
-        val intent = Intent(requireContext(), DarslarActivity::class.java)
-        binding.kotlin.setOnClickListener {
-            intent.apply {
-              putExtra("Til","Kotlin")
-            }
-            startActivity(intent)
-        }
-        binding.java.setOnClickListener {
-            intent.apply {
-              putExtra("Til","Java")
-            }
-            startActivity(intent)
-        }
-        binding.python.setOnClickListener {
-            intent.apply {
-                putExtra("Til","Python")
-            }
-            startActivity(intent)
-        }
-        binding.cpp.setOnClickListener {
-            intent.apply {
-                putExtra("Til","C++")
-            }
-            startActivity(intent)
-        }
-        binding.scratch.setOnClickListener {
-            intent.apply {
-                putExtra("Til","Scratch")
-            }
-            startActivity(intent)
-        }
         binding.tvAll.setOnClickListener {
             startActivity(Intent(requireContext(),AllCategoryActivity::class.java))
         }
@@ -209,7 +172,6 @@ lateinit var binding: FragmentHomeBinding
                 literacy.add(student)
             }
         }
-        loadData()
 
         val androidThread = Thread { topAndroid(android) }
         androidThread.start()
@@ -227,6 +189,16 @@ lateinit var binding: FragmentHomeBinding
 
     fun  loadData(){
         viewModel.getOffers()
+        viewModel.getCategoris()
+    }
+    private fun categories(category: List<CategoryModel>) {
+        val top = category.sortedBy { it.id }.take(3)
+        Glide.with(binding.imgCategory1).load(top[0].image).into(binding.imgCategory1)
+        Glide.with(binding.imgCategory2).load(top[1].image).into(binding.imgCategory2)
+        Glide.with(binding.imgCategory3).load(top[2].image).into(binding.imgCategory3)
+        binding.nameCategory1.text = top[0].language
+        binding.nameCategory2.text = top[1].language
+        binding.nameCategory3.text = top[2].language
     }
     private fun topAndroid(students: ArrayList<AllStudentModel>) {
         val top = students.sortedByDescending { it.foiz }.take(3)

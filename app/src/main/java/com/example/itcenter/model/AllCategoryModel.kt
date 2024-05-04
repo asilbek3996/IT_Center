@@ -1,6 +1,6 @@
 package com.example.itcenter.model
 
-data class CategoryModel(
+data class AllCategoryModel(
     val id: Int,
     val image: String,
     val language: String

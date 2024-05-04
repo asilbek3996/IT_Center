@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.itcenter.activity.DarslarActivity
+import com.example.itcenter.databinding.AllCategoryItemLayoutBinding
 import com.example.itcenter.databinding.CategoryItemLayoutBinding
+import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.CategoryModel
 
-class CategoryAdapter(val items: List<CategoryModel>): RecyclerView.Adapter<CategoryAdapter.ItemHolder>() {
-    inner class ItemHolder(val binding: CategoryItemLayoutBinding): RecyclerView.ViewHolder(binding.root)
+class AllCategoryAdapter(val items: List<AllCategoryModel>): RecyclerView.Adapter<AllCategoryAdapter.ItemHolder>() {
+    inner class ItemHolder(val binding: AllCategoryItemLayoutBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
-        return ItemHolder(CategoryItemLayoutBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return ItemHolder(AllCategoryItemLayoutBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun getItemCount(): Int {
@@ -22,11 +25,13 @@ class CategoryAdapter(val items: List<CategoryModel>): RecyclerView.Adapter<Cate
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val item = items[position]
-        holder.binding.caytegoryImg.setImageResource(item.img)
-        holder.binding.categoryTxt.text = item.title
+        Glide.with(holder.binding.caytegoryImg)
+            .load(item.image)
+            .into(holder.binding.caytegoryImg)
+        holder.binding.categoryTxt.text = item.language
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context,DarslarActivity::class.java)
-            intent.putExtra("Til",item.title)
+            intent.putExtra("Til",item.language)
             it.context.startActivity(intent)
         }
     }
