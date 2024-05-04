@@ -14,6 +14,7 @@ import io.reactivex.schedulers.Schedulers
 class Repository() {
     val compositeDisposable = CompositeDisposable()
     fun getAds(error: MutableLiveData<String>, progress:MutableLiveData<Boolean>, success:MutableLiveData<List<ImageItem>>){
+        progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getAds()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -34,18 +35,16 @@ class Repository() {
         )
 
     }
-    fun getAllCategories(error: MutableLiveData<String>, progress:MutableLiveData<Boolean>, success:MutableLiveData<List<AllCategoryModel>>){
+    fun getAllCategories(error: MutableLiveData<String>, success:MutableLiveData<List<AllCategoryModel>>){
         compositeDisposable.add(NetworkManager.getApiService().getAllCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<List<AllCategoryModel>>(){
                 override fun onNext(t: List<AllCategoryModel>) {
-                    progress.value = false
                     success.value = t
                 }
 
                 override fun onError(e: Throwable) {
-                    progress.value = false
                     error.value = e.localizedMessage
                 }
 
@@ -55,18 +54,16 @@ class Repository() {
         )
 
     }
-    fun getCategories(error: MutableLiveData<String>, progress:MutableLiveData<Boolean>, success:MutableLiveData<ArrayList<CategoryModel>>){
+    fun getCategories(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<CategoryModel>>){
         compositeDisposable.add(NetworkManager.getApiService().getCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<ArrayList<CategoryModel>>(){
                 override fun onNext(t: ArrayList<CategoryModel>) {
-                    progress.value = false
                     success.value = t
                 }
 
                 override fun onError(e: Throwable) {
-                    progress.value = false
                     error.value = e.localizedMessage
                 }
 

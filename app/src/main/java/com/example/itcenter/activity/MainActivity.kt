@@ -4,8 +4,10 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.View
 import android.view.Window
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,22 +17,27 @@ import com.example.homepage.fragments.HomeFragment
 import com.example.homepage.fragments.ProfileFragment
 import com.example.homepage.fragments.QuizFragment
 import com.example.itcenter.R
+import com.example.itcenter.ShowProgress
 import com.example.itcenter.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShowProgress.View {
     val homeFragment = HomeFragment.newInstance()
     val favoriteFragment = FavoriteFragment.newInstance()
     val quizFragment = QuizFragment.newInstance()
     val profileFragment = ProfileFragment.newInstance()
     var activeFragment: Fragment = homeFragment
     lateinit var binding: ActivityMainBinding
-    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var progressBar: ProgressBar
+    private lateinit var refresh: ImageView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        progressBar = findViewById(R.id.refreshProgress)
+        refresh = findViewById(R.id.refresh)
         supportFragmentManager.beginTransaction()
             .add(R.id.flContainer, homeFragment, homeFragment.tag).hide(homeFragment).commit()
         supportFragmentManager.beginTransaction()
@@ -87,5 +94,15 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         dialog.show()
+    }
+
+    override fun showProgressBar() {
+        progressBar.visibility = View.VISIBLE
+        refresh.visibility = View.GONE
+    }
+
+    override fun hideProgressBar() {
+        progressBar.visibility = View.GONE
+        refresh.visibility = View.VISIBLE
     }
 }

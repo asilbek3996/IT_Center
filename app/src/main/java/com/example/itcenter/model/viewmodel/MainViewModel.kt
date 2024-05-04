@@ -21,9 +21,9 @@ class MainViewModel: ViewModel() {
         repository.getAds(error, progress, adsData)
     }
     fun getAllCategories() {
-        repository.getAllCategories(error, progress, allCategoryData)
+        repository.getAllCategories(error, allCategoryData)
     }
     fun getCategoris() {
-        repository.getCategories(error, progress, categoriesData)
+        repository.getCategories(error, categoriesData)
     }
 }

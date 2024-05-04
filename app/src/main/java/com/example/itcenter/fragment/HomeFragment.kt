@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
@@ -16,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.itcenter.R
+import com.example.itcenter.ShowProgress
 import com.example.itcenter.activity.AllCategoryActivity
 import com.example.itcenter.activity.AllStudentActivity
 import com.example.itcenter.adapter.ImageAdapter
@@ -23,6 +26,9 @@ import com.example.itcenter.databinding.FragmentHomeBinding
 import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.viewmodel.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment() {
@@ -33,7 +39,8 @@ lateinit var binding: FragmentHomeBinding
     private lateinit var imageChangeRunnable: Runnable
     private val handler2 = Handler(Looper.getMainLooper())
     lateinit var viewModel: MainViewModel
-
+    lateinit var refresh: ImageView
+    private var isItemVisible = false
     var allStudentsList = listOf(
         AllStudentModel(1,"Muxtorov Javohirbek",100,R.drawable.ahmad_aka,"android"),
         AllStudentModel(2,"Rahmataliyev Shamshodbek",50,R.drawable.ahmad_aka,"android"),
@@ -94,7 +101,7 @@ lateinit var binding: FragmentHomeBinding
                 override fun run() {
                     val nextIndex = (binding.viewPager.currentItem + 1) % it.size
                     binding.viewPager.currentItem = nextIndex
-                    handler2.postDelayed(this, 2000) // Change image every 3 seconds
+                    handler2.postDelayed(this, 3000) // Change image every 3 seconds
 
                 }
             }
@@ -116,12 +123,22 @@ lateinit var binding: FragmentHomeBinding
         viewModel.categoriesData.observe(requireActivity(), Observer {
             categories(it)
         })
-
+        refresh = requireActivity().findViewById(R.id.refresh)
+        refresh.setOnClickListener {
+            binding.swipe.isRefreshing = true
+            loadData()
+            (activity as? ShowProgress.View)?.showProgressBar()
+        }
         binding.swipe.setOnRefreshListener {
             loadData()
         }
         viewModel.progress.observe(requireActivity(), Observer {
             binding.swipe.isRefreshing = it
+            if (it){
+                (activity as? ShowProgress.View)?.showProgressBar()
+            }else{
+                (activity as? ShowProgress.View)?.hideProgressBar()
+            }
         })
         val searchView: SearchView = requireActivity().findViewById(R.id.search_view)
         val editText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
@@ -185,6 +202,11 @@ lateinit var binding: FragmentHomeBinding
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()
+    }
+
+
+    private fun stopAnimation() {
+        isItemVisible = false // Buni animatsiya tugaganida qilamiz
     }
 
     fun  loadData(){

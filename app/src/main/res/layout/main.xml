@@ -61,6 +61,12 @@
                 app:tint="@color/white"
                 android:layout_height="24dp"
                 android:src="@drawable/refresh" />
+            <ProgressBar
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:id="@+id/refreshProgress"
+                android:indeterminateTint="@color/white"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
