@@ -148,11 +148,10 @@ class HomeFragment : Fragment() {
             }
             startActivity(intent2)
         }
-        var item = ArrayList<AllStudentModel>()
         viewModel.studentData.observe(requireActivity(), Observer {
             topAndroid(it)
             topPython(it)
-            topScratch(item)
+            topScratch(it)
             topLiteracy(it)
         })
     }

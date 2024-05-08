@@ -1,6 +1,7 @@
 package com.example.itcenter.activity
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -30,14 +31,20 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
     lateinit var binding: ActivityMainBinding
     private lateinit var progressBar: ProgressBar
     private lateinit var refresh: ImageView
+    private lateinit var settings: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         progressBar = findViewById(R.id.refreshProgress)
+        settings = findViewById(R.id.settings)
         refresh = findViewById(R.id.refresh)
+        settings.setOnClickListener {
+            startActivity(Intent(this,SettingsActivity::class.java))
+        }
         supportFragmentManager.beginTransaction()
             .add(R.id.flContainer, homeFragment, homeFragment.tag).hide(homeFragment).commit()
         supportFragmentManager.beginTransaction()

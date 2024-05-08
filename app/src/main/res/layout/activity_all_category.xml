@@ -22,13 +22,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/linearlayout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/appcompat_buttonss"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
             android:paddingHorizontal="8dp"
             android:visibility="gone">
 
@@ -36,13 +35,27 @@
                 android:id="@+id/searchview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:closeIcon="@drawable/clear"
+                app:closeIcon="@null"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@android:color/transparent"
                 app:queryHint="Search"
                 app:searchHintIcon="@color/black"
                 app:searchIcon="@drawable/search" />
-        </LinearLayout>
+            <FrameLayout
+                android:id="@+id/ivExit"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="end|center"
+                android:background="@drawable/ripple_effect">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/clear"
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
+
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/linearlayout2"
@@ -97,4 +110,10 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
         android:id="@+id/recyclerAllCategory"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:visibility="gone"
+        android:id="@+id/recyclerSearchCategory"/>
 </LinearLayout>

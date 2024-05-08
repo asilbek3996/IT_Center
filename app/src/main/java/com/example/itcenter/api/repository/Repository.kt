@@ -55,6 +55,25 @@ class Repository() {
         )
 
     }
+    fun getSearchCategories(error: MutableLiveData<String>, success:MutableLiveData<List<AllCategoryModel>>,search: String){
+        compositeDisposable.add(NetworkManager.getApiService().getSearchCategories(search)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<List<AllCategoryModel>>(){
+                override fun onNext(t: List<AllCategoryModel>) {
+                    success.value = t
+                }
+
+                override fun onError(e: Throwable) {
+                    error.value = e.localizedMessage
+                }
+
+                override fun onComplete() {
+                }
+            })
+        )
+
+    }
     fun getCategories(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<CategoryModel>>){
         compositeDisposable.add(NetworkManager.getApiService().getCategories()
             .subscribeOn(Schedulers.io())
