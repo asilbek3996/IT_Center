@@ -1,9 +1,12 @@
 package com.example.itcenter.model
 
 data class AllStudentModel(
-    val id: Int,
-    val name: String,
-    val foiz: Int,
-    val img: Int,
-    val language: String
+    var id: Int,
+    var fullName: String,
+    var birthday: String,
+    var address: String,
+    var group: String,
+    var phone: String,
+    var userPercentage: Int,
+    var userPhoto: String
 )
