@@ -16,7 +16,6 @@ class MainViewModel: ViewModel() {
     val progress = MutableLiveData<Boolean>()
     val adsData = MutableLiveData<ArrayList<ImageItem>>()
     val allCategoryData = MutableLiveData<List<AllCategoryModel>>()
-    val searchCategoryData = MutableLiveData<List<AllCategoryModel>>()
     val categoriesData = MutableLiveData<ArrayList<CategoryModel>>()
     val studentData = MutableLiveData<ArrayList<AllStudentModel>>()
 
@@ -24,15 +23,12 @@ class MainViewModel: ViewModel() {
         repository.getAds(error, progress, adsData)
     }
     fun getAllCategories() {
-        repository.getAllCategories(error, allCategoryData)
-    }
-    fun getSearchCategories(search: String) {
-        repository.getSearchCategories(error, searchCategoryData,search)
+        repository.getAllCategories(error, allCategoryData, progress)
     }
     fun getCategoris() {
         repository.getCategories(error, categoriesData)
     }
     fun getStudent() {
-        repository.getStudent(error, studentData)
+        repository.getStudent(error, studentData, progress)
     }
 }

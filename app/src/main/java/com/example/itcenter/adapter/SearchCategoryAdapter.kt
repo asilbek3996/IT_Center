@@ -12,7 +12,7 @@ import com.example.itcenter.databinding.CategoryItemLayoutBinding
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.CategoryModel
 
-class AllCategoryAdapter(var items: List<AllCategoryModel>): RecyclerView.Adapter<AllCategoryAdapter.ItemHolder>() {
+class SearchCategoryAdapter(var items: List<AllCategoryModel>): RecyclerView.Adapter<SearchCategoryAdapter.ItemHolder>() {
     inner class ItemHolder(val binding: AllCategoryItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -41,5 +41,10 @@ class AllCategoryAdapter(var items: List<AllCategoryModel>): RecyclerView.Adapte
             intent.putExtra("Til", item.language)
             it.context.startActivity(intent)
         }
+    }
+
+    fun filter(filter: List<AllCategoryModel>) {
+        items = filter
+        notifyDataSetChanged()
     }
 }

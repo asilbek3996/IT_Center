@@ -22,6 +22,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
+import com.example.itcenter.activity.AboutStudentActivity
 import com.example.itcenter.activity.AllCategoryActivity
 import com.example.itcenter.activity.AllStudentActivity
 import com.example.itcenter.activity.DarslarActivity
@@ -205,6 +206,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun topAndroid(students: ArrayList<AllStudentModel>) {
+        val intent = Intent(requireContext(), AboutStudentActivity::class.java)
         var android = arrayListOf<AllStudentModel>()
         for (student in students) {
             if (student.group == "Java, Kotlin") {
@@ -219,6 +221,12 @@ class HomeFragment : Fragment() {
                 top.take(1)
                 binding.android3.visibility = View.INVISIBLE
                 binding.android2.visibility = View.INVISIBLE
+                binding.android1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
                 Glide.with(binding.imgAndroid1).load(top[0].userPhoto).into(binding.imgAndroid1)
                 binding.nameAndroid1.text = top[0].fullName
                 for (value in 0..top[0].userPercentage) {
@@ -236,6 +244,18 @@ class HomeFragment : Fragment() {
             } else if (android.size in 1..2) {
                 top.take(2)
                 binding.android3.visibility = View.INVISIBLE
+                binding.android1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.android2.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[1].fullName)
+                    }
+                    startActivity(intent)
+                }
                 Glide.with(binding.imgAndroid1).load(top[0].userPhoto).into(binding.imgAndroid1)
                 Glide.with(binding.imgAndroid2).load(top[1].userPhoto).into(binding.imgAndroid2)
                 binding.nameAndroid1.text = top[0].fullName
@@ -266,6 +286,24 @@ class HomeFragment : Fragment() {
                 }
             } else if (android.size > 0 && android.size > 2) {
                 top.take(3)
+                binding.android1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.android2.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[1].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.android3.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[2].fullName)
+                    }
+                    startActivity(intent)
+                }
                 Glide.with(binding.imgAndroid1).load(top[0].userPhoto).into(binding.imgAndroid1)
                 Glide.with(binding.imgAndroid2).load(top[1].userPhoto).into(binding.imgAndroid2)
                 Glide.with(binding.imgAndroid3).load(top[2].userPhoto).into(binding.imgAndroid3)
@@ -315,6 +353,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun topPython(students: ArrayList<AllStudentModel>) {
+        val intent = Intent(requireContext(), AboutStudentActivity::class.java)
         var python = arrayListOf<AllStudentModel>()
         for (student in students) {
             if (student.group == "Python, C++") {
@@ -326,6 +365,12 @@ class HomeFragment : Fragment() {
             binding.pythonNotStudents.visibility = View.GONE
             if (python.size in 1..1) {
                 top.take(1)
+                binding.python1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
                 binding.python3.visibility = View.INVISIBLE
                 binding.python2.visibility = View.INVISIBLE
                 Glide.with(binding.imgPython1).load(top[0].userPhoto).into(binding.imgPython1)
@@ -344,6 +389,18 @@ class HomeFragment : Fragment() {
                 }
             } else if (python.size in 1..2) {
                 top.take(2)
+                binding.python1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.python2.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[1].fullName)
+                    }
+                    startActivity(intent)
+                }
                 binding.python3.visibility = View.INVISIBLE
                 Glide.with(binding.imgPython1).load(top[0].userPhoto).into(binding.imgPython1)
                 Glide.with(binding.imgPython2).load(top[1].userPhoto).into(binding.imgPython2)
@@ -375,6 +432,24 @@ class HomeFragment : Fragment() {
                 }
             } else if (python.size > 0 && python.size > 2) {
                 top.take(3)
+                binding.python1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.python2.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[1].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.python3.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[2].fullName)
+                    }
+                    startActivity(intent)
+                }
                 Glide.with(binding.imgPython1).load(top[0].userPhoto).into(binding.imgPython1)
                 Glide.with(binding.imgPython2).load(top[1].userPhoto).into(binding.imgPython2)
                 Glide.with(binding.imgPython3).load(top[2].userPhoto).into(binding.imgPython3)
@@ -423,6 +498,7 @@ class HomeFragment : Fragment() {
         }
     }
     private fun topScratch(students: ArrayList<AllStudentModel>) {
+        val intent = Intent(requireContext(), AboutStudentActivity::class.java)
         var scratch = arrayListOf<AllStudentModel>()
         for (student in students) {
             if (student.group == "Scratch") {
@@ -435,6 +511,12 @@ class HomeFragment : Fragment() {
             binding.scratchStudents.visibility = View.VISIBLE
             if (scratch.size in 1..1) {
                 top.take(1)
+                binding.scratch1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
                 binding.scratch3.visibility = View.INVISIBLE
                 binding.scratch2.visibility = View.INVISIBLE
                 Glide.with(binding.imgScratch1).load(top[0].userPhoto).into(binding.imgScratch1)
@@ -453,6 +535,18 @@ class HomeFragment : Fragment() {
                 }
             } else if (scratch.size in 1..2) {
                 top.take(2)
+                binding.scratch1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.scratch2.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[1].fullName)
+                    }
+                    startActivity(intent)
+                }
                 binding.scratch3.visibility = View.INVISIBLE
                 Glide.with(binding.imgScratch1).load(top[0].userPhoto).into(binding.imgScratch1)
                 Glide.with(binding.imgScratch2).load(top[1].userPhoto).into(binding.imgScratch2)
@@ -484,6 +578,24 @@ class HomeFragment : Fragment() {
                 }
             } else if (scratch.size > 0 && scratch.size > 2) {
                 top.take(3)
+                binding.scratch1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.scratch2.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[1].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.scratch3.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[2].fullName)
+                    }
+                    startActivity(intent)
+                }
                 Glide.with(binding.imgScratch1).load(top[0].userPhoto).into(binding.imgScratch1)
                 Glide.with(binding.imgScratch2).load(top[1].userPhoto).into(binding.imgScratch2)
                 Glide.with(binding.imgScratch3).load(top[2].userPhoto).into(binding.imgScratch3)
@@ -534,6 +646,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun topLiteracy(students: ArrayList<AllStudentModel>) {
+        val intent = Intent(requireContext(), AboutStudentActivity::class.java)
         var literacy = arrayListOf<AllStudentModel>()
         for (student in students) {
             if (student.group == "Literacy") {
@@ -545,6 +658,12 @@ class HomeFragment : Fragment() {
             binding.literacyNotStudents.visibility = View.GONE
             if (literacy.size in 1..1) {
                 top.take(1)
+                binding.literacy1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
                 binding.scratch3.visibility = View.INVISIBLE
                 binding.scratch2.visibility = View.INVISIBLE
                 Glide.with(binding.imgLiteracy1).load(top[0].userPhoto).into(binding.imgLiteracy1)
@@ -563,6 +682,18 @@ class HomeFragment : Fragment() {
                 }
             } else if (literacy.size in 1..2) {
                 top.take(2)
+                binding.literacy1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.literacy2.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[1].fullName)
+                    }
+                    startActivity(intent)
+                }
                 Glide.with(binding.imgLiteracy1).load(top[0].userPhoto).into(binding.imgLiteracy1)
                 Glide.with(binding.imgLiteracy2).load(top[1].userPhoto).into(binding.imgLiteracy2)
                 binding.nameLiteracy1.text = top[0].fullName
@@ -593,6 +724,24 @@ class HomeFragment : Fragment() {
                 }
             } else if (literacy.size > 0 && literacy.size > 2) {
                 top.take(3)
+                binding.literacy1.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[0].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.literacy2.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[1].fullName)
+                    }
+                    startActivity(intent)
+                }
+                binding.literacy3.setOnClickListener {
+                    intent.apply {
+                        putExtra("Student", top[2].fullName)
+                    }
+                    startActivity(intent)
+                }
                 binding.scratch3.visibility = View.INVISIBLE
                 Glide.with(binding.imgLiteracy1).load(top[0].userPhoto).into(binding.imgLiteracy1)
                 Glide.with(binding.imgLiteracy2).load(top[1].userPhoto).into(binding.imgLiteracy2)

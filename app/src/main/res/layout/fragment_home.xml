@@ -284,7 +284,7 @@
                                         android:orientation="vertical">
                                         <androidx.cardview.widget.CardView
                                             android:layout_width="match_parent"
-                                            android:layout_height="110dp"
+                                            android:layout_height="120dp"
                                             app:cardBackgroundColor="#A8A8A8"
                                             app:cardCornerRadius="8dp"
                                             app:cardElevation="1dp">
@@ -369,7 +369,7 @@
                                         android:orientation="vertical">
                                         <androidx.cardview.widget.CardView
                                             android:layout_width="match_parent"
-                                            android:layout_height="110dp"
+                                            android:layout_height="120dp"
                                             app:cardBackgroundColor="#A8A8A8"
                                             app:cardCornerRadius="8dp"
                                             app:cardElevation="1dp">
@@ -454,7 +454,7 @@
                                         android:orientation="vertical">
                                         <androidx.cardview.widget.CardView
                                             android:layout_width="match_parent"
-                                            android:layout_height="110dp"
+                                            android:layout_height="120dp"
                                             app:cardBackgroundColor="#A8A8A8"
                                             app:cardCornerRadius="8dp"
                                             app:cardElevation="1dp">
@@ -620,7 +620,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">
@@ -705,7 +705,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">
@@ -790,7 +790,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">
@@ -957,7 +957,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">
@@ -1042,7 +1042,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">
@@ -1127,7 +1127,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">
@@ -1294,7 +1294,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">
@@ -1379,7 +1379,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">
@@ -1464,7 +1464,7 @@
                                             android:orientation="vertical">
                                             <androidx.cardview.widget.CardView
                                                 android:layout_width="match_parent"
-                                                android:layout_height="110dp"
+                                                android:layout_height="120dp"
                                                 app:cardBackgroundColor="#A8A8A8"
                                                 app:cardCornerRadius="8dp"
                                                 app:cardElevation="1dp">

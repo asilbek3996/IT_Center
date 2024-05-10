@@ -36,35 +36,19 @@ class Repository() {
         )
 
     }
-    fun getAllCategories(error: MutableLiveData<String>, success:MutableLiveData<List<AllCategoryModel>>){
+    fun getAllCategories(error: MutableLiveData<String>, success:MutableLiveData<List<AllCategoryModel>>,progress: MutableLiveData<Boolean>){
+        progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getAllCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<List<AllCategoryModel>>(){
                 override fun onNext(t: List<AllCategoryModel>) {
+                    progress.value = false
                     success.value = t
                 }
 
                 override fun onError(e: Throwable) {
-                    error.value = e.localizedMessage
-                }
-
-                override fun onComplete() {
-                }
-            })
-        )
-
-    }
-    fun getSearchCategories(error: MutableLiveData<String>, success:MutableLiveData<List<AllCategoryModel>>,search: String){
-        compositeDisposable.add(NetworkManager.getApiService().getSearchCategories(search)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object : DisposableObserver<List<AllCategoryModel>>(){
-                override fun onNext(t: List<AllCategoryModel>) {
-                    success.value = t
-                }
-
-                override fun onError(e: Throwable) {
+                    progress.value = false
                     error.value = e.localizedMessage
                 }
 
@@ -93,16 +77,19 @@ class Repository() {
         )
 
     }
-    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>){
+    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>,progress: MutableLiveData<Boolean>){
+        progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getStudent()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>(){
                 override fun onNext(t: ArrayList<AllStudentModel>) {
+                    progress.value = false
                     success.value = t
                 }
 
                 override fun onError(e: Throwable) {
+                    progress.value = false
                     error.value = e.localizedMessage
                 }
 

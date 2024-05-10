@@ -1,25 +1,35 @@
 package com.example.itcenter.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.itcenter.adapter.AllCategoryAdapter
+import com.example.itcenter.adapter.SearchCategoryAdapter
+import com.example.itcenter.api.NetworkManager
 import com.example.itcenter.databinding.ActivityAllCategoryBinding
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class AllCategoryActivity : AppCompatActivity() {
     lateinit var binding: ActivityAllCategoryBinding
     lateinit var viewModel: MainViewModel
-    override fun onCreate(savedInstanceState: Bundle?) {
+    lateinit var adapter: SearchCategoryAdapter
+override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAllCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+    loadData()
         binding.back.setOnClickListener {
             finish()
         }
@@ -30,9 +40,19 @@ class AllCategoryActivity : AppCompatActivity() {
             binding.linearlayout1.visibility = View.GONE
             binding.linearlayout2.visibility = View.VISIBLE
         }
+    binding.swipe.setOnRefreshListener {
+        loadData()
+    }
+    viewModel.progress.observe(this, Observer {
+        binding.swipe.isRefreshing = it
+    })
+    viewModel.allCategoryData.observe(this@AllCategoryActivity){
+        adapter = SearchCategoryAdapter(it)
+        binding.recyclerSearchCategory.layoutManager = GridLayoutManager(this@AllCategoryActivity, 3)
+        binding.recyclerSearchCategory.adapter = adapter
+    }
         binding.searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                //
                 return false
             }
 
@@ -45,6 +65,7 @@ class AllCategoryActivity : AppCompatActivity() {
                         binding.searchview.setQuery("", false)
                     }
                 }
+
                 if (newText.isNullOrEmpty()) {
                     binding.recyclerSearchCategory.visibility = View.GONE
                     binding.recyclerAllCategory.visibility = View.VISIBLE
@@ -52,14 +73,8 @@ class AllCategoryActivity : AppCompatActivity() {
                 } else {
                     binding.recyclerSearchCategory.visibility = View.VISIBLE
                     binding.recyclerAllCategory.visibility = View.GONE
-
-                    viewModel.searchCategoryData.observe(this@AllCategoryActivity){
-                        binding.recyclerSearchCategory.layoutManager = GridLayoutManager(this@AllCategoryActivity, 3)
-                        binding.recyclerSearchCategory.adapter = AllCategoryAdapter(it)
-                    }
-                    viewModel.getSearchCategories(newText)
+                    filter(newText)
                 }
-
                 return true
             }
         })
@@ -69,9 +84,22 @@ class AllCategoryActivity : AppCompatActivity() {
             binding.recyclerAllCategory.layoutManager = GridLayoutManager(this, 3)
             binding.recyclerAllCategory.adapter = AllCategoryAdapter(it)
         }
+}
+    fun loadData(){
         viewModel.getAllCategories()
     }
 
+    fun filter(text: String){
+        val filters: ArrayList<AllCategoryModel> = ArrayList()
+        viewModel.allCategoryData.observe(this, Observer {
+            for (language in it){
+                if (language.language.toLowerCase().contains(text.toLowerCase())){
+                    filters.add(language)
+                }
+            }
+            adapter.filter(filters)
+        })
+    }
     private fun toggleLayoutVisibility() {
         // SearchViewning joriy visibility holatini aniqlash
         val currentVisibility = binding.search.visibility

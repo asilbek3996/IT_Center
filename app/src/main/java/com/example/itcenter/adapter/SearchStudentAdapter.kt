@@ -9,10 +9,11 @@ import com.example.itcenter.activity.AboutStudentActivity
 import com.example.itcenter.activity.DarslarActivity
 import com.example.itcenter.databinding.AlStudentItemLayoutBinding
 import com.example.itcenter.databinding.DarslarBinding
+import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.DarslarModel
 
-class StudentAdapter(var items: List<AllStudentModel>): RecyclerView.Adapter<StudentAdapter.ItemHolder>() {
+class SearchStudentAdapter(var items: ArrayList<AllStudentModel>): RecyclerView.Adapter<SearchStudentAdapter.ItemHolder>() {
     inner class ItemHolder(val binding: AlStudentItemLayoutBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
@@ -38,6 +39,7 @@ class StudentAdapter(var items: List<AllStudentModel>): RecyclerView.Adapter<Stu
             it.context.startActivity(intent)
         }
     }
+
     fun filter(filter: ArrayList<AllStudentModel>) {
         items = filter
         notifyDataSetChanged()
