@@ -26,6 +26,7 @@ class DarslarActivity : AppCompatActivity() {
         binding = ActivityDarslarBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val message = intent.getStringExtra("Til")
+        val level = intent.getStringExtra("level")
         var kotlin1 = getString(R.string.kotlin1)
         val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
         val group = sharedPreferences.getString("group", null)
@@ -40,7 +41,7 @@ class DarslarActivity : AppCompatActivity() {
                 kotlin1,"Kotlin", "4-dars",R.drawable.kotlin),
         )
         binding.tvLanguage.text = message
-        if (message == group) {
+        if (message == group || level == "free") {
             var kotlin = arrayListOf<DarslarModel>()
             for (darslar in list) {
                 if (darslar.language == message) {
@@ -81,11 +82,11 @@ class DarslarActivity : AppCompatActivity() {
                 }
             })
         }else if (group == "x"){
-            var txt = "Siz hech qaysi guruhda o'qimaysi "
-            showAlertDialog(txt,message!!)
+                var txt = "Siz hech qaysi guruhda o'qimaysiz"
+                showAlertDialog(txt, message!!)
         }else{
-            var text = "Siz $group guruhida o'qiysiz "
-            showAlertDialog(text,message!!)
+                var text = "Siz $group guruhida o'qiysiz "
+                showAlertDialog(text, message!!)
         }
         }
 

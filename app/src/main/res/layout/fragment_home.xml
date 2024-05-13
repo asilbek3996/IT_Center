@@ -34,7 +34,7 @@
                         android:layout_height="match_parent"
                         android:layout_margin="3dp"
                         app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="20dp">
+                        app:cardCornerRadius="18dp">
                         <androidx.viewpager2.widget.ViewPager2
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

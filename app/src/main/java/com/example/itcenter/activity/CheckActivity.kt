@@ -47,15 +47,22 @@ class CheckActivity : AppCompatActivity() {
         }
         binding.btnLogin.setOnClickListener {
             var text = binding.etEmail.text.toString()
+            binding.btnLogin.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
             viewModel.studentData.observe(this, Observer {
                 for (language in it){
                     if (language.id.toString() == text){
+                        binding.btnLogin.visibility = View.VISIBLE
+                        binding.progressBar.visibility = View.GONE
                         val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
                         val editor = sharedPreferences.edit()
                         editor.putInt("id", language.id)
                         editor.apply()
                         startActivity(Intent(this@CheckActivity,MainActivity::class.java))
                         finish()
+                    }else{
+                        binding.btnLogin.visibility = View.VISIBLE
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             })
