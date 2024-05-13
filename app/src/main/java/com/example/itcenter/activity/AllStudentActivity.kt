@@ -47,15 +47,7 @@ class AllStudentActivity : AppCompatActivity() {
             binding.linearlayout2.visibility = View.VISIBLE
         }
         val message = intent.getStringExtra("Group")
-        if (message=="Java, Kotlin"){
-            binding.tvGroup.text = "Java, Kotlin"
-        }else if (message=="Python, C++"){
-            binding.tvGroup.text = "Python, C++"
-        }else if (message=="Scratch"){
-            binding.tvGroup.text = "Scratch"
-        }else if (message=="Literacy"){
-            binding.tvGroup.text = "Literacy"
-        }
+        binding.tvGroup.text = message
         viewModel.studentData.observe(this){
             getStudent(it,message!!)
         }

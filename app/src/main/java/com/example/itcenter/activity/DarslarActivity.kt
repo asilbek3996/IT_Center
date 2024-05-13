@@ -1,6 +1,11 @@
 package com.example.itcenter.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
@@ -22,7 +27,8 @@ class DarslarActivity : AppCompatActivity() {
         setContentView(binding.root)
         val message = intent.getStringExtra("Til")
         var kotlin1 = getString(R.string.kotlin1)
-
+        val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        val group = sharedPreferences.getString("group", null)
         var list = arrayListOf(
             DarslarModel(1,"https://www.youtube.com/embed/cTpLaTwmq8M?si=ygXz03hj79nEmQdU",
                 kotlin1,"Kotlin", "1-dars",R.drawable.kotlin),
@@ -34,46 +40,53 @@ class DarslarActivity : AppCompatActivity() {
                 kotlin1,"Kotlin", "4-dars",R.drawable.kotlin),
         )
         binding.tvLanguage.text = message
-        var kotlin = arrayListOf<DarslarModel>()
-        for (darslar in list) {
-            if (darslar.language==message){
-                kotlin.add(darslar)
-            }
-        }
-        binding.back.setOnClickListener {
-            finish()
-        }
-        binding.search.setOnClickListener {
-            toggleLayoutVisibility() // toggleLayoutVisibility funksiyasini chaqirish
-        }
-        binding.recyclerDars.layoutManager = GridLayoutManager(this,3)
-        binding.recyclerDars.adapter = DarsAdapter(kotlin)
-        binding.back2.setOnClickListener {
-            binding.main2.transitionToStart()
-        }
-        binding.ivExit.setOnClickListener {
-            binding.linearlayout1.visibility = View.GONE
-            binding.linearlayout2.visibility = View.VISIBLE
-        }
-        binding.searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                // Bu metodni qo'shmaymiz
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                binding.ivExit.setOnClickListener {
-                    if (newText.isNullOrEmpty()) {
-                        binding.linearlayout1.visibility = View.GONE
-                        binding.linearlayout2.visibility = View.VISIBLE
-                    } else {
-                        binding.searchview.setQuery("", false)
-                    }
+        if (message == group) {
+            var kotlin = arrayListOf<DarslarModel>()
+            for (darslar in list) {
+                if (darslar.language == message) {
+                    kotlin.add(darslar)
                 }
-                return true
             }
-        })
+            binding.back.setOnClickListener {
+                finish()
+            }
+            binding.search.setOnClickListener {
+                toggleLayoutVisibility() // toggleLayoutVisibility funksiyasini chaqirish
+            }
+            binding.recyclerDars.layoutManager = GridLayoutManager(this, 3)
+            binding.recyclerDars.adapter = DarsAdapter(kotlin)
+            binding.back2.setOnClickListener {
+                binding.main2.transitionToStart()
+            }
+            binding.ivExit.setOnClickListener {
+                binding.linearlayout1.visibility = View.GONE
+                binding.linearlayout2.visibility = View.VISIBLE
+            }
+            binding.searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    // Bu metodni qo'shmaymiz
+                    return false
+                }
 
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    binding.ivExit.setOnClickListener {
+                        if (newText.isNullOrEmpty()) {
+                            binding.linearlayout1.visibility = View.GONE
+                            binding.linearlayout2.visibility = View.VISIBLE
+                        } else {
+                            binding.searchview.setQuery("", false)
+                        }
+                    }
+                    return true
+                }
+            })
+        }else if (group == "x"){
+            var txt = "Siz hech qaysi guruhda o'qimaysi "
+            showAlertDialog(txt,message!!)
+        }else{
+            var text = "Siz $group guruhida o'qiysiz "
+            showAlertDialog(text,message!!)
+        }
         }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -108,6 +121,21 @@ class DarslarActivity : AppCompatActivity() {
         }
     }
 
-
-
+    private fun showAlertDialog(text: String,cource:String) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setMessage("$text $cource darslari sizga ochiq emas.\nAgar $cource darslari sizga qiziq bo'lsa telegram botimiz orqali uni sotib olishingiz mumkin.")
+        alertDialogBuilder.setPositiveButton("Sotib olish", DialogInterface.OnClickListener { dialog, which ->
+            val link = "https://t.me/dangara_itcenterbot" // Sizning linkingizni o'zgartiring
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+            startActivity(intent)
+            finish()
+        })
+        alertDialogBuilder.setNegativeButton("Ortga qaytish", DialogInterface.OnClickListener { dialog, which ->
+            dialog.dismiss()
+            finish()
+        })
+        alertDialogBuilder.setCancelable(false)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
 }

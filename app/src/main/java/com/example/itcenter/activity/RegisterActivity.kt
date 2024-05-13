@@ -29,6 +29,10 @@ class RegisterActivity : AppCompatActivity() {
         binding.btnSignUp.setOnClickListener {
             createAccount()
         }
+        binding.logIn.setOnClickListener {
+            startActivity(Intent(this,LoginActivity::class.java))
+            finish()
+        }
     }
     fun createAccount() {
         val email: String = binding.etEmail.getText().toString()
@@ -135,9 +139,4 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this@RegisterActivity,LoginActivity::class.java))
-        finish()
-    }
 }

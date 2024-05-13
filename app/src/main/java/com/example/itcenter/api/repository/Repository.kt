@@ -77,19 +77,22 @@ class Repository() {
         )
 
     }
-    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>,progress: MutableLiveData<Boolean>){
+    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>,progress: MutableLiveData<Boolean>,shimmer: MutableLiveData<Int>){
         progress.value = true
+        shimmer.value = 0
         compositeDisposable.add(NetworkManager.getApiService().getStudent()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>(){
                 override fun onNext(t: ArrayList<AllStudentModel>) {
                     progress.value = false
+                    shimmer.value = 1
                     success.value = t
                 }
 
                 override fun onError(e: Throwable) {
                     progress.value = false
+                    shimmer.value = 2
                     error.value = e.localizedMessage
                 }
 

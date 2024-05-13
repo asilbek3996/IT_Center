@@ -14,6 +14,7 @@ class MainViewModel: ViewModel() {
 
     val error = MutableLiveData<String>()
     val progress = MutableLiveData<Boolean>()
+    val shimmer = MutableLiveData<Int>()
     val adsData = MutableLiveData<ArrayList<ImageItem>>()
     val allCategoryData = MutableLiveData<List<AllCategoryModel>>()
     val categoriesData = MutableLiveData<ArrayList<CategoryModel>>()
@@ -29,6 +30,6 @@ class MainViewModel: ViewModel() {
         repository.getCategories(error, categoriesData)
     }
     fun getStudent() {
-        repository.getStudent(error, studentData, progress)
+        repository.getStudent(error, studentData, progress,shimmer)
     }
 }
