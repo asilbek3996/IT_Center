@@ -1,6 +1,7 @@
 package com.example.itcenter.activity
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -28,6 +29,10 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.btnSignUp.setOnClickListener {
             createAccount()
+            val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("group", "x")
+            editor.apply()
         }
         binding.logIn.setOnClickListener {
             startActivity(Intent(this,LoginActivity::class.java))

@@ -29,6 +29,7 @@ import com.example.itcenter.activity.AboutStudentActivity
 import com.example.itcenter.activity.AllCategoryActivity
 import com.example.itcenter.activity.AllStudentActivity
 import com.example.itcenter.activity.DarslarActivity
+import com.example.itcenter.activity.LevelActivity
 import com.example.itcenter.adapter.ImageAdapter
 import com.example.itcenter.adapter.TopStudentAdapter
 import com.example.itcenter.databinding.FragmentHomeBinding
@@ -101,7 +102,7 @@ class HomeFragment : Fragment() {
         binding.tvAll.setOnClickListener {
             startActivity(Intent(requireContext(), AllCategoryActivity::class.java))
         }
-        val intent = Intent(requireContext(), DarslarActivity::class.java)
+        val intent = Intent(requireContext(), LevelActivity::class.java)
         binding.category1.setOnClickListener {
             intent.apply {
                 putExtra("Til", item[0].language)

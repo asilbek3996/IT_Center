@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.itcenter.R
 import com.example.itcenter.databinding.ActivityAboutStudentBinding
 import com.example.itcenter.model.viewmodel.MainViewModel
+import java.util.Calendar
 
 class AboutStudentActivity : AppCompatActivity() {
     lateinit var binding: ActivityAboutStudentBinding
@@ -36,6 +37,7 @@ class AboutStudentActivity : AppCompatActivity() {
         viewModel.studentData.observe(this, Observer {
             for (student in it){
                 if (student.fullName==text){
+                    binding.age.text = student.birthday
                     Glide.with(binding.userPhoto).load(student.userPhoto).into(binding.userPhoto)
                     binding.fullName.text = student.fullName
                     var txt = student.userPercentage

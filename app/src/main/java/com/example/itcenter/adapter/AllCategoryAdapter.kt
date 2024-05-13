@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.itcenter.activity.DarslarActivity
+import com.example.itcenter.activity.LevelActivity
 import com.example.itcenter.databinding.AllCategoryItemLayoutBinding
 import com.example.itcenter.databinding.CategoryItemLayoutBinding
 import com.example.itcenter.model.AllCategoryModel
@@ -37,7 +38,7 @@ class AllCategoryAdapter(var items: List<AllCategoryModel>): RecyclerView.Adapte
             .into(holder.binding.caytegoryImg)
         holder.binding.categoryTxt.text = item.language
         holder.itemView.setOnClickListener {
-            val intent = Intent(it.context, DarslarActivity::class.java)
+            val intent = Intent(it.context, LevelActivity::class.java)
             intent.putExtra("Til", item.language)
             it.context.startActivity(intent)
         }

@@ -1,5 +1,6 @@
 package com.example.itcenter.activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -44,6 +45,10 @@ class LoginActivity : AppCompatActivity() {
                 if (firebaseAuth.currentUser!!.isEmailVerified) {
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     finish()
+                    val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("group", "x")
+                    editor.apply()
                 } else {
                     Utility.showToast(
                         this@LoginActivity,
