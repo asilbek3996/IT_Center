@@ -106,7 +106,7 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
                 holder.binding.progress3.progress = top[2].userPercentage
                 var top1txt = top[0].userPercentage.toString()
                 var top2txt = top[1].userPercentage.toString()
-                var top3txt = top[1].userPercentage.toString()
+                var top3txt = top[2].userPercentage.toString()
                 holder.binding.foiz1.text = top1txt
                 holder.binding.foiz2.text = top2txt
                 holder.binding.foiz3.text = top3txt

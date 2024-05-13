@@ -169,7 +169,7 @@ class HomeFragment : Fragment() {
         var java = arrayListOf<AllStudentModel>()
         var kotlin = arrayListOf<AllStudentModel>()
         var cpp = arrayListOf<AllStudentModel>()
-        var literacy = arrayListOf<AllStudentModel>()
+        var computerLiteracy = arrayListOf<AllStudentModel>()
         var scratch = arrayListOf<AllStudentModel>()
         var frontend = arrayListOf<AllStudentModel>()
         var student2 = ""
@@ -190,8 +190,8 @@ class HomeFragment : Fragment() {
                 cpp.add(student)
             }else if (student.group== "Scratch") {
                 scratch.add(student)
-            }else if (student.group== "Literacy") {
-                literacy.add(student)
+            }else if (student.group== "Kompyuter Savodxonligi") {
+                computerLiteracy.add(student)
             }else if (student.group== "Frontend") {
                 frontend.add(student)
             }
@@ -211,7 +211,7 @@ class HomeFragment : Fragment() {
             GroupModel("Android",android),
             GroupModel("Python",python),
             GroupModel("C++",cpp),
-            GroupModel("Literacy",literacy),
+            GroupModel("Kompyuter Savodxonligi",computerLiteracy),
             GroupModel("Scratch",scratch),
             GroupModel("Frontend",frontend)
         )

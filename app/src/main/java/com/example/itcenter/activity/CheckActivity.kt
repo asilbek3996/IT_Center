@@ -9,7 +9,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.util.Patterns
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
@@ -39,35 +41,52 @@ class CheckActivity : AppCompatActivity() {
         binding = ActivityCheckBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-//        showCustomDialogBox()
         showAlertDialog()
         binding.signUp.setOnClickListener {
             startActivity(Intent(this,RegisterActivity::class.java))
             finish()
         }
         binding.btnLogin.setOnClickListener {
-            var text = binding.etEmail.text.toString()
-            binding.btnLogin.visibility = View.GONE
-            binding.progressBar.visibility = View.VISIBLE
-            viewModel.studentData.observe(this, Observer {
-                for (language in it){
-                    if (language.id.toString() == text){
-                        binding.btnLogin.visibility = View.VISIBLE
-                        binding.progressBar.visibility = View.GONE
-                        val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-                        val editor = sharedPreferences.edit()
-                        editor.putInt("id", language.id)
-                        editor.apply()
-                        startActivity(Intent(this@CheckActivity,MainActivity::class.java))
-                        finish()
-                    }else{
-                        binding.btnLogin.visibility = View.VISIBLE
-                        binding.progressBar.visibility = View.GONE
-                    }
-                }
-            })
+                loginUser()
         }
         viewModel.getStudent()
+    }
+    fun loginUser() {
+        val email: String = binding.etEmail.text.toString()
+        if (email=="") {
+            binding.etEmail.error = "Email is invalid "
+        }else {
+            changeInProgress(true)
+            Handler().postDelayed({
+                loginAccountInFirebase(email)
+            }, 1500)
+        }
+    }
+    fun loginAccountInFirebase(email: String?){
+        changeInProgress(true)
+        viewModel.studentData.observe(this, Observer {
+            for (language in it){
+                if (language.id.toString() == email){
+                    changeInProgress(false)
+                    val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putInt("id", language.id)
+                    editor.apply()
+                    startActivity(Intent(this@CheckActivity,MainActivity::class.java))
+                    finish()
+                }else{
+                    validateDate(null)
+                    changeInProgress(false)
+                }
+            }
+        })
+    }
+    fun validateDate(email: String?): Boolean {
+        if (email==null) {
+            binding.etEmail.error = "Email is invalid "
+            return false
+        }
+        return true
     }
     private fun showAlertDialog() {
         val alertDialogBuilder = AlertDialog.Builder(this)
@@ -84,5 +103,14 @@ class CheckActivity : AppCompatActivity() {
         })
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
+    }
+    fun changeInProgress(inProgress: Boolean) {
+        if (inProgress) {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.btnLogin.visibility = View.GONE
+        } else {
+            binding.progressBar.visibility = View.GONE
+            binding.btnLogin.visibility = View.VISIBLE
+        }
     }
 }

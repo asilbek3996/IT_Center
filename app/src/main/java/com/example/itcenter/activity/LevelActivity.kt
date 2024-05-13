@@ -29,7 +29,12 @@ class LevelActivity : AppCompatActivity() {
                 }
             }
         }
-        var txt = "$message dasturlash tili"
+        var txt = ""
+        if (message == "Kompyuter Savodxonligi" || message == "Microsoft Office"){
+            txt = "$message darslari"
+        }else{
+            txt = "$message dasturlash tili"
+        }
         binding.tvName.text = txt
         if (message=="Kotlin") {
             binding.ivBegin.setImageResource(R.drawable.kotlin_logo)
