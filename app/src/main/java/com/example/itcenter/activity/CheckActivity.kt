@@ -65,12 +65,14 @@ class CheckActivity : AppCompatActivity() {
     fun loginAccountInFirebase(email: String?){
         changeInProgress(true)
         viewModel.studentData.observe(this, Observer {
-            for (language in it){
-                if (language.id.toString() == email){
+            for (student in it){
+                if (student.id.toString() == email){
                     changeInProgress(false)
                     val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
-                    editor.putInt("id", language.id)
+                    editor.putInt("id", student.id)
+                    editor.putString("fullName", student.fullName)
+                    editor.putString("group", student.group)
                     editor.apply()
                     startActivity(Intent(this@CheckActivity,MainActivity::class.java))
                     finish()

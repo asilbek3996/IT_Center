@@ -3,7 +3,6 @@ package com.example.itcenter.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.itcenter.activity.DarslarActivity
 import com.example.itcenter.databinding.DarslarBinding
 import com.example.itcenter.model.DarslarModel
 
@@ -20,12 +19,6 @@ class DarsAdapter(val items: List<DarslarModel>): RecyclerView.Adapter<DarsAdapt
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val item = items[position]
-        holder.binding.caytegoryImg.setImageResource(item.img)
-        holder.binding.categoryTxt.text = item.name
-        holder.itemView.setOnClickListener {
-            // Activitydan itemni boshqarish
-            (holder.itemView.context as DarslarActivity).onItemClick(item)
-        }
+        holder.binding.tvName.text = item.name
     }
-
 }

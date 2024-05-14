@@ -5,15 +5,8 @@
         <item name="colorPrimary">@color/light_green</item>
         <item name="colorPrimaryDark">@color/light_green</item>
         <item name="colorAccent">@color/light_green</item>
-
     </style>
 
     <style name="Theme.ITCenter" parent="Base.Theme.ITCenter" />
 
-    <style name="topStudent">
-        <item name="android:width">0dp</item>
-        <item name="android:height">120dp</item>
-        <item name="marginHorizontal">12dp</item>
-        <item name="android:orientation">vertical</item>
-    </style>
 </resources>

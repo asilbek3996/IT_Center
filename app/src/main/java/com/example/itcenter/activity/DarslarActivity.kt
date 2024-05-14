@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itcenter.R
 import com.example.itcenter.adapter.DarsAdapter
 import com.example.itcenter.databinding.ActivityDarslarBinding
@@ -54,11 +55,8 @@ class DarslarActivity : AppCompatActivity() {
             binding.search.setOnClickListener {
                 toggleLayoutVisibility() // toggleLayoutVisibility funksiyasini chaqirish
             }
-            binding.recyclerDars.layoutManager = GridLayoutManager(this, 3)
+            binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
             binding.recyclerDars.adapter = DarsAdapter(kotlin)
-            binding.back2.setOnClickListener {
-                binding.main2.transitionToStart()
-            }
             binding.ivExit.setOnClickListener {
                 binding.linearlayout1.visibility = View.GONE
                 binding.linearlayout2.visibility = View.VISIBLE
@@ -90,21 +88,8 @@ class DarslarActivity : AppCompatActivity() {
         }
         }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    fun onItemClick(item: DarslarModel) {
-
-        binding.tvSubtitr.text = item.subtitr
-        binding.tvName.text = item.name
-        binding.webView.loadData(item.video,"text/html","utf-8")
-        binding.webView.settings.javaScriptEnabled = true
-        binding.webView.webChromeClient = WebChromeClient()
-        check = true
-
-        binding.main2.transitionToEnd()
-    }
 
     override fun onBackPressed() {
-        binding.main2.transitionToStart()
         super.onBackPressed()
     }
     private fun toggleLayoutVisibility() {

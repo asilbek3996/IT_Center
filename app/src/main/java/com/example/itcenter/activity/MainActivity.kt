@@ -147,9 +147,6 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 refresh.visibility = View.VISIBLE
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
-            }else{
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.flContainer, loadingFragment, loadingFragment.tag).commit()
             }
         },2000)
     }
