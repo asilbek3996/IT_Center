@@ -6,6 +6,7 @@ import com.example.itcenter.api.repository.Repository
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.CategoryModel
+import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
 
 class MainViewModel: ViewModel() {
@@ -19,6 +20,7 @@ class MainViewModel: ViewModel() {
     val allCategoryData = MutableLiveData<List<AllCategoryModel>>()
     val categoriesData = MutableLiveData<ArrayList<CategoryModel>>()
     val studentData = MutableLiveData<ArrayList<AllStudentModel>>()
+    val lessonsData = MutableLiveData<ArrayList<DarslarModel>>()
 
     fun getOffers() {
         repository.getAds(error, progress, adsData)
@@ -31,5 +33,8 @@ class MainViewModel: ViewModel() {
     }
     fun getStudent() {
         repository.getStudent(error, studentData, progress,shimmer)
+    }
+    fun getLessons() {
+        repository.getLessons(error, lessonsData, progress)
     }
 }

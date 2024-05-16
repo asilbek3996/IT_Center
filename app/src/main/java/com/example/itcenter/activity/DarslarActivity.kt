@@ -12,43 +12,39 @@ import android.webkit.WebChromeClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itcenter.R
 import com.example.itcenter.adapter.DarsAdapter
 import com.example.itcenter.databinding.ActivityDarslarBinding
 import com.example.itcenter.model.DarslarModel
+import com.example.itcenter.model.viewmodel.MainViewModel
 
 class DarslarActivity : AppCompatActivity() {
     lateinit var binding: ActivityDarslarBinding
     var check: Boolean =false
+    lateinit var viewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDarslarBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val message = intent.getStringExtra("Til")
         val level = intent.getStringExtra("level")
-        var kotlin1 = getString(R.string.kotlin1)
         val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
         val group = sharedPreferences.getString("group", null)
-        var list = arrayListOf(
-            DarslarModel(1,"https://www.youtube.com/embed/cTpLaTwmq8M?si=ygXz03hj79nEmQdU",
-                kotlin1,"Kotlin", "1-dars",R.drawable.kotlin),
-            DarslarModel(2,"<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/cTpLaTwmq8M?si=ygXz03hj79nEmQdU\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
-                kotlin1,"Kotlin", "2-dars",R.drawable.kotlin),
-            DarslarModel(3,"<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/cTpLaTwmq8M?si=ygXz03hj79nEmQdU\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
-                kotlin1,"Kotlin", "3-dars",R.drawable.kotlin),
-            DarslarModel(4,"<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/cTpLaTwmq8M?si=ygXz03hj79nEmQdU\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen=true></iframe>",
-                kotlin1,"Kotlin", "4-dars",R.drawable.kotlin),
-        )
+        var kotlin = arrayListOf<DarslarModel>()
         binding.tvLanguage.text = message
+
         if (message == group || level == "free") {
-            var kotlin = arrayListOf<DarslarModel>()
-            for (darslar in list) {
+            viewModel.lessonsData.observe(this){
+            for (darslar in it) {
                 if (darslar.language == message) {
                     kotlin.add(darslar)
                 }
             }
+        }
             binding.back.setOnClickListener {
                 finish()
             }
@@ -57,10 +53,6 @@ class DarslarActivity : AppCompatActivity() {
             }
             binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
             binding.recyclerDars.adapter = DarsAdapter(kotlin)
-            binding.ivExit.setOnClickListener {
-                binding.linearlayout1.visibility = View.GONE
-                binding.linearlayout2.visibility = View.VISIBLE
-            }
             binding.searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     // Bu metodni qo'shmaymiz

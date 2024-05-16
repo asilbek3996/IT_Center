@@ -2,13 +2,11 @@ package com.example.itcenter.api
 
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.AllStudentModel
-import com.example.itcenter.model.BaseResponse
 import com.example.itcenter.model.CategoryModel
+import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
 import io.reactivex.Observable
 import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface Api {
     @GET("ads")
@@ -19,4 +17,6 @@ interface Api {
     fun getCategories(): Observable<ArrayList<CategoryModel>>
     @GET("students")
     fun getStudent(): Observable<ArrayList<AllStudentModel>>
+    @GET("lessonLevel")
+    fun getLessons(): Observable<ArrayList<DarslarModel>>
 }
