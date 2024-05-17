@@ -9,7 +9,7 @@ import com.example.itcenter.activity.VideoActivity
 import com.example.itcenter.databinding.DarslarBinding
 import com.example.itcenter.model.DarslarModel
 
-class DarsAdapter(val items: List<DarslarModel>): RecyclerView.Adapter<DarsAdapter.ItemHolder>() {
+class DarsAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<DarsAdapter.ItemHolder>() {
     inner class ItemHolder(val binding: DarslarBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
@@ -25,7 +25,7 @@ class DarsAdapter(val items: List<DarslarModel>): RecyclerView.Adapter<DarsAdapt
         holder.binding.tvName.text = item.lessonName
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context, VideoActivity::class.java)
-            intent.putExtra("video", item)
+            intent.putExtra("video", item.id)
             it.context.startActivity(intent)
         }
     }

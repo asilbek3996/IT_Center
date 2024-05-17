@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         viewModel.shimmer.observe(this){
             if (it == 1) {
                 check = false
+                binding.main.transitionToEnd()
             }else if (it == 2){
                 val alertDialogBuilder = AlertDialog.Builder(this)
                 alertDialogBuilder.setMessage("There was an error connecting to the server. Please try again")
@@ -81,9 +82,8 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
             goto(check)
         }
 
-        val bottomN = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-        bottomN.setOnItemSelectedListener {
+            binding.bottomNavigationView.setOnItemSelectedListener {
                 if (it.itemId == R.id.home) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
@@ -102,9 +102,9 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                     tvMain.text = "Profil"
                 }
 
-            return@setOnItemSelectedListener true
+                return@setOnItemSelectedListener true
 
-        }
+            }
 
 
     }

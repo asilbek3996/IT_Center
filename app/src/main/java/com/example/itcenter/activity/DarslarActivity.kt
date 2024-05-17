@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -36,23 +37,23 @@ class DarslarActivity : AppCompatActivity() {
         val group = sharedPreferences.getString("group", null)
         var kotlin = arrayListOf<DarslarModel>()
         binding.tvLanguage.text = message
-
+        viewModel.getLessons()
         if (message == group || level == "free") {
             viewModel.lessonsData.observe(this){
-            for (darslar in it) {
-                if (darslar.language == message) {
+                for (darslar in it) {
+                if (darslar.language == message && darslar.level == level) {
                     kotlin.add(darslar)
                 }
             }
-        }
+                binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+                binding.recyclerDars.adapter = DarsAdapter(kotlin)
+            }
             binding.back.setOnClickListener {
                 finish()
             }
             binding.search.setOnClickListener {
                 toggleLayoutVisibility() // toggleLayoutVisibility funksiyasini chaqirish
             }
-            binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-            binding.recyclerDars.adapter = DarsAdapter(kotlin)
             binding.searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     // Bu metodni qo'shmaymiz
@@ -80,10 +81,6 @@ class DarslarActivity : AppCompatActivity() {
         }
         }
 
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
     private fun toggleLayoutVisibility() {
         // SearchViewning joriy visibility holatini aniqlash
         val currentVisibility = binding.search.visibility

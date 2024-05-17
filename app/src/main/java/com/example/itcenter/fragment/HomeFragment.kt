@@ -245,4 +245,5 @@ class HomeFragment : Fragment() {
         binding.nameCategory2.text = item[1].language
         binding.nameCategory3.text = item[2].language
     }
+
 }

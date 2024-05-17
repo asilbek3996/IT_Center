@@ -103,6 +103,28 @@ class Repository() {
         )
 
     }
+    fun getUser(error: MutableLiveData<String>, success:MutableLiveData<AllStudentModel>,progress: MutableLiveData<Boolean>, id: Int){
+        progress.value = true
+       compositeDisposable.add(NetworkManager.getApiService().getUsers(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<AllStudentModel>(){
+                override fun onNext(t: AllStudentModel) {
+                    progress.value = false
+                    success.value = t
+                }
+
+                override fun onError(e: Throwable) {
+                    progress.value = false
+                    error.value = e.localizedMessage
+                }
+
+                override fun onComplete() {
+                }
+            })
+        )
+
+    }
     fun getLessons(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<DarslarModel>>,progress: MutableLiveData<Boolean>){
         progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getLessons()

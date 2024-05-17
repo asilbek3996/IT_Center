@@ -7,6 +7,7 @@ import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
 import io.reactivex.Observable
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface Api {
     @GET("ads")
@@ -17,6 +18,8 @@ interface Api {
     fun getCategories(): Observable<ArrayList<CategoryModel>>
     @GET("students")
     fun getStudent(): Observable<ArrayList<AllStudentModel>>
+    @GET("students")
+    fun getUsers(@Query("id")id :Int): Observable<AllStudentModel>
     @GET("lessonLevel")
     fun getLessons(): Observable<ArrayList<DarslarModel>>
 }

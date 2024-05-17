@@ -70,8 +70,6 @@ dependencies {
     implementation ("com.squareup.retrofit2:adapter-rxjava2:2.7.2")
 
     implementation ("com.orhanobut:hawk:2.0.1")
-    
-
     implementation ("androidx.room:room-runtime:2.4.3")
 //    kapt "androidx.room:room-compiler:2.4.3"
 

@@ -35,20 +35,6 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPreferences = requireActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        var id = sharedPreferences.getInt("favorite",0)
-        var items= arrayListOf<DarslarModel>()
-        viewModel.lessonsData.observe(requireActivity()) {
-            for (i in it) {
-                if (i.id == id) {
-                    items.add(i)
-                }
-            }
-        }
-        recyclerView = view.findViewById(R.id.favorite_recyclerView)
-        recyclerView.layoutManager = GridLayoutManager(requireActivity(),3)
-        adapter = SaveAdapter(items) // Adapter o'rnating
-        recyclerView.adapter = adapter // Adapterni RecyclerViewga ulang
     }
 
     companion object {
