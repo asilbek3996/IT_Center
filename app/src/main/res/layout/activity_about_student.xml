@@ -121,7 +121,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="Full Name:"
+                    android:text="Ism Familya:"
                     android:layout_marginLeft="16dp"
                     android:textColor="@color/black"
                     android:textSize="20sp"/>
@@ -145,7 +145,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="Age:"
+                    android:text="Yosh:"
                     android:layout_marginLeft="16dp"
                     android:textColor="@color/black"
                     android:textSize="20sp"/>
@@ -169,7 +169,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="Direction:"
+                    android:text="Yo'nalishi:"
                     android:layout_marginLeft="16dp"
                     android:textColor="@color/black"
                     android:textSize="20sp"/>
@@ -193,7 +193,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="Group:"
+                    android:text="Guruh:"
                     android:layout_marginLeft="16dp"
                     android:textColor="@color/black"
                     android:textSize="20sp"/>
@@ -217,7 +217,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="percentage:"
+                    android:text="O'zlashtirish:"
                     android:layout_marginLeft="16dp"
                     android:textColor="@color/black"
                     android:textSize="20sp"/>

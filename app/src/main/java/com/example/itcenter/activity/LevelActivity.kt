@@ -26,6 +26,11 @@ class LevelActivity : AppCompatActivity() {
                 if (item.language == message){
                     Glide.with(binding.img).load(item.image).into(binding.img)
                     Glide.with(binding.topImage).load(item.image).into(binding.topImage)
+
+                    Glide.with(binding.ivBegin).load(item.levelImage).into(binding.ivBegin)
+                    Glide.with(binding.ivFree).load(item.levelImage).into(binding.ivFree)
+                    Glide.with(binding.ivMedium).load(item.levelImage).into(binding.ivMedium)
+                    Glide.with(binding.ivAdvanced).load(item.levelImage).into(binding.ivAdvanced)
                 }
             }
         }
@@ -36,32 +41,6 @@ class LevelActivity : AppCompatActivity() {
             txt = "$message dasturlash tili"
         }
         binding.tvName.text = txt
-        if (message=="Kotlin") {
-            binding.ivBegin.setImageResource(R.drawable.kotlin_logo)
-            binding.ivFree.setImageResource(R.drawable.kotlin_logo)
-            binding.ivMedium.setImageResource(R.drawable.kotlin_logo)
-            binding.ivAdvanced.setImageResource(R.drawable.kotlin_logo)
-        }else if (message=="Java"){
-            binding.ivBegin.setImageResource(R.drawable.java_logo)
-            binding.ivFree.setImageResource(R.drawable.java_logo)
-            binding.ivMedium.setImageResource(R.drawable.java_logo)
-            binding.ivAdvanced.setImageResource(R.drawable.java_logo)
-        }else if (message=="Python"){
-            binding.ivBegin.setImageResource(R.drawable.python_logo)
-            binding.ivFree.setImageResource(R.drawable.python_logo)
-            binding.ivMedium.setImageResource(R.drawable.python_logo)
-            binding.ivAdvanced.setImageResource(R.drawable.python_logo)
-        }else if (message=="C++"){
-            binding.ivBegin.setImageResource(R.drawable.cpp_logo)
-            binding.ivFree.setImageResource(R.drawable.cpp_logo)
-            binding.ivMedium.setImageResource(R.drawable.cpp_logo)
-            binding.ivAdvanced.setImageResource(R.drawable.cpp_logo)
-        }else if (message=="Scratch"){
-            binding.ivBegin.setImageResource(R.drawable.scratch_logo)
-            binding.ivFree.setImageResource(R.drawable.scratch_logo)
-            binding.ivMedium.setImageResource(R.drawable.scratch_logo)
-            binding.ivAdvanced.setImageResource(R.drawable.scratch_logo)
-        }
         binding.back.setOnClickListener {
             finish()
         }

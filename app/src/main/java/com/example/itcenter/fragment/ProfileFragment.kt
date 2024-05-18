@@ -1,5 +1,6 @@
 package com.example.itcenter.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -16,6 +17,7 @@ import com.example.itcenter.ShowProgress
 import com.example.itcenter.activity.CheckActivity
 import com.example.itcenter.activity.SettingsActivity
 import com.example.itcenter.databinding.FragmentProfileBinding
+import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.viewmodel.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
 
@@ -54,7 +56,6 @@ lateinit var binding: FragmentProfileBinding
         binding.swipe.setOnRefreshListener {
             loadData()
         }
-        loadData()
         viewModel.progress.observe(requireActivity()) {
             binding.swipe.isRefreshing = it
             if (it) {
@@ -63,13 +64,29 @@ lateinit var binding: FragmentProfileBinding
                 (activity as? ShowProgress.View)?.hideProgressBar()
             }
         }
+        loadData()
         viewModel.studentData.observe(requireActivity()){
-            for (item in it){
-                if (item.id == idRaqami){
-                    Glide.with(requireActivity()).load(item.userPhoto).into(binding.img)
-                    binding.tvFullName.text = item.fullName
-                    binding.tvID.text = item.id.toString()
+            for (items in it){
+                if (items.id == idRaqami){
+                    Glide.with(binding.img).load(items.userPhoto).into(binding.img)
+                    binding.tvFullName.text = items.fullName
+                    binding.tvID.text = idRaqami.toString()
                 }
+            }
+        }
+
+        binding.rating.setOnClickListener {
+            val uri: Uri =Uri.parse("market://details?id=org.telegram.messenger")
+            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            try {
+                startActivity(goToMarket)
+            }catch (e: ActivityNotFoundException){
+                startActivity(Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=org.telegram.messenger")))
             }
         }
         binding.support.setOnClickListener {

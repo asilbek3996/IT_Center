@@ -9,12 +9,12 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="75dp"
+        android:layout_marginTop="80dp"
         android:id="@+id/swipe">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="75dp"
-            android:layout_marginTop="60dp"
             android:orientation="vertical">
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img"
@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="Ism fmilya: "
+                    android:text="Foydalanuvchi: "
                     android:layout_marginEnd="4dp"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
@@ -78,7 +78,7 @@
                     android:layout_weight="1"
                     android:layout_height="150dp"
                     android:layout_marginHorizontal="20dp"
-                    app:cardCornerRadius="8dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
@@ -88,20 +88,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
+                        android:background="@drawable/appcompat_buttonss"
                         android:paddingHorizontal="16dp">
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_baseline_settings_24"
-                            android:layout_marginTop="16dp"/>
+                            android:src="@drawable/icons8_settings"
+                            android:layout_marginTop="16dp"
+                            app:tint="@color/white" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
-                            android:text="Setttings"
+                            android:text="Sozlamalar"
                             android:gravity="center"
                             android:layout_marginBottom="8dp"
                             android:layout_marginTop="8dp"/>
@@ -112,7 +114,7 @@
                     android:layout_weight="1"
                     android:layout_height="150dp"
                     android:layout_marginHorizontal="20dp"
-                    app:cardCornerRadius="8dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
@@ -122,20 +124,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
+                        android:background="@drawable/appcompat_buttonss"
                         android:paddingHorizontal="16dp">
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:src="@drawable/support"
-                            android:layout_marginTop="16dp"/>
+                            android:layout_marginTop="16dp"
+                            app:tint="@color/white" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
-                            android:text="Support"
+                            android:text="Bog'lanish"
                             android:layout_marginBottom="8dp"
                             android:gravity="center"
                             android:layout_marginTop="8dp"/>
@@ -151,7 +155,7 @@
                     android:layout_weight="1"
                     android:layout_height="150dp"
                     android:layout_marginHorizontal="20dp"
-                    app:cardCornerRadius="8dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
@@ -161,20 +165,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
+                        android:background="@drawable/appcompat_buttonss"
                         android:paddingHorizontal="16dp">
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:src="@drawable/rating"
-                            android:layout_marginTop="16dp"/>
+                            android:src="@drawable/rate"
+                            android:layout_marginTop="16dp"
+                            app:tint="@color/white" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
-                            android:text="Rating"
+                            android:text="Baholash"
                             android:gravity="center"
                             android:layout_marginBottom="8dp"
                             android:layout_marginTop="8dp"/>
@@ -185,7 +191,7 @@
                     android:layout_weight="1"
                     android:layout_height="150dp"
                     android:layout_marginHorizontal="20dp"
-                    app:cardCornerRadius="8dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
@@ -195,20 +201,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
+                        android:background="@drawable/appcompat_buttonss"
                         android:paddingHorizontal="16dp">
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:src="@drawable/noun_log_out_3556472"
-                            android:layout_marginTop="16dp"/>
+                            android:src="@drawable/logout"
+                            android:layout_marginTop="16dp"
+                            app:tint="@color/white" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
-                            android:text="Logout"
+                            android:text="Chiqish"
                             android:layout_marginBottom="8dp"
                             android:gravity="center"
                             android:layout_marginTop="8dp"/>

@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.itcenter.PrefUtils
 import com.example.itcenter.R
 import com.example.itcenter.databinding.ActivityVideoBinding
 import com.example.itcenter.model.viewmodel.MainViewModel
@@ -35,16 +36,21 @@ class VideoActivity : AppCompatActivity() {
                     binding.webView.loadUrl(video.videoLink)
                     imageView1= findViewById(R.id.save)
 
-
+                    imageView1= findViewById(R.id.save)
+                    val intArrayPrefs = PrefUtils(this)
                     imageView1.setOnClickListener {
                         if (check) {
                             imageView1.setImageResource(R.drawable.heart)
                             check = false
+                            intArrayPrefs.addIntToArray("f",message)
+
                         } else {
-                            check = true
                             imageView1.setImageResource(R.drawable.favorite)
+                            check = true
                         }
                     }
+
+
                 }
             }
         }

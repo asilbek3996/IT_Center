@@ -332,15 +332,15 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/notStudents"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="100dp"
             android:layout_marginTop="8dp"
             android:layout_marginHorizontal="28dp"
             android:gravity="center"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="#00FFFFFF"
             android:visibility="gone"
             app:cardCornerRadius="8dp"
             android:layout_marginBottom="8dp"
-            app:cardElevation="2dp">
+            app:cardElevation="0dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -348,7 +348,7 @@
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:text="This group is not open yet"/>
+                android:text="Tez kunda..."/>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 </FrameLayout>

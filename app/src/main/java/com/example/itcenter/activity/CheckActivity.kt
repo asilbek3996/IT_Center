@@ -98,11 +98,11 @@ class CheckActivity : AppCompatActivity() {
             dialog.dismiss()
         })
         alertDialogBuilder.setNegativeButton("Yo'q", DialogInterface.OnClickListener { dialog, which ->
-            // Agar "Cancel" bosilsa qilish kerak bo'lgan har qanday ishlar
             startActivity(Intent(this@CheckActivity,RegisterActivity::class.java))
             finish()
             dialog.dismiss()
         })
+        alertDialogBuilder.setCancelable(false)
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
