@@ -8,28 +8,22 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.homepage.fragments.FavoriteFragment
-import com.example.homepage.fragments.HomeFragment
-import com.example.homepage.fragments.ProfileFragment
-import com.example.homepage.fragments.QuizFragment
+import com.example.itcenter.fragment.FavoriteFragment
+import com.example.itcenter.fragment.HomeFragment
+import com.example.itcenter.fragment.ProfileFragment
+import com.example.itcenter.fragment.QuizFragment
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
 import com.example.itcenter.databinding.ActivityMainBinding
 import com.example.itcenter.fragment.LoadingFragment
 import com.example.itcenter.model.viewmodel.MainViewModel
-import com.example.itcenter.utils.Constants
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), ShowProgress.View {
     val homeFragment = HomeFragment.newInstance()

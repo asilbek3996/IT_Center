@@ -18,8 +18,6 @@ interface Api {
     fun getCategories(): Observable<ArrayList<CategoryModel>>
     @GET("students")
     fun getStudent(): Observable<ArrayList<AllStudentModel>>
-    @GET("students")
-    fun getUsers(@Query("id")id :Int): Observable<AllStudentModel>
     @GET("lessonLevel")
     fun getLessons(): Observable<ArrayList<DarslarModel>>
 }

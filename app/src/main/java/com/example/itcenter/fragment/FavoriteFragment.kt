@@ -1,18 +1,14 @@
-package com.example.homepage.fragments
+package com.example.itcenter.fragment
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.itcenter.R
 import com.example.itcenter.adapter.SaveAdapter
 import com.example.itcenter.databinding.FragmentFavoriteBinding
-import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.viewmodel.MainViewModel
 
 class FavoriteFragment : Fragment() {
@@ -37,6 +33,10 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.clear()
+    }
     companion object {
         @JvmStatic
         fun newInstance() = FavoriteFragment()

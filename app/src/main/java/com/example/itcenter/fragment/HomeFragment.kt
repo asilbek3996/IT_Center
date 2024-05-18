@@ -1,19 +1,13 @@
-package com.example.homepage.fragments
+package com.example.itcenter.fragment
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.RippleDrawable
-import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,10 +19,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
-import com.example.itcenter.activity.AboutStudentActivity
 import com.example.itcenter.activity.AllCategoryActivity
-import com.example.itcenter.activity.AllStudentActivity
-import com.example.itcenter.activity.DarslarActivity
 import com.example.itcenter.activity.LevelActivity
 import com.example.itcenter.adapter.ImageAdapter
 import com.example.itcenter.adapter.TopStudentAdapter
@@ -162,6 +153,11 @@ class HomeFragment : Fragment() {
         viewModel.getOffers()
         viewModel.getCategoris()
         viewModel.getStudent()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.clear()
     }
     private fun topTest(students: ArrayList<AllStudentModel>) {
         var android = arrayListOf<AllStudentModel>()

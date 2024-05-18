@@ -15,6 +15,9 @@ import io.reactivex.schedulers.Schedulers
 
 class Repository() {
     val compositeDisposable = CompositeDisposable()
+    fun clearDisposable() {
+        compositeDisposable.clear()
+    }
     fun getAds(error: MutableLiveData<String>, progress:MutableLiveData<Boolean>, success:MutableLiveData<ArrayList<ImageItem>>){
         progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getAds()
@@ -94,28 +97,6 @@ class Repository() {
                 override fun onError(e: Throwable) {
                     progress.value = false
                     shimmer.value = 2
-                    error.value = e.localizedMessage
-                }
-
-                override fun onComplete() {
-                }
-            })
-        )
-
-    }
-    fun getUser(error: MutableLiveData<String>, success:MutableLiveData<AllStudentModel>,progress: MutableLiveData<Boolean>, id: Int){
-        progress.value = true
-       compositeDisposable.add(NetworkManager.getApiService().getUsers(id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object : DisposableObserver<AllStudentModel>(){
-                override fun onNext(t: AllStudentModel) {
-                    progress.value = false
-                    success.value = t
-                }
-
-                override fun onError(e: Throwable) {
-                    progress.value = false
                     error.value = e.localizedMessage
                 }
 

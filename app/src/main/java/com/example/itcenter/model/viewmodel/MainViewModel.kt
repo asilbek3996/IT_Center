@@ -20,7 +20,6 @@ class MainViewModel: ViewModel() {
     val allCategoryData = MutableLiveData<List<AllCategoryModel>>()
     val categoriesData = MutableLiveData<ArrayList<CategoryModel>>()
     val studentData = MutableLiveData<ArrayList<AllStudentModel>>()
-    val userData = MutableLiveData<AllStudentModel>()
     val lessonsData = MutableLiveData<ArrayList<DarslarModel>>()
 
     fun getOffers() {
@@ -35,10 +34,10 @@ class MainViewModel: ViewModel() {
     fun getStudent() {
         repository.getStudent(error, studentData, progress,shimmer)
     }
-    fun getUser(id: Int) {
-        repository.getUser(error, userData, progress,id)
-    }
     fun getLessons() {
         repository.getLessons(error, lessonsData, progress)
+    }
+    fun clear() {
+        repository.clearDisposable()
     }
 }
