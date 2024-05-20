@@ -3,6 +3,8 @@ package com.example.itcenter.adapter
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.itcenter.activity.AboutStudentActivity
 import com.example.itcenter.activity.VideoActivity

@@ -9,52 +9,59 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.itcenter.PrefUtils
+import com.example.itcenter.utils.PrefUtils
 import com.example.itcenter.R
 import com.example.itcenter.databinding.ActivityVideoBinding
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.Constants
 
 class VideoActivity : AppCompatActivity() {
     lateinit var binding: ActivityVideoBinding
-    private lateinit var imageView1 : ImageView
     lateinit var viewModel: MainViewModel
-    var check = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        var message = intent.getIntExtra("video",-1)
+        var message = intent.getIntExtra("video", -1)
         viewModel.getLessons()
-        viewModel.lessonsData.observe(this){
-            for (video in it){
-                if (video.id == message){
+        viewModel.lessonsData.observe(this) {
+            for (video in it) {
+                if (video.id == message) {
                     binding.tvLanguage.text = video.lessonName
                     binding.webView.settings.javaScriptEnabled = true
                     binding.webView.webChromeClient = MyChrome()
                     binding.webView.webViewClient = WebViewClient()
                     binding.webView.loadUrl(video.videoLink)
-                    imageView1= findViewById(R.id.save)
 
-                    imageView1= findViewById(R.id.save)
-                    val intArrayPrefs = PrefUtils(this)
-                    imageView1.setOnClickListener {
-                        if (check) {
-                            imageView1.setImageResource(R.drawable.heart)
-                            check = false
-                            intArrayPrefs.addIntToArray("f",message)
 
+                    val pref = PrefUtils(this)
+
+                    if (pref.checkFavorite(Constants.favorite, message)) {
+                        binding.save.setImageResource(R.drawable.heart)
+                    } else {
+                        binding.save.setImageResource(R.drawable.favorite)
+                    }
+
+                    binding.save.setOnClickListener {
+                        pref.saveFavorite(Constants.favorite, message)
+                        if (pref.checkFavorite(Constants.favorite, message)) {
+                            binding.save.setImageResource(R.drawable.heart)
                         } else {
-                            imageView1.setImageResource(R.drawable.favorite)
-                            check = true
+                            binding.save.setImageResource(R.drawable.favorite)
                         }
                     }
 
 
+                    binding.back2.setOnClickListener {
+                        finish()
+                    }
+
                 }
             }
         }
-        }
+    }
+
     private inner class MyChrome : WebChromeClient() {
         private var fullscreen: View? = null
 

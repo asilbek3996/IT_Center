@@ -5,20 +5,27 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.itcenter.PrefUtils
+import com.example.itcenter.R
+import com.example.itcenter.ShowProgress
+import com.example.itcenter.adapter.ItemClickedListener
+import com.example.itcenter.utils.PrefUtils
 import com.example.itcenter.adapter.SaveAdapter
 import com.example.itcenter.databinding.FragmentFavoriteBinding
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.Constants
 
-class FavoriteFragment : Fragment() {
+class FavoriteFragment : Fragment(), ItemClickedListener {
     lateinit var binding: FragmentFavoriteBinding
     lateinit var viewModel: MainViewModel
     private lateinit var adapter: SaveAdapter
+    lateinit var refresh: ImageView
+    var items= arrayListOf<DarslarModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
@@ -35,10 +42,9 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
-        var items= arrayListOf<DarslarModel>()
         viewModel.lessonsData.observe(requireActivity()){
             val intArrayPrefs = PrefUtils(requireContext())
-            val intArray = intArrayPrefs.getIntArray("f")
+            val intArray = intArrayPrefs.getFavorite(Constants.favorite)
             intArray?.let {item->
                 for (num in item) {
                     for (i in it){
@@ -50,11 +56,39 @@ class FavoriteFragment : Fragment() {
                 }
                 Toast.makeText(requireContext(), "${items.size}", Toast.LENGTH_SHORT).show()
                 binding.favoriteRecyclerView.layoutManager = GridLayoutManager(requireActivity(),3)
-                adapter = SaveAdapter(items) // Adapter o'rnating
-                binding.favoriteRecyclerView.adapter = adapter // Adapterni RecyclerViewga ulang
+                adapter = SaveAdapter(items,this,this)
+                binding.favoriteRecyclerView.adapter = adapter
             }
         }
 
+
+
+        refresh = requireActivity().findViewById(R.id.refresh)
+        refresh.setOnClickListener {
+            items.clear()
+            binding.swipe.isRefreshing = true
+            loadData()
+            (activity as? ShowProgress.View)?.showProgressBar()
+        }
+        binding.swipe.setOnRefreshListener {
+            loadData()
+            items.clear()
+        }
+        viewModel.progress.observe(requireActivity(), Observer {
+            binding.swipe.isRefreshing = it
+            if (it) {
+                (activity as? ShowProgress.View)?.showProgressBar()
+            } else {
+                (activity as? ShowProgress.View)?.hideProgressBar()
+            }
+        })
+
+    }
+    override fun onItemClicked(position: Int) {
+        val pref = PrefUtils(requireContext())
+        pref.saveFavorite(Constants.favorite,position)
+        loadData()
+        items.clear()
     }
     fun loadData(){
         viewModel.getLessons()
@@ -67,4 +101,5 @@ class FavoriteFragment : Fragment() {
         @JvmStatic
         fun newInstance() = FavoriteFragment()
     }
+
 }
