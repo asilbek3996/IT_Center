@@ -28,6 +28,8 @@ import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.GroupModel
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.Constants
+import com.example.itcenter.utils.PrefUtils
 import kotlin.math.abs
 
 
@@ -160,6 +162,7 @@ class HomeFragment : Fragment() {
         viewModel.clear()
     }
     private fun topTest(students: ArrayList<AllStudentModel>) {
+        val pref = PrefUtils(requireContext())
         var android = arrayListOf<AllStudentModel>()
         var python = arrayListOf<AllStudentModel>()
         var java = arrayListOf<AllStudentModel>()
@@ -168,11 +171,6 @@ class HomeFragment : Fragment() {
         var computerLiteracy = arrayListOf<AllStudentModel>()
         var scratch = arrayListOf<AllStudentModel>()
         var frontend = arrayListOf<AllStudentModel>()
-        var student2 = ""
-
-        val sharedPreferences = requireActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        val idRaqami = sharedPreferences.getInt("id", -1)
-        val editor = sharedPreferences.edit()
         for (student in students) {
             if (student.group== "Android") {
                 android.add(student)
@@ -186,33 +184,27 @@ class HomeFragment : Fragment() {
                 cpp.add(student)
             }else if (student.group== "Scratch") {
                 scratch.add(student)
-            }else if (student.group== "Kompyuter Savodxonligi") {
+            }else if (student.group== "Literacy") {
                 computerLiteracy.add(student)
             }else if (student.group== "Frontend") {
                 frontend.add(student)
-            }
-            if (student.id == idRaqami){
-                student2 = student.group
-                editor.putString("group", student.group)
-                editor.putString("fullName", student.fullName)
-                editor.apply()
             }
 
         }
         var group = arrayListOf<GroupModel>()
         var item = arrayListOf<GroupModel>()
         var items = listOf(
-            GroupModel("Java",java),
-            GroupModel("Kotlin",kotlin),
-            GroupModel("Android",android),
-            GroupModel("Python",python),
-            GroupModel("C++",cpp),
-            GroupModel("Kompyuter Savodxonligi",computerLiteracy),
-            GroupModel("Scratch",scratch),
-            GroupModel("Frontend",frontend)
+            GroupModel("Java",java,"Java"),
+            GroupModel("Kotlin",kotlin,"Kotlin"),
+            GroupModel("Android",android,"Android"),
+            GroupModel("Python",python,"Python"),
+            GroupModel("C++",cpp,"C++"),
+            GroupModel("Kompyuter Savodxonligi",computerLiteracy,"Literacy"),
+            GroupModel("Scratch",scratch,"Scratch"),
+            GroupModel("Frontend",frontend,"Frontend")
         )
         for (it in items){
-            if (it.name == student2){
+            if (it.name == pref.getStudent(Constants.group)){
                 group.add(it)
             }else{
                 item.add(it)
@@ -223,11 +215,10 @@ class HomeFragment : Fragment() {
         binding.recyclerGroup.adapter = TopStudentAdapter(group)
     }
     private fun categories(category: List<CategoryModel>) {
-        val sharedPreferences = requireActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        val group = sharedPreferences.getString("group", null)
+        var pref = PrefUtils(requireContext())
         var item2 = arrayListOf<CategoryModel>()
         for (it in category){
-            if (it.language == group){
+            if (it.language == pref.getStudent(Constants.group)){
                 item.add(it)
             }else{
                 item2.add(it)

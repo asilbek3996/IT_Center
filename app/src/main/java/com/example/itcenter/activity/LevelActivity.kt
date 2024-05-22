@@ -26,7 +26,6 @@ class LevelActivity : AppCompatActivity() {
                 if (item.language == message){
                     Glide.with(binding.img).load(item.image).into(binding.img)
                     Glide.with(binding.topImage).load(item.image).into(binding.topImage)
-
                     Glide.with(binding.ivBegin).load(item.levelImage).into(binding.ivBegin)
                     Glide.with(binding.ivFree).load(item.levelImage).into(binding.ivFree)
                     Glide.with(binding.ivMedium).load(item.levelImage).into(binding.ivMedium)

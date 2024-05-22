@@ -37,7 +37,8 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
 
         holder.binding.groupName.text = item.name
         holder.binding.tvAll.setOnClickListener {
-                intent2.putExtra("Group", item.name)
+                intent2.putExtra("Group", item.group)
+                intent2.putExtra("GroupName", item.name)
                 it.context.startActivity(intent2)
         }
 

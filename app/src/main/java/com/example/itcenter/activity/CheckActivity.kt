@@ -28,6 +28,7 @@ import com.example.itcenter.R
 import com.example.itcenter.databinding.ActivityCheckBinding
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.PrefUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -68,12 +69,8 @@ class CheckActivity : AppCompatActivity() {
             for (student in it){
                 if (student.id.toString() == email){
                     changeInProgress(false)
-                    val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.putInt("id", student.id)
-                    editor.putString("fullName", student.fullName)
-                    editor.putString("group", student.group)
-                    editor.apply()
+                    val pref = PrefUtils(this)
+                    pref.setStudent(student)
                     startActivity(Intent(this@CheckActivity,MainActivity::class.java))
                     finish()
                 }else{
@@ -85,7 +82,7 @@ class CheckActivity : AppCompatActivity() {
     }
     fun validateDate(email: String?): Boolean {
         if (email==null) {
-            binding.etEmail.error = "Email is invalid "
+            binding.etEmail.error = "ID is invalid "
             return false
         }
         return true

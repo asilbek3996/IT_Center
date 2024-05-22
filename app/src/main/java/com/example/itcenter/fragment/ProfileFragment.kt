@@ -19,6 +19,8 @@ import com.example.itcenter.activity.SettingsActivity
 import com.example.itcenter.databinding.FragmentProfileBinding
 import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.Constants
+import com.example.itcenter.utils.PrefUtils
 import com.google.firebase.auth.FirebaseAuth
 
 class ProfileFragment : Fragment() {
@@ -40,9 +42,8 @@ lateinit var binding: FragmentProfileBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPreferences = requireActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val idRaqami = sharedPreferences.getInt("id", -1)
+        val pref = PrefUtils(requireContext())
+        var idRaqami = pref.getID()
         val firebaseAuth = FirebaseAuth.getInstance()
         binding.settings.setOnClickListener {
             startActivity(Intent(requireActivity(),SettingsActivity::class.java))
@@ -76,7 +77,7 @@ lateinit var binding: FragmentProfileBinding
         }
 
         binding.rating.setOnClickListener {
-            val uri: Uri =Uri.parse("market://details?id=org.telegram.messenger")
+            val uri: Uri =Uri.parse("market://details?id=com.google.android.youtube")
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
 
             goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
@@ -86,7 +87,7 @@ lateinit var binding: FragmentProfileBinding
                 startActivity(goToMarket)
             }catch (e: ActivityNotFoundException){
                 startActivity(Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=org.telegram.messenger")))
+                    Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.youtube")))
             }
         }
         binding.support.setOnClickListener {
@@ -99,8 +100,7 @@ lateinit var binding: FragmentProfileBinding
             if (idRaqami == -1){
                 firebaseAuth.signOut()
             }else{
-                editor.clear()
-                editor.apply()
+                pref.clear()
             }
             startActivity(Intent(requireActivity(),CheckActivity::class.java))
             requireActivity().finish()

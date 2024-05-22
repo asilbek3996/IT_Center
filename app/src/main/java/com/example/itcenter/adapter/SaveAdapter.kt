@@ -16,7 +16,7 @@ import com.example.itcenter.utils.Constants
 import com.example.itcenter.utils.PrefUtils
 
 interface ItemClickedListener {
-    fun onItemClicked(position: Int)
+    fun onItemClicked(position: DarslarModel)
 }
 class SaveAdapter(private val items: List<DarslarModel>, private val fragment: Fragment, private val listener: ItemClickedListener) : RecyclerView.Adapter<SaveAdapter.SaveViewHolder>() {
 
@@ -33,9 +33,11 @@ class SaveAdapter(private val items: List<DarslarModel>, private val fragment: F
     override fun onBindViewHolder(holder: SaveViewHolder, position: Int) {
         val item = items[position]
 
-        holder.itemView.findViewById<TextView>(R.id.titleText).text = item.lessonName
-        holder.itemView.findViewById<ImageView>(R.id.delete).setOnClickListener {
-            listener.onItemClicked(item.id)
+        holder.itemView.findViewById<TextView>(R.id.txt).text = item.lessonName
+        holder.itemView.findViewById<ImageView>(R.id.remove).setOnClickListener {
+        val pref = PrefUtils(holder.itemView.context)
+        pref.saveFavorite(Constants.favorite,item)
+            listener.onItemClicked(item)
         }
         holder.itemView.setOnClickListener {
                 val intent = Intent(it.context, VideoActivity::class.java)

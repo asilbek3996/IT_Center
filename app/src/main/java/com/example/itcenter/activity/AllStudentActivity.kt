@@ -47,7 +47,8 @@ class AllStudentActivity : AppCompatActivity() {
             binding.linearlayout2.visibility = View.VISIBLE
         }
         val message = intent.getStringExtra("Group")
-        binding.tvGroup.text = message
+        val name = intent.getStringExtra("GroupName")
+        binding.tvGroup.text = name
         viewModel.studentData.observe(this){
             getStudent(it,message!!)
         }

@@ -33,8 +33,13 @@ class VideoActivity : AppCompatActivity() {
                     binding.webView.webChromeClient = MyChrome()
                     binding.webView.webViewClient = WebViewClient()
                     binding.webView.loadUrl(video.videoLink)
-
-
+//                    var text =""
+//                    for (j in 1..10) {
+//                        for () {
+//                        }
+//                    }
+                    var txt = video.homework
+                    binding.tvSubtitr.text = txt
                     val pref = PrefUtils(this)
 
                     if (pref.checkFavorite(Constants.favorite, message)) {
@@ -44,7 +49,7 @@ class VideoActivity : AppCompatActivity() {
                     }
 
                     binding.save.setOnClickListener {
-                        pref.saveFavorite(Constants.favorite, message)
+                        pref.saveFavorite(Constants.favorite, video)
                         if (pref.checkFavorite(Constants.favorite, message)) {
                             binding.save.setImageResource(R.drawable.heart)
                         } else {

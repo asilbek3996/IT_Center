@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
 import com.example.itcenter.adapter.ItemClickedListener
@@ -42,27 +43,7 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
-        viewModel.lessonsData.observe(requireActivity()){
-            val intArrayPrefs = PrefUtils(requireContext())
-            val intArray = intArrayPrefs.getFavorite(Constants.favorite)
-            intArray?.let {item->
-                for (num in item) {
-                    for (i in it){
-                        if (i.id==num){
-                            items.add(i)
-
-                        }
-                    }
-                }
-                Toast.makeText(requireContext(), "${items.size}", Toast.LENGTH_SHORT).show()
-                binding.favoriteRecyclerView.layoutManager = GridLayoutManager(requireActivity(),3)
-                adapter = SaveAdapter(items,this,this)
-                binding.favoriteRecyclerView.adapter = adapter
-            }
-        }
-
-
-
+        favorite()
         refresh = requireActivity().findViewById(R.id.refresh)
         refresh.setOnClickListener {
             items.clear()
@@ -84,11 +65,17 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
         })
 
     }
-    override fun onItemClicked(position: Int) {
+    override fun onItemClicked(position: DarslarModel) {
+        favorite()
+    }
+    fun favorite(){
         val pref = PrefUtils(requireContext())
-        pref.saveFavorite(Constants.favorite,position)
-        loadData()
-        items.clear()
+        if (pref.getFavorite(Constants.favorite)?.isNotEmpty() == true) {
+            items = pref.getFavorite(Constants.favorite)!!
+        }
+        binding.favoriteRecyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        adapter = SaveAdapter(items,this,this)
+        binding.favoriteRecyclerView.adapter = adapter
     }
     fun loadData(){
         viewModel.getLessons()
@@ -96,10 +83,12 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.clear()
+        items.clear()
     }
     companion object {
         @JvmStatic
         fun newInstance() = FavoriteFragment()
     }
+
 
 }

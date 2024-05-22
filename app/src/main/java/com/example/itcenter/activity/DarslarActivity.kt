@@ -21,6 +21,8 @@ import com.example.itcenter.adapter.DarsAdapter
 import com.example.itcenter.databinding.ActivityDarslarBinding
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.Constants
+import com.example.itcenter.utils.PrefUtils
 
 class DarslarActivity : AppCompatActivity() {
     lateinit var binding: ActivityDarslarBinding
@@ -30,18 +32,18 @@ class DarslarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDarslarBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        var pref = PrefUtils(this)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val message = intent.getStringExtra("Til")
         val level = intent.getStringExtra("level")
-        val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        val group = sharedPreferences.getString("group", null)
+        val group = pref.getStudent(Constants.group)
         var kotlin = arrayListOf<DarslarModel>()
         binding.tvLanguage.text = message
         viewModel.getLessons()
         if (message == group || level == "free") {
             viewModel.lessonsData.observe(this){
                 for (darslar in it) {
-                if (darslar.language == message && darslar.level == level) {
+                if (darslar.languageName == message && darslar.level == level) {
                     kotlin.add(darslar)
                 }
             }

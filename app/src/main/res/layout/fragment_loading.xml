@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         app:shimmer_auto_start="true"
         app:shimmer_base_alpha="0.3"
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="60dp"
         app:shimmer_duration="1500"
         app:shimmer_highlight_alpha="0.8"
         app:shimmer_repeat_count="500">

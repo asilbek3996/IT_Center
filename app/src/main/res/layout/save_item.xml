@@ -1,57 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_marginTop="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-   <LinearLayout
-       android:layout_width="0dp"
-       android:layout_weight="1"
-       android:layout_height="match_parent"
-       android:orientation="vertical">
-
-
-           <FrameLayout
-               android:layout_width="match_parent"
-               android:layout_height="0dp"
-               android:layout_weight="1"
-               android:padding="3dp"
-               android:background="@drawable/linearlayoutbg"
-               android:orientation="vertical">
-
-
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/play"
-                       android:layout_gravity="center"/>
-                   <ImageView
-                       android:id="@+id/delete"
-                       android:layout_width="24dp"
-                       android:layout_height="24dp"
-                       android:src="@drawable/delete"
-                       android:layout_marginBottom="5dp"
-                       android:layout_marginEnd="4dp"
-                       android:layout_gravity="bottom|end"/>
-
-           </FrameLayout>
-           <TextView
-               android:id="@+id/titleText"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:gravity="center"
-               android:text="1-dars"
-               android:textSize="14sp"
-               android:maxLines="1"
-               android:ellipsize="end"
-               android:textStyle="bold|italic"
-               android:textColor="@color/black"
-               android:layout_gravity="center"/>
-
-       </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/circle_shape_border">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/play_button"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/black"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="12dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:id="@+id/txt"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/delete"
+        android:id="@+id/remove"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center_vertical"
+        app:tint="@color/black" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/black"/>
 </LinearLayout>
