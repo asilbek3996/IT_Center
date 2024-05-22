@@ -82,18 +82,35 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
                     tvMain.text = "Asosiy"
+                    binding.crown1.visibility = View.GONE
+                    binding.crown2.visibility = View.GONE
+                    binding.settings.visibility = View.VISIBLE
+                    binding.refresh.visibility = View.VISIBLE
                 } else if (it.itemId == R.id.favorite) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.flContainer, favoriteFragment, favoriteFragment.tag).commit()
                     tvMain.text = "Tanlanganlar"
+                    binding.crown1.visibility = View.GONE
+                    binding.crown2.visibility = View.GONE
+                    binding.settings.visibility = View.VISIBLE
+                    binding.refresh.visibility = View.VISIBLE
                 } else if (it.itemId == R.id.game) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.flContainer, quizFragment, quizFragment.tag).commit()
                     tvMain.text = "Testlar"
+                    binding.crown1.visibility = View.VISIBLE
+                    binding.crown2.visibility = View.VISIBLE
+                    binding.settings.visibility = View.GONE
+                    binding.refresh.visibility = View.GONE
+                    binding.refreshProgress.visibility = View.GONE
                 } else if (it.itemId == R.id.profile) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.flContainer, profileFragment, profileFragment.tag).commit()
                     tvMain.text = "Profil"
+                    binding.crown1.visibility = View.GONE
+                    binding.crown2.visibility = View.GONE
+                    binding.settings.visibility = View.VISIBLE
+                    binding.refresh.visibility = View.VISIBLE
                 }
 
                 return@setOnItemSelectedListener true

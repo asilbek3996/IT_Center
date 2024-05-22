@@ -7,19 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.itcenter.R
-import com.example.itcenter.databinding.ActivityQuizStartBinding
+import com.example.itcenter.databinding.ActivityQuizSplashBinding
 
-class QuizStartActivity : AppCompatActivity() {
-    lateinit var binding: ActivityQuizStartBinding
+class QuizSplashActivity : AppCompatActivity() {
+    lateinit var binding: ActivityQuizSplashBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityQuizStartBinding.inflate(layoutInflater)
+        binding = ActivityQuizSplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.exitQuiz.setOnClickListener {
+        binding.animationView.postDelayed({
+            startActivity(Intent(this,QuizStartActivity::class.java))
             finish()
-        }
-        binding.startQuiz.setOnClickListener {
-            startActivity(Intent(this,QuizLanguageActivity::class.java))
-        }
+        },3500)
     }
 }

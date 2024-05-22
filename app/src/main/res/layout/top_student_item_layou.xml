@@ -46,7 +46,10 @@
                 android:layout_height="20dp"
                 android:orientation="horizontal"
                 android:background="@drawable/ripple_effect"
-                android:gravity="end|center">
+                android:gravity="end|center"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:focusable="true">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

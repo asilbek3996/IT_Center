@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.itcenter.R
+import com.example.itcenter.activity.QuizSplashActivity
 import com.example.itcenter.activity.QuizStartActivity
 import com.example.itcenter.databinding.FragmentQuizBinding
 
@@ -23,7 +24,7 @@ class QuizFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.play.setOnClickListener {
-            startActivity(Intent(requireActivity(),QuizStartActivity::class.java))
+            startActivity(Intent(requireActivity(),QuizSplashActivity::class.java))
         }
     }
     companion object {

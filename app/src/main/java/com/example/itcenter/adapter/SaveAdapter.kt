@@ -36,7 +36,7 @@ class SaveAdapter(private val items: List<DarslarModel>, private val fragment: F
         holder.itemView.findViewById<TextView>(R.id.txt).text = item.lessonName
         holder.itemView.findViewById<ImageView>(R.id.remove).setOnClickListener {
         val pref = PrefUtils(holder.itemView.context)
-        pref.saveFavorite(Constants.favorite,item)
+            pref.saveFavorite(Constants.favorite,item)
             listener.onItemClicked(item)
         }
         holder.itemView.setOnClickListener {

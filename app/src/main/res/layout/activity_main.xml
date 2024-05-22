@@ -36,6 +36,13 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_baseline_settings_24"
                 app:tint="@color/white" />
+            <ImageView
+                android:id="@+id/crown1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/crown_svgrepo_com"
+                android:visibility="gone"
+                app:tint="@color/white" />
 
             <TextView
                 android:id="@+id/tvMain"
@@ -56,6 +63,16 @@
                 app:tint="@color/white"
                 android:layout_height="24dp"
                 android:src="@drawable/refresh" />
+            <ImageView
+                android:id="@+id/crown2"
+                android:layout_width="24dp"
+                app:tint="@color/white"
+                android:visibility="gone"
+                android:layout_height="24dp"
+                android:src="@drawable/crown_svgrepo_com"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:focusable="true" />
             <ProgressBar
                 android:layout_width="24dp"
                 android:layout_height="24dp"

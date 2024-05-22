@@ -67,5 +67,6 @@ class PrefUtils(context: Context) {
     }
     fun clear(){
         editor.clear()
+        editor.apply()
     }
 }

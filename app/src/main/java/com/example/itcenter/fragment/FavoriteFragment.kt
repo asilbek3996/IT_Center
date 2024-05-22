@@ -66,6 +66,7 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
 
     }
     override fun onItemClicked(position: DarslarModel) {
+        items.clear()
         favorite()
     }
     fun favorite(){

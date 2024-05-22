@@ -34,14 +34,27 @@
         android:maxLines="2"
         android:ellipsize="end"
         android:id="@+id/txt"/>
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            app:icon="@drawable/heart"-->
+<!--            app:iconSize="40dp"-->
+<!--            android:gravity="center"-->
+<!--            android:text=""-->
+<!--            app:iconGravity="textEnd"-->
+<!--            android:padding="10dp"-->
+<!--            app:iconTint="#FF0000"/>-->
+
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/delete"
+        android:src="@drawable/heart"
         android:id="@+id/remove"
         android:scaleType="centerCrop"
         android:layout_gravity="center_vertical"
-        app:tint="@color/black" />
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true" />
     </LinearLayout>
     <View
         android:layout_width="match_parent"
