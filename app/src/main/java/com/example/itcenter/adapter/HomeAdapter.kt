@@ -1,37 +1,23 @@
 package com.example.itcenter.adapter
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.itcenter.activity.DarslarActivity
-import com.example.itcenter.activity.LevelActivity
+import com.example.itcenter.R
 import com.example.itcenter.activity.QuizActivity
-import com.example.itcenter.databinding.AllCategoryItemLayoutBinding
-import com.example.itcenter.databinding.CategoryItemLayoutBinding
-import com.example.itcenter.databinding.QuizItemLayoutBinding
-import com.example.itcenter.databinding.QuizLevelItemLayoutBinding
-import com.example.itcenter.model.AllCategoryModel
-import com.example.itcenter.model.CategoryModel
+import com.example.itcenter.activity.VideoActivity
+import com.example.itcenter.databinding.HomeWorkItemLayoutBinding
+import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.QuestionModel
-import com.example.itcenter.model.QuizLevelModel
+import com.example.itcenter.utils.PrefUtils
 
-class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Context): RecyclerView.Adapter<QuizLevelAdapter.ItemHolder>() {
-    inner class ItemHolder(val binding: QuizLevelItemLayoutBinding) :
-        RecyclerView.ViewHolder(binding.root)
+class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<HomeAdapter.ItemHolder>() {
+    inner class ItemHolder(val binding: HomeWorkItemLayoutBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
-        return ItemHolder(
-            QuizLevelItemLayoutBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        return ItemHolder(HomeWorkItemLayoutBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun getItemCount(): Int {
@@ -40,14 +26,31 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val item = items[position]
-        holder.binding.tvMain.text = item.text
-        holder.itemView.setOnClickListener {
-            val intent = Intent(context, QuizActivity::class.java)
+        var pref = PrefUtils(holder.itemView.context)
+        var lesson = pref.getLesson()
+
+        holder.binding.quiz.setOnClickListener {
+            val intent = Intent(it.context, QuizActivity::class.java)
             intent.putParcelableArrayListExtra("list",ArrayList(questionList()))
-            context.startActivity(intent)
-            if (context is Activity) {
-            context.finish()
+            it.context.startActivity(intent)
         }
+        var txt = position+1
+        holder.binding.lessonName.text = "${txt}-dars. ${item.lessonName}"
+        holder.binding.homeWork.text = item.homework
+        var c = false
+
+        holder.binding.more.setOnClickListener {
+            if (c){
+                holder.binding.img.setImageResource(R.drawable.ic_baseline_more_vert_24)
+                holder.binding.home.visibility = View.GONE
+                holder.binding.quiz.visibility = View.GONE
+                c = false
+            }else{
+                holder.binding.img.setImageResource(R.drawable.up)
+                holder.binding.home.visibility = View.VISIBLE
+                holder.binding.quiz.visibility = View.VISIBLE
+                c = true
+            }
         }
     }
     private fun questionList(): MutableList<QuestionModel> {

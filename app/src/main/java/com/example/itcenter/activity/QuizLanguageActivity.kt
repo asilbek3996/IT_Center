@@ -1,5 +1,6 @@
 package com.example.itcenter.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -25,15 +26,21 @@ class QuizLanguageActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         loadData()
         binding.back.setOnClickListener {
+            startActivity(Intent(this,QuizStartActivity::class.java))
             finish()
         }
         viewModel.allCategoryData.observe(this) {
             binding.recyclerQuiz.layoutManager = GridLayoutManager(this, 2)
-            binding.recyclerQuiz.adapter = QuizLanguage(it)
+            binding.recyclerQuiz.adapter = QuizLanguage(it,this)
         }
     }
 
     fun loadData(){
         viewModel.getAllCategories()
+    }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this,QuizStartActivity::class.java))
+        finish()
     }
 }

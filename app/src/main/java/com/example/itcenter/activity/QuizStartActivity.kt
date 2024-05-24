@@ -20,6 +20,7 @@ class QuizStartActivity : AppCompatActivity() {
         }
         binding.startQuiz.setOnClickListener {
             startActivity(Intent(this,QuizLanguageActivity::class.java))
+            finish()
         }
     }
 }

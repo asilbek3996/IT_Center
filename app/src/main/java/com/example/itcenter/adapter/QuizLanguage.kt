@@ -1,5 +1,7 @@
 package com.example.itcenter.adapter
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,7 +17,7 @@ import com.example.itcenter.databinding.QuizItemLayoutBinding
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.CategoryModel
 
-class QuizLanguage(var items: List<AllCategoryModel>): RecyclerView.Adapter<QuizLanguage.ItemHolder>() {
+class QuizLanguage(var items: List<AllCategoryModel>, private val context: Context): RecyclerView.Adapter<QuizLanguage.ItemHolder>() {
     inner class ItemHolder(val binding: QuizItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -40,9 +42,12 @@ class QuizLanguage(var items: List<AllCategoryModel>): RecyclerView.Adapter<Quiz
             .into(holder.binding.ivItemQuiz)
         holder.binding.tvQuizItem.text = item.language
         holder.itemView.setOnClickListener {
-            val intent = Intent(it.context, QuizLevelActivity::class.java)
+            val intent = Intent(context, QuizLevelActivity::class.java)
             intent.putExtra("Language", item.language)
-            it.context.startActivity(intent)
+            context.startActivity(intent)
+            if (context is Activity) {
+                context.finish()
+            }
         }
     }
 }
