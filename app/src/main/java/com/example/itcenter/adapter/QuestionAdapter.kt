@@ -11,7 +11,7 @@ import com.example.itcenter.R
 import com.example.itcenter.databinding.ViewholderQuestionBinding
 
 interface score {
-    fun amount(number: Int, clickedAnswer: String)
+    fun amount(number: Int, clickedAnswer: String,rightAnswer: Int,wrongAnswer: Int)
 }
 class QuestionAdapter(
     val correctAnswer: String,
@@ -132,7 +132,7 @@ class QuestionAdapter(
                         R.color.white
                     )
                 )
-                returnScore.amount(score, str)
+                returnScore.amount(score, str,1,0)
             } else {
                 binding.answerTxt.setBackgroundResource(R.drawable.red_background)
                 binding.answerTxt.setTextColor(
@@ -141,7 +141,7 @@ class QuestionAdapter(
                         R.color.white
                     )
                 )
-                returnScore.amount(0, str)
+                returnScore.amount(0, str,0,1)
             }
         }
         if (differ.currentList.size==5) holder.itemView.setOnClickListener(null)

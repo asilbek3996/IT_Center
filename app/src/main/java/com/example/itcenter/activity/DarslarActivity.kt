@@ -36,7 +36,7 @@ class DarslarActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val message = intent.getStringExtra("Til")
         val level = intent.getStringExtra("level")
-        val group = pref.getStudent(Constants.group)
+        val group = pref.getStudent(Constants.g)
         var kotlin = arrayListOf<DarslarModel>()
         binding.tvLanguage.text = message
         viewModel.getLessons()

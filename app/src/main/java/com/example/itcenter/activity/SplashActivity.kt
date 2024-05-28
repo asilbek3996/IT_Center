@@ -7,10 +7,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.itcenter.databinding.ActivitySplashBinding
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.PrefUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.orhanobut.hawk.Hawk
 
@@ -22,8 +24,10 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.getStudent()
+        var pref = PrefUtils(this)
         val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        val idRaqami = sharedPreferences.getInt("id", -1)
+        val idRaqami = pref.getID()
         val malumotBoSh = idRaqami == -1
         binding.animationViews.postDelayed({
             if (malumotBoSh) {
@@ -35,11 +39,20 @@ class SplashActivity : AppCompatActivity() {
                     val editor = sharedPreferences.edit()
                     editor.putString("group", "x")
                     editor.apply()
+                    finish()
                 }
             }else{
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                viewModel.studentData.observe(this){
+                    for (i in it){
+                        if (idRaqami == i.id){
+                            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                            finish()
+                        }else{
+                            pref.clear()
+                        }
+                    }
+                }
             }
-            finish()
         },2950)
     }
 

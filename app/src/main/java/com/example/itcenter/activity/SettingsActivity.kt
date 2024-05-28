@@ -25,6 +25,9 @@ class SettingsActivity : AppCompatActivity() {
         binding.share.setOnClickListener {
             shareApp()
         }
+        binding.back.setOnClickListener {
+            finish()
+        }
         binding.about.setOnClickListener {
             showCustomDialogBox()
         }

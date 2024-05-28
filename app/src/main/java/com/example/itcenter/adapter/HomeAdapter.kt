@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.itcenter.R
 import com.example.itcenter.activity.QuizActivity
-import com.example.itcenter.activity.VideoActivity
 import com.example.itcenter.databinding.HomeWorkItemLayoutBinding
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.QuestionModel
@@ -64,8 +63,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Hamma javob noto’g’ri",
                 "a",
                 5,
-                "q_1",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -77,8 +77,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Malumotlar bazasi",
                 "a",
                 5,
-                "q_2",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -90,8 +91,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Malumotlar bazasi",
                 "b",
                 5,
-                "q_3",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -103,8 +105,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Faylni saqlaydi",
                 "a",
                 5,
-                "q_4",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -116,8 +119,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Kompyuter parametriga kiradi",
                 "c",
                 5,
-                "q_5",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -129,8 +133,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Backspace",
                 "d",
                 5,
-                "q_6",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -142,8 +147,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Ctrl + P",
                 "d",
                 5,
-                "q_7",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -155,8 +161,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "1,876,000",
                 "d",
                 5,
-                "q_8",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -168,8 +175,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Faylni saqlaydi",
                 "c",
                 5,
-                "q_9",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -181,8 +189,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Sichqonchaning chap tug. > Haqida> Dokument Ms Word.",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -194,8 +203,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Dasturni rangini o’zgartiradi.",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -207,8 +217,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Word, You tube, Excel.",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -220,8 +231,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Tanlab olingan matn qismini o’chirish",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -233,8 +245,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Musiqa eshitishga moslangan qurilma",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -246,8 +259,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Ctrl + P yoki Joylash bo’limidagi qidiruv oynasi orqali.",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -259,8 +273,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "16,140",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -272,8 +287,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Joylash bo’limidagi bo’sh ro’yhat orqali",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -285,8 +301,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Bilmayman",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -298,8 +315,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Alt + F5",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -311,8 +329,9 @@ class HomeAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Home
                 "Bilmayman",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         return question

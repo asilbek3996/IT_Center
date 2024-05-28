@@ -7,5 +7,7 @@ object Constants {
     const val group = "group"
     const val fullName = "fullName"
     const val level = "level"
+    const val quizLevel = "ql"
     const val lesson = "lesson"
+    const val g = "g"
 }

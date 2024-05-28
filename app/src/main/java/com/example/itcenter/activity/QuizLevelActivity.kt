@@ -1,7 +1,11 @@
 package com.example.itcenter.activity
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,10 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itcenter.R
 import com.example.itcenter.adapter.QuizLanguage
 import com.example.itcenter.adapter.QuizLevelAdapter
+import com.example.itcenter.adapter.level
 import com.example.itcenter.databinding.ActivityQuizLevelBinding
+import com.example.itcenter.model.QuestionModel
 import com.example.itcenter.model.QuizLevelModel
+import com.example.itcenter.utils.PrefUtils
 
-class QuizLevelActivity : AppCompatActivity() {
+class QuizLevelActivity : AppCompatActivity(),level {
     lateinit var binding: ActivityQuizLevelBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +40,33 @@ class QuizLevelActivity : AppCompatActivity() {
             QuizLevelModel(10,"10-bosqich"),
         )
         binding.back.setOnClickListener {
+            startActivity(Intent(this,QuizLanguageActivity::class.java))
             finish()
         }
         binding.recyclerQuiz.layoutManager = LinearLayoutManager(this)
-        binding.recyclerQuiz.adapter = QuizLevelAdapter(list,this)
+        binding.recyclerQuiz.adapter = QuizLevelAdapter(list,this, message.toString(),this@QuizLevelActivity)
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         startActivity(Intent(this,QuizLanguageActivity::class.java))
         finish()
+    }
+
+    override fun onItemClicked(position: QuizLevelModel) {
+        var pref = PrefUtils(this)
+        var level = pref.getQuizLevel()
+        showAlertDialog(position.text,level)
+    }
+
+    private fun showAlertDialog(level: String,l: Int) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setMessage("Siz hali ${level}ga yetib kelmagansiz. Siz ${l}-bosqichni yechib bo'lmagansiz. ${l}-bosqichni yeching")
+        alertDialogBuilder.setPositiveButton("Tushunarli", DialogInterface.OnClickListener { dialog, which ->
+            dialog.dismiss()
+        })
+        alertDialogBuilder.setCancelable(false)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 }

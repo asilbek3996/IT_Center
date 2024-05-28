@@ -66,12 +66,19 @@ lateinit var binding: FragmentProfileBinding
             }
         }
         loadData()
+        var idRaqam = pref.getID()
         viewModel.studentData.observe(requireActivity()){
             for (items in it){
                 if (items.id == idRaqami){
-                    Glide.with(binding.img).load(items.userPhoto).into(binding.img)
-                    binding.tvFullName.text = items.fullName
-                    binding.tvID.text = idRaqami.toString()
+                    if (items.id == idRaqami){
+                        Glide.with(binding.img).load(items.userPhoto).into(binding.img)
+                        binding.tvFullName.text = items.fullName
+                        binding.tvID.text = idRaqami.toString()
+                    }
+                }else{
+                    pref.clear()
+                    startActivity(Intent(requireActivity(), CheckActivity::class.java))
+                    requireActivity().finish()
                 }
             }
         }

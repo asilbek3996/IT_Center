@@ -5,9 +5,9 @@
 
     <Transition
         motion:duration="1000"
-        motion:autoTransition="none"
         motion:constraintSetEnd="@+id/end"
-        motion:constraintSetStart="@id/start">
+        motion:constraintSetStart="@id/start"
+        motion:autoTransition="animateToEnd">
         <KeyFrameSet>
         </KeyFrameSet>
     </Transition>

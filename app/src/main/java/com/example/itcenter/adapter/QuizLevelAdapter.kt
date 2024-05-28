@@ -5,22 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.itcenter.activity.DarslarActivity
-import com.example.itcenter.activity.LevelActivity
 import com.example.itcenter.activity.QuizActivity
-import com.example.itcenter.databinding.AllCategoryItemLayoutBinding
-import com.example.itcenter.databinding.CategoryItemLayoutBinding
-import com.example.itcenter.databinding.QuizItemLayoutBinding
 import com.example.itcenter.databinding.QuizLevelItemLayoutBinding
-import com.example.itcenter.model.AllCategoryModel
-import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.QuestionModel
 import com.example.itcenter.model.QuizLevelModel
+import com.example.itcenter.utils.PrefUtils
 
-class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Context): RecyclerView.Adapter<QuizLevelAdapter.ItemHolder>() {
+interface level {
+    fun onItemClicked(position: QuizLevelModel)
+}
+class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Context,var language: String, private val listener: level): RecyclerView.Adapter<QuizLevelAdapter.ItemHolder>() {
     inner class ItemHolder(val binding: QuizLevelItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -41,13 +36,26 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val item = items[position]
         holder.binding.tvMain.text = item.text
-        holder.itemView.setOnClickListener {
-            val intent = Intent(context, QuizActivity::class.java)
-            intent.putParcelableArrayListExtra("list",ArrayList(questionList()))
-            context.startActivity(intent)
-            if (context is Activity) {
-            context.finish()
+        var pref = PrefUtils(holder.itemView.context)
+        var level = pref.getQuizLevel()
+        var a = questionList()
+        var list = mutableListOf<QuestionModel>()
+        for (i in a){
+            if (i.language == language && i.level == item.id){
+                list.add(i)
+            }
         }
+        holder.itemView.setOnClickListener {
+            if (item.id<=level){
+                val intent = Intent(context, QuizActivity::class.java)
+                intent.putParcelableArrayListExtra("list",ArrayList(list))
+                context.startActivity(intent)
+                if (context is Activity) {
+                    context.finish()
+            }
+        }else{
+            listener.onItemClicked(item)
+            }
         }
     }
     private fun questionList(): MutableList<QuestionModel> {
@@ -61,8 +69,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Hamma javob noto’g’ri",
                 "a",
                 5,
-                "q_1",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -74,8 +83,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Malumotlar bazasi",
                 "a",
                 5,
-                "q_2",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -87,8 +97,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Malumotlar bazasi",
                 "b",
                 5,
-                "q_3",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -100,8 +111,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Faylni saqlaydi",
                 "a",
                 5,
-                "q_4",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -113,8 +125,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Kompyuter parametriga kiradi",
                 "c",
                 5,
-                "q_5",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -126,8 +139,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Backspace",
                 "d",
                 5,
-                "q_6",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -139,8 +153,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Ctrl + P",
                 "d",
                 5,
-                "q_7",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -152,8 +167,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "1,876,000",
                 "d",
                 5,
-                "q_8",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -165,8 +181,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Faylni saqlaydi",
                 "c",
                 5,
-                "q_9",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -178,8 +195,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Sichqonchaning chap tug. > Haqida> Dokument Ms Word.",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -191,8 +209,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Dasturni rangini o’zgartiradi.",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -204,8 +223,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Word, You tube, Excel.",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -217,8 +237,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Tanlab olingan matn qismini o’chirish",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -230,8 +251,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Musiqa eshitishga moslangan qurilma",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -243,8 +265,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Ctrl + P yoki Joylash bo’limidagi qidiruv oynasi orqali.",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -256,8 +279,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "16,140",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -269,8 +293,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Joylash bo’limidagi bo’sh ro’yhat orqali",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -282,8 +307,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Bilmayman",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -295,8 +321,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Alt + F5",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -308,8 +335,9 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
                 "Bilmayman",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "Kompyuter Savodxonligi",
+                1
             )
         )
         return question

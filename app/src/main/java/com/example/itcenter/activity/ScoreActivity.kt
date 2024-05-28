@@ -2,14 +2,10 @@ package com.example.itcenter.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.itcenter.R
 import com.example.itcenter.databinding.ActivityScoreBinding
 import com.example.itcenter.model.QuestionModel
+import com.example.itcenter.utils.PrefUtils
 
 class ScoreActivity : AppCompatActivity() {
     var score: Int = 0
@@ -19,8 +15,18 @@ class ScoreActivity : AppCompatActivity() {
         binding = ActivityScoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
         score=intent.getIntExtra("Score",0)
+        var right=intent.getIntExtra("right",0)
+        var wrong=intent.getIntExtra("wrong",0)
+        binding.totalRight.text = right.toString()
+        binding.totalWrong.text = wrong.toString()
         val txt = "${score}%"
         binding.score.text=txt
+        var pref = PrefUtils(this)
+        var level = pref.getQuizLevel()
+        if (score==100){
+            level+=1
+        }
+        pref.setQuizLevel(level)
         binding.backMain.setOnClickListener {
                 startActivity(Intent(this@ScoreActivity,QuizStartActivity::class.java))
                 finish()
@@ -42,8 +48,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Hamma javob noto’g’ri",
                 "a",
                 5,
-                "q_1",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -55,8 +62,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Malumotlar bazasi",
                 "a",
                 5,
-                "q_2",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -68,8 +76,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Malumotlar bazasi",
                 "b",
                 5,
-                "q_3",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -81,8 +90,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Faylni saqlaydi",
                 "a",
                 5,
-                "q_4",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -94,8 +104,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Kompyuter parametriga kiradi",
                 "c",
                 5,
-                "q_5",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -107,8 +118,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Backspace",
                 "d",
                 5,
-                "q_6",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -120,8 +132,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Ctrl + P",
                 "d",
                 5,
-                "q_7",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -133,8 +146,9 @@ class ScoreActivity : AppCompatActivity() {
                 "1,876,000",
                 "d",
                 5,
-                "q_8",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -146,8 +160,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Faylni saqlaydi",
                 "c",
                 5,
-                "q_9",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -159,8 +174,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Sichqonchaning chap tug. > Haqida> Dokument Ms Word.",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -172,8 +188,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Dasturni rangini o’zgartiradi.",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -185,8 +202,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Word, You tube, Excel.",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -198,8 +216,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Tanlab olingan matn qismini o’chirish",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -211,8 +230,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Musiqa eshitishga moslangan qurilma",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -224,8 +244,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Ctrl + P yoki Joylash bo’limidagi qidiruv oynasi orqali.",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -237,8 +258,9 @@ class ScoreActivity : AppCompatActivity() {
                 "16,140",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -250,8 +272,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Joylash bo’limidagi bo’sh ro’yhat orqali",
                 "c",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -263,8 +286,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Bilmayman",
                 "b",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -276,8 +300,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Alt + F5",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         question.add(
@@ -289,8 +314,9 @@ class ScoreActivity : AppCompatActivity() {
                 "Bilmayman",
                 "a",
                 5,
-                "q_10",
-                null
+                null,
+                "kompyuter Savodxonligi",
+                1
             )
         )
         return question

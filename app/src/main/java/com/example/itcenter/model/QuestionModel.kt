@@ -12,8 +12,9 @@ data class QuestionModel(
     val answer_4: String?,
     val correctAnswer: String?,
     val score: Int,
-    val picPath: String?,
-    var clickedAnswer: String?
+    var clickedAnswer: String?,
+    var language: String?,
+    var level: Int
     ):Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -25,7 +26,8 @@ data class QuestionModel(
         parcel.readString(),
         parcel.readInt(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readInt()
     ) {
     }
 
@@ -38,8 +40,9 @@ data class QuestionModel(
         parcel.writeString(answer_4)
         parcel.writeString(correctAnswer)
         parcel.writeInt(score)
-        parcel.writeString(picPath)
         parcel.writeString(clickedAnswer)
+        parcel.writeString(language)
+        parcel.writeInt(level)
     }
 
     override fun describeContents(): Int {

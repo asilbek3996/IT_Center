@@ -45,6 +45,11 @@ class PrefUtils(context: Context) {
         editor.putInt(Constants.ID, student.id)
         editor.putString(Constants.fullName, student.fullName)
         editor.putString(Constants.group, student.group)
+        editor.putString(Constants.g, student.group)
+        editor.apply()
+    }
+    fun setGroup(group: String){
+        editor.putString(Constants.g, group)
         editor.apply()
     }
     fun getID(): Int {
@@ -55,12 +60,21 @@ class PrefUtils(context: Context) {
     }
     fun setLevel(value: String){
         editor.putString(Constants.level,value)
+        editor.apply()
+    }
+    fun setQuizLevel(value: Int){
+        editor.putInt(Constants.quizLevel,value)
+        editor.apply()
     }
     fun setLesson(value: Int){
         editor.putInt(Constants.lesson,value)
+        editor.apply()
     }
     fun getLevel(): String? {
         return sharedPreferences.getString(Constants.level,"begin")
+    }
+    fun getQuizLevel(): Int {
+        return sharedPreferences.getInt(Constants.quizLevel,1)
     }
     fun getLesson(): Int {
         return sharedPreferences.getInt(Constants.lesson,0)

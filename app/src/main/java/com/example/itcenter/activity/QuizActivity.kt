@@ -1,9 +1,15 @@
 package com.example.itcenter.activity
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
+import android.view.View
 import android.view.Window
+import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -24,80 +30,75 @@ import com.example.itcenter.utils.PrefUtils
 
 class QuizActivity : AppCompatActivity(), score {
     private lateinit var binding: ActivityQuizBinding
-    var position: Int = 0
-    var receivedList: MutableList<QuestionModel> = mutableListOf()
-    var allScore = 0
+    private var position: Int = 0
+    private var receivedList: MutableList<QuestionModel> = mutableListOf()
+    private var correctAnswersCount = 0
+    private var wrongAnswersCount = 0
+    private var score = 0
+    private lateinit var timer: CountDownTimer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityQuizBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+
+        binding.framelayout.visibility = android.view.View.VISIBLE
+        binding.framelayout.startAnimation(fadeInAnimation)
+        binding.questionList.visibility = android.view.View.VISIBLE
+        binding.questionList.startAnimation(fadeInAnimation)
+
         val window: Window = this@QuizActivity.window
         window.statusBarColor = ContextCompat.getColor(this@QuizActivity, R.color.grey)
 
-
         receivedList = intent.getParcelableArrayListExtra<QuestionModel>("list")!!.toMutableList()
-        var count = receivedList.size
-        var pref = PrefUtils(this)
-        var name = pref.getStudent(Constants.fullName)
-        var txt = "Hi $name"
+        val count = receivedList.size
+        val pref = PrefUtils(this)
+        val name = pref.getStudent(Constants.fullName)
+        val txt = "Hi $name"
         binding.tvMain.text = txt
+
         binding.back.setOnClickListener {
-            startActivity(Intent(this,LevelActivity::class.java))
+            startActivity(Intent(this, QuizLevelActivity::class.java))
             finish()
         }
-        binding.apply {
 
+        binding.apply {
             questionNumberTxt.text = "Question 1/$count"
             progressBar.progress = 1
 
             questionTxt.text = receivedList[position].question
 
-
             loadAnswers()
             progressBar.max = count
+
             rightArrow.setOnClickListener {
                 if (progressBar.progress == count) {
-                    val intent = Intent(this@QuizActivity, ScoreActivity::class.java)
-                    intent.putExtra("Score", allScore)
-                    startActivity(intent)
-                    finish()
+                    navigateToScoreActivity()
                     return@setOnClickListener
                 }
-                position++
-                progressBar.progress = progressBar.progress + 1
-                binding.questionNumberTxt.text = "Question" + binding.progressBar.progress + "/$count"
-                questionTxt.text=receivedList[position].question
-
-
-                loadAnswers()
-
+                moveToNextQuestion()
             }
+        }
 
+        // Start the timer for the first question
+        resetAndStartTimer()
+    }
+
+    private fun moveToNextQuestion() {
+        if (position < receivedList.size - 1) {
+            position++
+            binding.progressBar.progress = position + 1
+            binding.questionNumberTxt.text = "Question ${binding.progressBar.progress}/${receivedList.size}"
+            binding.questionTxt.text = receivedList[position].question
+            loadAnswers()
+            resetAndStartTimer()  // Reset and start the timer for the new question
+        } else {
+            navigateToScoreActivity()
         }
     }
 
-    override fun amount(number: Int, clickedAnswer: String) {
-        allScore += number
-        receivedList[position].clickedAnswer = clickedAnswer
-        var count = receivedList.size
-        Handler().postDelayed({
-            if (binding.progressBar.progress == count) {
-                val intent = Intent(this@QuizActivity, ScoreActivity::class.java)
-                intent.putExtra("Score", allScore)
-                startActivity(intent)
-                finish()
-            }
-            var count = receivedList.size
-            position++
-            binding.progressBar.progress += 1
-            binding.questionNumberTxt.text = "Question" + binding.progressBar.progress + "/$count"
-            binding.questionTxt.text=receivedList[position].question
-
-
-            loadAnswers()
-        },1000)
-    }
     private fun loadAnswers() {
         val users: MutableList<String> = mutableListOf()
         users.add(receivedList[position].answer_1.toString())
@@ -105,24 +106,86 @@ class QuizActivity : AppCompatActivity(), score {
         users.add(receivedList[position].answer_3.toString())
         users.add(receivedList[position].answer_4.toString())
 
-        if (receivedList[position].clickedAnswer != null) users.add(receivedList[position].clickedAnswer.toString())
-
-        val questionAdapter by lazy {
-            QuestionAdapter(
-                receivedList[position].correctAnswer.toString(), users,receivedList[position].score, this
-            )
+        if (receivedList[position].clickedAnswer != null) {
+            receivedList[position].clickedAnswer = ""
+//            users.add(receivedList[position].clickedAnswer.toString())
         }
+
+        val questionAdapter = QuestionAdapter(
+            receivedList[position].correctAnswer.toString(), users, receivedList[position].score, this
+        )
 
         questionAdapter.differ.submitList(users)
         binding.questionList.apply {
-            layoutManager = GridLayoutManager(this@QuizActivity,2)
+            layoutManager = GridLayoutManager(this@QuizActivity, 2)
             adapter = questionAdapter
         }
     }
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this,QuizLevelActivity::class.java))
+
+    private fun navigateToScoreActivity() {
+        timer.cancel()
+        val intent = Intent(this@QuizActivity, ScoreActivity::class.java).apply {
+            putExtra("right", correctAnswersCount)
+            putExtra("wrong", wrongAnswersCount)
+            putExtra("Score", score)
+        }
+        startActivity(intent)
         finish()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        timer.cancel()  // Cancel the timer when back button is pressed
+        startActivity(Intent(this, QuizLevelActivity::class.java))
+        finish()
+    }
+
+    private fun resetAndStartTimer() {
+        if (::timer.isInitialized) {
+            timer.cancel()  // Cancel the previous timer if it exists
+        }
+        timer = object : CountDownTimer(10000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.timer.text = (millisUntilFinished / 1000).toString()
+            }
+            override fun onFinish() {
+                Toast.makeText(this@QuizActivity, "Time out", Toast.LENGTH_SHORT).show()
+                timeOut()
+//                moveToNextQuestion()  // Move to the next question when the timer finishes
+            }
+        }
+        timer.start()  // Start the new timer
+    }
+    fun timeOut(){
+            val alertDialogBuilder = AlertDialog.Builder(this)
+            alertDialogBuilder.setMessage("Sizning vaqtingiz tugadi testlarni qaytadan yeching yoki orqga qayting")
+            alertDialogBuilder.setPositiveButton("Qayta boshlash", DialogInterface.OnClickListener { dialog, which ->
+                clear()
+                timer.start()
+                dialog.dismiss()
+            })
+            alertDialogBuilder.setNegativeButton("Ortga qaytish", DialogInterface.OnClickListener { dialog, which ->
+                timer.cancel()  // Cancel the timer when back button is pressed
+                startActivity(Intent(this, QuizLevelActivity::class.java))
+                finish()
+                dialog.dismiss()
+            })
+            alertDialogBuilder.setCancelable(false)
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
+    }
+    fun clear(){
+        binding.progressBar.progress = 0
+        correctAnswersCount = 0
+        wrongAnswersCount = 0
+        position = -1
+        moveToNextQuestion()
+        loadAnswers()
+    }
+    override fun amount(number: Int, clickedAnswer: String, rightAnswer: Int, wrongAnswer: Int) {
+            correctAnswersCount +=rightAnswer
+            wrongAnswersCount += wrongAnswer
+            score += number
+            receivedList[position].clickedAnswer = clickedAnswer
+    }
 }

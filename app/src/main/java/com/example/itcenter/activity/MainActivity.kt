@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.itcenter.fragment.FavoriteFragment
 import com.example.itcenter.fragment.HomeFragment
@@ -55,14 +56,16 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
             progressBar.visibility = View.VISIBLE
             refresh.visibility = View.GONE
         }
-        val tvMain = findViewById<TextView>(R.id.tvMain)
-        var check = true
+        var fragment = "Asosiy"
+        var a = 0
         supportFragmentManager.beginTransaction()
             .add(R.id.flContainer, loadingFragment, loadingFragment.tag).commit()
+
+
+        var check = true
         viewModel.shimmer.observe(this){
             if (it == 1) {
                 check = false
-                binding.main.transitionToEnd()
             }else if (it == 2){
                 val alertDialogBuilder = AlertDialog.Builder(this)
                 alertDialogBuilder.setMessage("There was an error connecting to the server. Please try again")
@@ -73,49 +76,56 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 val alertDialog = alertDialogBuilder.create()
                 alertDialog.show()
             }
-            goto(check)
+            if (a==0) {
+                goto(check, fragment, false)
+            }
+        }
+
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            if (it.itemId == R.id.home) {
+                binding.crown1.visibility = View.GONE
+                binding.crown2.visibility = View.GONE
+                binding.settings.visibility = View.VISIBLE
+                binding.refresh.visibility = View.VISIBLE
+                fragment = "Asosiy"
+                a=1
+                if (check) {
+                    goto(true, fragment, false)
+                }else{
+                    goto(true,fragment,true)
+                }
+            } else if (it.itemId == R.id.favorite) {
+                binding.crown1.visibility = View.GONE
+                binding.crown2.visibility = View.GONE
+                binding.settings.visibility = View.VISIBLE
+                binding.refresh.visibility = View.VISIBLE
+                fragment = "Tanlanganlar"
+                a=1
+                goto(true,fragment,true)
+            } else if (it.itemId == R.id.game) {
+                binding.crown1.visibility = View.VISIBLE
+                binding.crown2.visibility = View.VISIBLE
+                binding.settings.visibility = View.GONE
+                binding.refresh.visibility = View.GONE
+                binding.refreshProgress.visibility = View.GONE
+                fragment = "Testlar"
+                a=1
+                goto(true,fragment,true)
+            } else if (it.itemId == R.id.profile) {
+                binding.crown1.visibility = View.GONE
+                binding.crown2.visibility = View.GONE
+                binding.settings.visibility = View.VISIBLE
+                binding.refresh.visibility = View.VISIBLE
+                fragment = "Profile"
+                a=1
+                goto(true,fragment,true)
+            }
+
+            return@setOnItemSelectedListener true
+
         }
 
 
-            binding.bottomNavigationView.setOnItemSelectedListener {
-                if (it.itemId == R.id.home) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
-                    tvMain.text = "Asosiy"
-                    binding.crown1.visibility = View.GONE
-                    binding.crown2.visibility = View.GONE
-                    binding.settings.visibility = View.VISIBLE
-                    binding.refresh.visibility = View.VISIBLE
-                } else if (it.itemId == R.id.favorite) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, favoriteFragment, favoriteFragment.tag).commit()
-                    tvMain.text = "Tanlanganlar"
-                    binding.crown1.visibility = View.GONE
-                    binding.crown2.visibility = View.GONE
-                    binding.settings.visibility = View.VISIBLE
-                    binding.refresh.visibility = View.VISIBLE
-                } else if (it.itemId == R.id.game) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, quizFragment, quizFragment.tag).commit()
-                    tvMain.text = "Testlar"
-                    binding.crown1.visibility = View.VISIBLE
-                    binding.crown2.visibility = View.VISIBLE
-                    binding.settings.visibility = View.GONE
-                    binding.refresh.visibility = View.GONE
-                    binding.refreshProgress.visibility = View.GONE
-                } else if (it.itemId == R.id.profile) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, profileFragment, profileFragment.tag).commit()
-                    tvMain.text = "Profil"
-                    binding.crown1.visibility = View.GONE
-                    binding.crown2.visibility = View.GONE
-                    binding.settings.visibility = View.VISIBLE
-                    binding.refresh.visibility = View.VISIBLE
-                }
-
-                return@setOnItemSelectedListener true
-
-            }
 
 
     }
@@ -149,17 +159,34 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
             .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
         tvMain.text = "Asosiy"
     }
-    fun goto(check: Boolean){
-        Handler().postDelayed({
+    fun goto(check: Boolean,fragment: String,a: Boolean){
             val tvMain = findViewById<TextView>(R.id.tvMain)
-            if (!check){
-                tvMain.text = "Asosiy"
-                progressBar.visibility = View.GONE
-                refresh.visibility = View.VISIBLE
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
-            }
-        },2000)
+            tvMain.text = fragment
+
+            if (a){
+                if (fragment == "Asosiy") {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
+                }else if (fragment == "Tanlanganlar") {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, favoriteFragment, favoriteFragment.tag).commit()
+                }else if (fragment == "Testlar") {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, quizFragment, quizFragment.tag).commit()
+                }else if (fragment == "Profile") {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, profileFragment, profileFragment.tag).commit()
+                }
+            }else {
+                Handler().postDelayed({
+                if (!check){
+                    progressBar.visibility = View.GONE
+                    refresh.visibility = View.VISIBLE
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
+                }
+                },2000)
+                }
     }
     fun loadData(){
         viewModel.getStudent()

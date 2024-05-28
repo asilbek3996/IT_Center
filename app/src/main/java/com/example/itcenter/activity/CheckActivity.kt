@@ -70,6 +70,7 @@ class CheckActivity : AppCompatActivity() {
                 if (student.id.toString() == email){
                     changeInProgress(false)
                     val pref = PrefUtils(this)
+                    validateDate(email)
                     pref.setStudent(student)
                     startActivity(Intent(this@CheckActivity,MainActivity::class.java))
                     finish()

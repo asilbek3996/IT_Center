@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
 import com.example.itcenter.activity.AllCategoryActivity
+import com.example.itcenter.activity.CheckActivity
 import com.example.itcenter.activity.LevelActivity
 import com.example.itcenter.adapter.ImageAdapter
 import com.example.itcenter.adapter.TopStudentAdapter
@@ -114,7 +116,10 @@ class HomeFragment : Fragment() {
             }
             startActivity(intent)
         }
+        var pref = PrefUtils(requireActivity())
+        var idRaqam = pref.getID()
         viewModel.studentData.observe(requireActivity(), Observer {
+
             topTest(it)
         })
     }
@@ -163,6 +168,7 @@ class HomeFragment : Fragment() {
     }
     private fun topTest(students: ArrayList<AllStudentModel>) {
         val pref = PrefUtils(requireContext())
+        var idRaqam = pref.getID()
         var android = arrayListOf<AllStudentModel>()
         var python = arrayListOf<AllStudentModel>()
         var java = arrayListOf<AllStudentModel>()
@@ -172,22 +178,28 @@ class HomeFragment : Fragment() {
         var scratch = arrayListOf<AllStudentModel>()
         var frontend = arrayListOf<AllStudentModel>()
         for (student in students) {
-            if (student.group== "Android") {
-                android.add(student)
-            }else if (student.group== "Python") {
-                python.add(student)
-            }else if (student.group== "Kotlin") {
-                kotlin.add(student)
-            }else if (student.group== "Java") {
-                java.add(student)
-            }else if (student.group== "C++") {
-                cpp.add(student)
-            }else if (student.group== "Scratch") {
-                scratch.add(student)
-            }else if (student.group== "Literacy") {
-                computerLiteracy.add(student)
-            }else if (student.group== "Frontend") {
-                frontend.add(student)
+            if (student.id == idRaqam){
+                if (student.group== "Android") {
+                    android.add(student)
+                }else if (student.group== "Python") {
+                    python.add(student)
+                }else if (student.group== "Kotlin") {
+                    kotlin.add(student)
+                }else if (student.group== "Java") {
+                    java.add(student)
+                }else if (student.group== "C++") {
+                    cpp.add(student)
+                }else if (student.group== "Scratch") {
+                    scratch.add(student)
+                }else if (student.group== "Literacy") {
+                    computerLiteracy.add(student)
+                }else if (student.group== "Frontend") {
+                    frontend.add(student)
+                }
+            }else{
+                pref.clear()
+                startActivity(Intent(requireActivity(), CheckActivity::class.java))
+                requireActivity().finish()
             }
 
         }
@@ -204,8 +216,9 @@ class HomeFragment : Fragment() {
             GroupModel("Frontend",frontend,"Frontend")
         )
         for (it in items){
-            if (it.name == pref.getStudent(Constants.group)){
+            if (it.group == pref.getStudent(Constants.group)){
                 group.add(it)
+                pref.setGroup(it.name)
             }else{
                 item.add(it)
             }
@@ -218,7 +231,7 @@ class HomeFragment : Fragment() {
         var pref = PrefUtils(requireContext())
         var item2 = arrayListOf<CategoryModel>()
         for (it in category){
-            if (it.language == pref.getStudent(Constants.group)){
+            if (it.language == pref.getStudent(Constants.g)){
                 item.add(it)
             }else{
                 item2.add(it)
