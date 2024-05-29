@@ -24,34 +24,22 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.getStudent()
         var pref = PrefUtils(this)
-        val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
         val idRaqami = pref.getID()
-        val malumotBoSh = idRaqami == -1
         binding.animationViews.postDelayed({
-            if (malumotBoSh) {
-                val currentUser = FirebaseAuth.getInstance().currentUser
-                if (currentUser == null) {
-                    startActivity(Intent(this@SplashActivity, CheckActivity::class.java))
-                } else {
-                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                    val editor = sharedPreferences.edit()
-                    editor.putString("group", "x")
-                    editor.apply()
-                    finish()
-                }
-            }else{
-                viewModel.studentData.observe(this){
-                    for (i in it){
-                        if (idRaqami == i.id){
+                        if (idRaqami!=-1){
                             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                             finish()
                         }else{
-                            pref.clear()
-                        }
-                    }
-                }
+                            val currentUser = FirebaseAuth.getInstance().currentUser
+                            if (currentUser == null) {
+                                pref.clear()
+                                startActivity(Intent(this@SplashActivity, CheckActivity::class.java))
+                                finish()
+                            } else {
+                                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                                finish()
+                            }
             }
         },2950)
     }

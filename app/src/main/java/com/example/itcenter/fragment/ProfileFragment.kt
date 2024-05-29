@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.itcenter.R
@@ -42,6 +43,7 @@ lateinit var binding: FragmentProfileBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadData()
         val pref = PrefUtils(requireContext())
         var idRaqami = pref.getID()
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -65,23 +67,7 @@ lateinit var binding: FragmentProfileBinding
                 (activity as? ShowProgress.View)?.hideProgressBar()
             }
         }
-        loadData()
-        var idRaqam = pref.getID()
-        viewModel.studentData.observe(requireActivity()){
-            for (items in it){
-                if (items.id == idRaqami){
-                    if (items.id == idRaqami){
-                        Glide.with(binding.img).load(items.userPhoto).into(binding.img)
-                        binding.tvFullName.text = items.fullName
-                        binding.tvID.text = idRaqami.toString()
-                    }
-                }else{
-                    pref.clear()
-                    startActivity(Intent(requireActivity(), CheckActivity::class.java))
-                    requireActivity().finish()
-                }
-            }
-        }
+
 
         binding.rating.setOnClickListener {
             val uri: Uri =Uri.parse("market://details?id=com.google.android.youtube")
@@ -112,9 +98,35 @@ lateinit var binding: FragmentProfileBinding
             startActivity(Intent(requireActivity(),CheckActivity::class.java))
             requireActivity().finish()
         }
+
+        viewModel.userData.observe(requireActivity()){
+            if (it.isNotEmpty()){
+                val pref = PrefUtils(requireContext())
+                var idRaqami = pref.getID()
+                val firebaseAuth = FirebaseAuth.getInstance()
+                    for (items in it){
+                            Glide.with(binding.img).load(items.userPhoto).into(binding.img)
+                            binding.tvFullName.text = items.fullName
+                            binding.tvID.text = idRaqami.toString()
+                    }
+            }else {
+                Toast.makeText(
+                    requireContext(),
+                    "Sizning ID raqamingiz serverda topilmadi.",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                val pref = PrefUtils(requireContext())
+                pref.clear()
+                startActivity(Intent(requireActivity(), CheckActivity::class.java))
+                requireActivity().finish()
+            }
+        }
     }
 fun loadData(){
-    viewModel.getStudent()
+    val pref = PrefUtils(requireContext())
+    var idRaqami = pref.getID()
+    viewModel.getUser(idRaqami)
 }
     override fun onDestroy() {
         super.onDestroy()

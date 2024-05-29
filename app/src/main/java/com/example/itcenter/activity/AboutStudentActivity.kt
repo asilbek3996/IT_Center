@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.itcenter.R
+import com.example.itcenter.ShowProgress
 import com.example.itcenter.databinding.ActivityAboutStudentBinding
 import com.example.itcenter.model.viewmodel.MainViewModel
 import java.util.Calendar
@@ -26,10 +27,31 @@ class AboutStudentActivity : AppCompatActivity() {
         binding.back.setOnClickListener {
             finish()
         }
+        binding.refresh.setOnClickListener {
+            loadData()
+            showProgressBar()
+        }
+        viewModel.progress.observe(this, Observer {
+            if (it) {
+                showProgressBar()
+            } else {
+                hideProgressBar()
+            }
+        })
         binding.tvFullName.text = message
         filter(message.toString())
         loadData()
     }
+
+    private fun hideProgressBar() {
+        binding.refresh.visibility = View.VISIBLE
+        binding.refreshProgress.visibility = View.GONE
+    }
+    private fun showProgressBar() {
+        binding.refresh.visibility = View.GONE
+        binding.refreshProgress.visibility = View.VISIBLE
+    }
+
     fun loadData(){
         viewModel.getStudent()
     }

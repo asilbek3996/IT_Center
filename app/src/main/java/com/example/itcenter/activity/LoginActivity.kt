@@ -5,9 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.itcenter.Utility
 import com.example.itcenter.databinding.ActivityLoginBinding
+import com.example.itcenter.model.AllStudentModel
+import com.example.itcenter.utils.PrefUtils
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
@@ -38,17 +42,15 @@ class LoginActivity : AppCompatActivity() {
 
     fun loginAccountInFirebase(email: String?, password: String?) {
         val firebaseAuth = FirebaseAuth.getInstance()
-        changeInProgress(true)
         firebaseAuth.signInWithEmailAndPassword(email!!, password!!).addOnCompleteListener { task ->
-            changeInProgress(false)
             if (task.isSuccessful) {
                 if (firebaseAuth.currentUser!!.isEmailVerified) {
+
+                    var pref = PrefUtils(this)
+                    var student = AllStudentModel(0,email,"","","x","",0,"")
+                    pref.setStudent(student)
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     finish()
-                    val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.putString("group", "x")
-                    editor.apply()
                 } else {
                     Utility.showToast(
                         this@LoginActivity,

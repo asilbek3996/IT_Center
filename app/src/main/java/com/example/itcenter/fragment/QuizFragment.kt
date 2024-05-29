@@ -7,12 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itcenter.R
 import com.example.itcenter.activity.QuizSplashActivity
-import com.example.itcenter.activity.QuizStartActivity
-import com.example.itcenter.adapter.DarsAdapter
-import com.example.itcenter.adapter.HomeAdapter
 import com.example.itcenter.databinding.FragmentQuizBinding
 import com.example.itcenter.model.viewmodel.MainViewModel
 
@@ -36,11 +32,8 @@ class QuizFragment : Fragment() {
         binding.play.setOnClickListener {
             startActivity(Intent(requireActivity(),QuizSplashActivity::class.java))
         }
-//        viewModel.lessonsData.observe(requireActivity()){
-//            binding.recyclerWork.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL,false)
-//            binding.recyclerWork.adapter = HomeAdapter(it)
-//        }
-        viewModel.getLessons()
+        binding.lottieAnimationView.setAnimation(R.raw.quizz)
+        binding.lottieAnimationView.playAnimation()
     }
     companion object {
         @JvmStatic

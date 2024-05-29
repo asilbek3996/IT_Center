@@ -83,12 +83,12 @@
                 android:id="@+id/questionNumberTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@color/white"
                 android:layout_gravity="center_vertical"
-                android:text="Question 1/10" />
+                android:layout_weight="8"
+                android:text="Savollar 1/10"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/timer"
@@ -147,7 +147,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/questionList"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="14dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"

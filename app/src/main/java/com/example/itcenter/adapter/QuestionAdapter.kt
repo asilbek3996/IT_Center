@@ -30,14 +30,20 @@ class QuestionAdapter(
 
     override fun onBindViewHolder(holder: QuestionAdapter.Viewholder, position: Int) {
         val binding = ViewholderQuestionBinding.bind(holder.itemView)
-        if (position == 0){
-            binding.answerTxt.text = "A. ${differ.currentList[position]}"
-        }else if (position == 1){
-            binding.answerTxt.text = "B. ${differ.currentList[position]}"
-        }else if (position == 2){
-            binding.answerTxt.text = "C. ${differ.currentList[position]}"
-        }else if (position == 3){
-            binding.answerTxt.text = "D. ${differ.currentList[position]}"
+            binding.answerTxt.text = differ.currentList[position]
+
+        if (position == 0) {
+            binding.textTxt.text = "A"
+            binding.answerTxt.text = differ.currentList[position]
+        } else if (position == 1) {
+            binding.textTxt.text = "B"
+            binding.answerTxt.text = differ.currentList[position]
+        } else if (position == 2) {
+            binding.textTxt.text = "C"
+            binding.answerTxt.text = differ.currentList[position]
+        } else if (position == 3) {
+            binding.textTxt.text = "D"
+            binding.answerTxt.text = differ.currentList[position]
         }
         var currentPos = 0
         when (correctAnswer) {

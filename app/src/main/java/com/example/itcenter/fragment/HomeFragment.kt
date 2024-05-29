@@ -58,24 +58,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
-        setUpTransformer()
-        viewModel.adsData.observe(requireActivity(), Observer {
-            binding.viewPager.adapter = ImageAdapter(it, binding.viewPager)
-            binding.viewPager.offscreenPageLimit = 3
-            binding.viewPager.clipToPadding = false
-            binding.viewPager.clipChildren = false
-            binding.viewPager.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-        })
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                handler.removeCallbacks(runnable)
-                handler.postDelayed(runnable, 2000)
-            }
-        })
-        viewModel.categoriesData.observe(requireActivity(), Observer {
-            categories(it)
-        })
         refresh = requireActivity().findViewById(R.id.refresh)
         refresh.setOnClickListener {
             binding.swipe.isRefreshing = true
@@ -92,6 +74,27 @@ class HomeFragment : Fragment() {
             } else {
                 (activity as? ShowProgress.View)?.hideProgressBar()
             }
+        })
+
+
+        setUpTransformer()
+        viewModel.adsData.observe(requireActivity(), Observer {
+            binding.viewPager.adapter = ImageAdapter(it, binding.viewPager)
+            binding.viewPager.offscreenPageLimit = 3
+            binding.viewPager.clipToPadding = false
+            binding.viewPager.clipChildren = false
+            binding.viewPager.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+        })
+        binding.viewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                handler.removeCallbacks(runnable)
+                handler.postDelayed(runnable, 2000)
+            }
+        })
+        viewModel.categoriesData.observe(requireActivity(), Observer {
+            categories(it)
         })
 
         binding.tvAll.setOnClickListener {
@@ -116,12 +119,24 @@ class HomeFragment : Fragment() {
             }
             startActivity(intent)
         }
-        var pref = PrefUtils(requireActivity())
-        var idRaqam = pref.getID()
         viewModel.studentData.observe(requireActivity(), Observer {
-
             topTest(it)
         })
+
+        viewModel.userData.observe(requireActivity()) {
+            if (it.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Sizning ID raqamingiz serverda topilmadi.",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                val pref = PrefUtils(requireContext())
+                pref.clear()
+                startActivity(Intent(requireActivity(), CheckActivity::class.java))
+                requireActivity().finish()
+            }
+        }
     }
 
     companion object {
@@ -157,18 +172,21 @@ class HomeFragment : Fragment() {
     }
 
     fun loadData() {
+        val pref = PrefUtils(requireContext())
+        var idRaqam = pref.getID()
         viewModel.getOffers()
         viewModel.getCategoris()
         viewModel.getStudent()
+        viewModel.getUser(idRaqam)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.clear()
     }
+
     private fun topTest(students: ArrayList<AllStudentModel>) {
         val pref = PrefUtils(requireContext())
-        var idRaqam = pref.getID()
         var android = arrayListOf<AllStudentModel>()
         var python = arrayListOf<AllStudentModel>()
         var java = arrayListOf<AllStudentModel>()
@@ -178,62 +196,56 @@ class HomeFragment : Fragment() {
         var scratch = arrayListOf<AllStudentModel>()
         var frontend = arrayListOf<AllStudentModel>()
         for (student in students) {
-            if (student.id == idRaqam){
-                if (student.group== "Android") {
-                    android.add(student)
-                }else if (student.group== "Python") {
-                    python.add(student)
-                }else if (student.group== "Kotlin") {
-                    kotlin.add(student)
-                }else if (student.group== "Java") {
-                    java.add(student)
-                }else if (student.group== "C++") {
-                    cpp.add(student)
-                }else if (student.group== "Scratch") {
-                    scratch.add(student)
-                }else if (student.group== "Literacy") {
-                    computerLiteracy.add(student)
-                }else if (student.group== "Frontend") {
-                    frontend.add(student)
-                }
-            }else{
-                pref.clear()
-                startActivity(Intent(requireActivity(), CheckActivity::class.java))
-                requireActivity().finish()
+            if (student.group == "Android") {
+                android.add(student)
+            } else if (student.group == "Python") {
+                python.add(student)
+            } else if (student.group == "Kotlin") {
+                kotlin.add(student)
+            } else if (student.group == "Java") {
+                java.add(student)
+            } else if (student.group == "C++") {
+                cpp.add(student)
+            } else if (student.group == "Scratch") {
+                scratch.add(student)
+            } else if (student.group == "Literacy") {
+                computerLiteracy.add(student)
+            } else if (student.group == "Frontend") {
+                frontend.add(student)
             }
-
         }
         var group = arrayListOf<GroupModel>()
         var item = arrayListOf<GroupModel>()
         var items = listOf(
-            GroupModel("Java",java,"Java"),
-            GroupModel("Kotlin",kotlin,"Kotlin"),
-            GroupModel("Android",android,"Android"),
-            GroupModel("Python",python,"Python"),
-            GroupModel("C++",cpp,"C++"),
-            GroupModel("Kompyuter Savodxonligi",computerLiteracy,"Literacy"),
-            GroupModel("Scratch",scratch,"Scratch"),
-            GroupModel("Frontend",frontend,"Frontend")
+            GroupModel("Java", java, "Java"),
+            GroupModel("Kotlin", kotlin, "Kotlin"),
+            GroupModel("Android", android, "Android"),
+            GroupModel("Python", python, "Python"),
+            GroupModel("C++", cpp, "C++"),
+            GroupModel("Kompyuter Savodxonligi", computerLiteracy, "Literacy"),
+            GroupModel("Scratch", scratch, "Scratch"),
+            GroupModel("Frontend", frontend, "Frontend")
         )
-        for (it in items){
-            if (it.group == pref.getStudent(Constants.group)){
+        for (it in items) {
+            if (it.group == pref.getStudent(Constants.group)) {
                 group.add(it)
-                pref.setGroup(it.name)
-            }else{
+            } else {
                 item.add(it)
             }
         }
         group.addAll(item)
-        binding.recyclerGroup.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        binding.recyclerGroup.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerGroup.adapter = TopStudentAdapter(group)
     }
+
     private fun categories(category: List<CategoryModel>) {
         var pref = PrefUtils(requireContext())
         var item2 = arrayListOf<CategoryModel>()
-        for (it in category){
-            if (it.language == pref.getStudent(Constants.g)){
+        for (it in category) {
+            if (it.language == pref.getStudent(Constants.g)) {
                 item.add(it)
-            }else{
+            } else {
                 item2.add(it)
             }
         }

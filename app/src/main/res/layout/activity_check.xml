@@ -31,7 +31,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hi, \nPlease Login"
+            android:text="Salom, \nXush kelibsiz!"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:textSize="30sp"
@@ -53,7 +53,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your Id"
+                android:text="Sizning ID raqamingiz"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20sp"/>
@@ -69,7 +69,7 @@
                 android:textColor="#474747"
                 android:inputType="numberSigned"
                 android:background="@drawable/edit_text_background"
-                android:hint="Enter Your Id" />
+                android:hint="ID raqamingizni kiriting" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,15 +83,15 @@
                     android:textAlignment="center"
                     android:textColor="#818181"
                     android:textStyle="bold"
-                    android:text="Don't Remember Password? " />
+                    android:text="Email orqali ro'yxatdan o'ting? " />
                 <TextView
                     android:id="@+id/signUp"
-                    android:layout_width="80dp"
+                    android:layout_width="120dp"
                     android:layout_height="20dp"
                     android:textAlignment="center"
                     android:textColor="@color/dark_green"
                     android:textStyle="bold"
-                    android:text="Recovery It" />
+                    android:text="Ro'yhatdan o'tish" />
 
             </LinearLayout>
 
@@ -99,7 +99,7 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="LOGIN"
+                android:text="KIRISH"
                 android:textColor="@color/white"
                 style="@android:style/Widget.Button"
                 android:textSize="20sp"

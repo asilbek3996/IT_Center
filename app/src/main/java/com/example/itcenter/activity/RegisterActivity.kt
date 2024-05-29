@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.itcenter.R
 import com.example.itcenter.Utility
 import com.example.itcenter.databinding.ActivityRegisterBinding
+import com.example.itcenter.model.AllStudentModel
+import com.example.itcenter.utils.PrefUtils
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.AuthResult
@@ -42,14 +44,15 @@ class RegisterActivity : AppCompatActivity() {
     fun createAccount() {
         val email: String = binding.etEmail.getText().toString()
         val password: String = binding.etPassword.getText().toString()
+        val name: String = binding.etName.getText().toString()
         val confirmPassword: String = binding.etRePassword.getText().toString()
         val isValidate: Boolean = validateDate(email, password, confirmPassword)
         if (!isValidate) {
             return
         }
-        createAccountInFirebase(email, password)
+        createAccountInFirebase(email, password,name)
     }
-    fun createAccountInFirebase(email: String?, password: String?) {
+    fun createAccountInFirebase(email: String?, password: String?,name: String?) {
         changeInProgress(true)
         val firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.createUserWithEmailAndPassword(email!!, password!!)
@@ -63,7 +66,7 @@ class RegisterActivity : AppCompatActivity() {
                         )
                         firebaseAuth.currentUser!!.sendEmailVerification()
                         firebaseAuth.signOut()
-                        showCustomDialogBox(email, password)
+                        showCustomDialogBox(email, password,name)
                     } else {
                         Utility.showToast(
                             this@RegisterActivity,
@@ -73,7 +76,7 @@ class RegisterActivity : AppCompatActivity() {
                 })
     }
 
-    private fun showCustomDialogBox(email: String?, password: String?) {
+    private fun showCustomDialogBox(email: String?, password: String?,name: String?) {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -88,7 +91,7 @@ class RegisterActivity : AppCompatActivity() {
         val progress: ProgressBar = dialog.findViewById(R.id.progress_bar2)
 //        var inProgress2: Boolean = false
         check.setOnClickListener {
-            loginAccountInFirebase(email, password,progress,check)
+            loginAccountInFirebase(email, password,name,progress,check)
             progress.visibility = View.VISIBLE
             check.visibility = View.GONE
 
@@ -123,13 +126,17 @@ class RegisterActivity : AppCompatActivity() {
         }
         return true
     }
-    fun loginAccountInFirebase(email: String?, password: String?, progressBar: ProgressBar, dialogButton: FloatingActionButton) {
+    fun loginAccountInFirebase(email: String?, password: String?,name: String?, progressBar: ProgressBar, dialogButton: FloatingActionButton) {
         val firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.signInWithEmailAndPassword(email!!, password!!).addOnCompleteListener { task ->
             progressBar.visibility = View.GONE
             dialogButton.visibility = View.VISIBLE
             if (task.isSuccessful) {
                 if (firebaseAuth.currentUser!!.isEmailVerified) {
+
+                    var pref = PrefUtils(this)
+                    var student = AllStudentModel(0,email,"","","x","",0,"")
+                    pref.setStudent(student)
                     startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
                     finish()
                 } else {

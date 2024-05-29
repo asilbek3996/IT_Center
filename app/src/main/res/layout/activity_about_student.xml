@@ -44,6 +44,7 @@
                         android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
                         app:tint="@color/white" />
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/tvFullName"
                     android:layout_width="0dp"
@@ -52,13 +53,13 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center"
-                    android:text="Full Name"
+                    android:text="To'liq ism"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/search"
+                    android:id="@+id/refresh"
                     android:layout_width="50dp"
                     android:layout_height="30dp"
                     android:orientation="horizontal"
@@ -66,8 +67,15 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/search"
+                        android:src="@drawable/refresh"
                         app:tint="@color/white" />
+                    <ProgressBar
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/refreshProgress"
+                    android:indeterminateTint="@color/white"
+                    android:visibility="gone"/>
+
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

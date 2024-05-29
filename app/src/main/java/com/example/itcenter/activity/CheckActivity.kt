@@ -83,7 +83,7 @@ class CheckActivity : AppCompatActivity() {
     }
     fun validateDate(email: String?): Boolean {
         if (email==null) {
-            binding.etEmail.error = "ID is invalid "
+            binding.etEmail.error = "ID raqam xato"
             return false
         }
         return true

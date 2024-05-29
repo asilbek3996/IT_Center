@@ -8,6 +8,7 @@ import com.example.itcenter.model.BaseResponse
 import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
+import com.example.itcenter.model.QuestionModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -106,6 +107,29 @@ class Repository() {
         )
 
     }
+
+    fun getUser(id: Int, error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>,progress: MutableLiveData<Boolean>){
+        progress.value = true
+        compositeDisposable.add(NetworkManager.getApiService().getUser(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>(){
+                override fun onNext(t: ArrayList<AllStudentModel>) {
+                    progress.value = false
+                    success.value = t
+                }
+
+                override fun onError(e: Throwable) {
+                    progress.value = false
+                    error.value = e.localizedMessage
+                }
+
+                override fun onComplete() {
+                }
+            })
+        )
+
+    }
     fun getLessons(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<DarslarModel>>,progress: MutableLiveData<Boolean>){
         progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getLessons()
@@ -119,6 +143,25 @@ class Repository() {
 
                 override fun onError(e: Throwable) {
                     progress.value = false
+                    error.value = e.localizedMessage
+                }
+
+                override fun onComplete() {
+                }
+            })
+        )
+
+    }
+    fun getQuestions(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<QuestionModel>>){
+        compositeDisposable.add(NetworkManager.getApiService().getQuestions()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<ArrayList<QuestionModel>>(){
+                override fun onNext(t: ArrayList<QuestionModel>) {
+                    success.value = t
+                }
+
+                override fun onError(e: Throwable) {
                     error.value = e.localizedMessage
                 }
 

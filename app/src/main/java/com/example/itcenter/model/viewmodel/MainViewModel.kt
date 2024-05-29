@@ -8,6 +8,7 @@ import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
+import com.example.itcenter.model.QuestionModel
 
 class MainViewModel: ViewModel() {
     val repository = Repository()
@@ -20,7 +21,9 @@ class MainViewModel: ViewModel() {
     val allCategoryData = MutableLiveData<List<AllCategoryModel>>()
     val categoriesData = MutableLiveData<ArrayList<CategoryModel>>()
     val studentData = MutableLiveData<ArrayList<AllStudentModel>>()
+    val userData = MutableLiveData<ArrayList<AllStudentModel>>()
     val lessonsData = MutableLiveData<ArrayList<DarslarModel>>()
+    val questionData = MutableLiveData<ArrayList<QuestionModel>>()
 
     fun getOffers() {
         repository.getAds(error, progress, adsData)
@@ -34,8 +37,14 @@ class MainViewModel: ViewModel() {
     fun getStudent() {
         repository.getStudent(error, studentData, progress,shimmer)
     }
+    fun getUser(id: Int) {
+        repository.getUser(id,error, userData, progress)
+    }
     fun getLessons() {
         repository.getLessons(error, lessonsData, progress)
+    }
+    fun getQuestions() {
+        repository.getQuestions(error, questionData)
     }
     fun clear() {
         repository.clearDisposable()

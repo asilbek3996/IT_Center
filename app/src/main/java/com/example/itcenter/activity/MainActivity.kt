@@ -1,43 +1,40 @@
 package com.example.itcenter.activity
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.view.Window
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.itcenter.fragment.FavoriteFragment
-import com.example.itcenter.fragment.HomeFragment
-import com.example.itcenter.fragment.ProfileFragment
-import com.example.itcenter.fragment.QuizFragment
+import com.example.itcenter.fragment.*
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
 import com.example.itcenter.databinding.ActivityMainBinding
-import com.example.itcenter.fragment.LoadingFragment
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.PrefUtils
 
 class MainActivity : AppCompatActivity(), ShowProgress.View {
-    val homeFragment = HomeFragment.newInstance()
-    val favoriteFragment = FavoriteFragment.newInstance()
-    val quizFragment = QuizFragment.newInstance()
-    val profileFragment = ProfileFragment.newInstance()
-    val loadingFragment = LoadingFragment.newInstance()
-    lateinit var binding: ActivityMainBinding
+    private val homeFragment = HomeFragment.newInstance()
+    private val favoriteFragment = FavoriteFragment.newInstance()
+    private val quizFragment = QuizFragment.newInstance()
+    private val profileFragment = ProfileFragment.newInstance()
+    private val loadingFragment = LoadingFragment.newInstance()
+
+    private lateinit var binding: ActivityMainBinding
     private lateinit var progressBar: ProgressBar
     private lateinit var refresh: ImageView
     private lateinit var settings: ImageView
-    lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: MainViewModel
 
+    private val handler = Handler()
+    private var fragmentSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,99 +46,119 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         settings = findViewById(R.id.settings)
         refresh = findViewById(R.id.refresh)
         settings.setOnClickListener {
-            startActivity(Intent(this,SettingsActivity::class.java))
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.flContainer, loadingFragment, loadingFragment.tag).commit()
+
         refresh.setOnClickListener {
             loadData()
             progressBar.visibility = View.VISIBLE
             refresh.visibility = View.GONE
         }
-        var fragment = "Asosiy"
-        var a = 0
-        supportFragmentManager.beginTransaction()
-            .add(R.id.flContainer, loadingFragment, loadingFragment.tag).commit()
-
-
-        var check = true
-        viewModel.shimmer.observe(this){
-            if (it == 1) {
-                check = false
-            }else if (it == 2){
-                val alertDialogBuilder = AlertDialog.Builder(this)
-                alertDialogBuilder.setMessage("There was an error connecting to the server. Please try again")
-                alertDialogBuilder.setPositiveButton("try again", DialogInterface.OnClickListener { dialog, which ->
-                    loadData()
-                    dialog.dismiss()
-                })
-                val alertDialog = alertDialogBuilder.create()
-                alertDialog.show()
-            }
-            if (a==0) {
-                goto(check, fragment, false)
-            }
-        }
 
         binding.bottomNavigationView.setOnItemSelectedListener {
-            if (it.itemId == R.id.home) {
-                binding.crown1.visibility = View.GONE
-                binding.crown2.visibility = View.GONE
-                binding.settings.visibility = View.VISIBLE
-                binding.refresh.visibility = View.VISIBLE
-                fragment = "Asosiy"
-                a=1
-                if (check) {
-                    goto(true, fragment, false)
-                }else{
-                    goto(true,fragment,true)
+            fragmentSelected = true
+            val fragment = when (it.itemId) {
+                R.id.home -> {
+                    updateUIForHome()
+                    homeFragment
                 }
-            } else if (it.itemId == R.id.favorite) {
-                binding.crown1.visibility = View.GONE
-                binding.crown2.visibility = View.GONE
-                binding.settings.visibility = View.VISIBLE
-                binding.refresh.visibility = View.VISIBLE
-                fragment = "Tanlanganlar"
-                a=1
-                goto(true,fragment,true)
-            } else if (it.itemId == R.id.game) {
-                binding.crown1.visibility = View.VISIBLE
-                binding.crown2.visibility = View.VISIBLE
-                binding.settings.visibility = View.GONE
-                binding.refresh.visibility = View.GONE
-                binding.refreshProgress.visibility = View.GONE
-                fragment = "Testlar"
-                a=1
-                goto(true,fragment,true)
-            } else if (it.itemId == R.id.profile) {
-                binding.crown1.visibility = View.GONE
-                binding.crown2.visibility = View.GONE
-                binding.settings.visibility = View.VISIBLE
-                binding.refresh.visibility = View.VISIBLE
-                fragment = "Profile"
-                a=1
-                goto(true,fragment,true)
+
+                R.id.favorite -> {
+                    updateUIForOther("Tanlanganlar")
+                    favoriteFragment
+                }
+
+                R.id.game -> {
+                    updateUIForQuiz()
+                    quizFragment
+                }
+
+                R.id.profile -> {
+                    updateUIForOther("Hisob")
+                    profileFragment
+                }
+
+                else -> null
             }
-
-            return@setOnItemSelectedListener true
-
+            fragment?.let { switchFragment(it) }
+            true
         }
 
+        viewModel.shimmer.observe(this) { status ->
+            when (status) {
+                1 -> {
+                    handler.postDelayed({
+                        if (!fragmentSelected) {
+                            switchFragment(homeFragment)
+                        }
+                    }, 1000)
+                }
 
-
-
+                2 -> {
+                    // Error in loading data
+                    showErrorDialog()
+                }
+            }
+        }
+        viewModel.userData.observe(this) {
+            if (it.isEmpty()) {
+                Toast.makeText(this, "Sizning ID raqamingiz serverda topilmadi.", Toast.LENGTH_LONG)
+                    .show()
+            var pref = PrefUtils(this)
+            pref.clear()
+            startActivity(Intent(this, CheckActivity::class.java))
+            finish()
+            }
+        }
     }
 
-    private fun showCustomDialogBox() {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
-        dialog.setContentView(R.layout.about_custom_dialog)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    private fun loadData() {
+        var pref = PrefUtils(this)
+        var idRaqam = pref.getID()
+        viewModel.getStudent()
+        viewModel.getUser(idRaqam)
+    }
 
-        val exit: ImageView = dialog.findViewById(R.id.exit)
-        exit.setOnClickListener {
-            dialog.dismiss()
-        }
-        dialog.show()
+    private fun showErrorDialog() {
+        AlertDialog.Builder(this)
+            .setMessage("Serverga ulanishda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring")
+            .setPositiveButton("Qayta urinib ko'ring") { dialog, _ ->
+                loadData()
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun switchFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.flContainer, fragment, fragment.tag)
+            .commit()
+    }
+
+    private fun updateUIForHome() {
+        binding.crown1.visibility = View.GONE
+        binding.crown2.visibility = View.GONE
+        settings.visibility = View.VISIBLE
+        refresh.visibility = View.VISIBLE
+        findViewById<TextView>(R.id.tvMain).text = "Asosiy"
+    }
+
+    private fun updateUIForOther(text: String) {
+        binding.crown1.visibility = View.GONE
+        binding.crown2.visibility = View.GONE
+        settings.visibility = View.VISIBLE
+        refresh.visibility = View.VISIBLE
+        findViewById<TextView>(R.id.tvMain).text = text
+    }
+
+    private fun updateUIForQuiz() {
+        binding.crown1.visibility = View.VISIBLE
+        binding.crown2.visibility = View.VISIBLE
+        settings.visibility = View.GONE
+        refresh.visibility = View.GONE
+        binding.refresh.visibility = View.GONE
     }
 
     override fun showProgressBar() {
@@ -153,42 +170,8 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         progressBar.visibility = View.GONE
         refresh.visibility = View.VISIBLE
     }
-    override fun navigateToHomeFragment() {
-        val tvMain = findViewById<TextView>(R.id.tvMain)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
-        tvMain.text = "Asosiy"
-    }
-    fun goto(check: Boolean,fragment: String,a: Boolean){
-            val tvMain = findViewById<TextView>(R.id.tvMain)
-            tvMain.text = fragment
 
-            if (a){
-                if (fragment == "Asosiy") {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
-                }else if (fragment == "Tanlanganlar") {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, favoriteFragment, favoriteFragment.tag).commit()
-                }else if (fragment == "Testlar") {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, quizFragment, quizFragment.tag).commit()
-                }else if (fragment == "Profile") {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.flContainer, profileFragment, profileFragment.tag).commit()
-                }
-            }else {
-                Handler().postDelayed({
-                if (!check){
-                    progressBar.visibility = View.GONE
-                    refresh.visibility = View.VISIBLE
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.flContainer, homeFragment, homeFragment.tag).commit()
-                }
-                },2000)
-                }
-    }
-    fun loadData(){
-        viewModel.getStudent()
+    override fun navigateToHomeFragment() {
+        switchFragment(homeFragment)
     }
 }
