@@ -39,10 +39,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="#005D38">
-                        <androidx.viewpager2.widget.ViewPager2
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/viewPager"/>
+                            <androidx.viewpager2.widget.ViewPager2
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/viewPager"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -77,7 +77,7 @@
                             android:text="@string/category"/>
                         <LinearLayout
                             android:id="@+id/tvAll"
-                            android:layout_width="60dp"
+                            android:layout_width="80dp"
                             android:layout_height="20dp"
                             android:orientation="horizontal"
                             android:background="@drawable/ripple_effect"
@@ -94,7 +94,6 @@
                             <ImageView
                                 android:layout_width="12dp"
                                 android:layout_height="12dp"
-                                android:layout_marginTop="2dp"
                                 android:src="@drawable/noun_next_arrow"/>
                         </LinearLayout>
                     </LinearLayout>

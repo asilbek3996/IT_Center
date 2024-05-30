@@ -29,7 +29,7 @@ class ScoreActivity : AppCompatActivity() {
         }
         pref.setQuizLevel(level)
         binding.backMain.setOnClickListener {
-                startActivity(Intent(this@ScoreActivity,QuizStartActivity::class.java))
+                startActivity(Intent(this@ScoreActivity,QuizLevelActivity::class.java))
                 finish()
         }
         binding.refresh.setOnClickListener {

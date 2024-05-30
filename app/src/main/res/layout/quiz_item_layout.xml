@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#00000000"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 <androidx.cardview.widget.CardView
@@ -24,11 +23,38 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center"
             android:background="@drawable/item_quiz2">
-            <ImageView
+            <FrameLayout
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circle_shape_quiz">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardCornerRadius="55dp"
+                    app:cardElevation="0dp"
+                    app:contentPadding="6dp"
+                    app:cardBackgroundColor="#0015E5FF">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/ivItemQuiz"
+                        android:src="@drawable/ahmad_aka"
+                        android:scaleType="fitCenter"/>
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="match_parent"
-                android:id="@+id/ivItemQuiz"/>
+                app:civ_border_color="#fff"
+                android:padding="6dp"
+                app:civ_border_width="2dp"
+                android:src="@drawable/ahmad_aka"
+                android:layout_margin="20dp"/>
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
@@ -37,6 +63,8 @@
             android:textSize="18sp"
             android:layout_margin="4dp"
             android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/white"
             android:id="@+id/tvQuizItem"
             android:text="Kotlin"/>

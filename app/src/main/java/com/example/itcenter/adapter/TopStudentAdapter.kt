@@ -50,6 +50,7 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
             val top = item.students.sortedByDescending { it.userPercentage }
             if (item.students.size in 1..1) {
                 top.take(1)
+                holder.binding.tvAll.visibility = View.VISIBLE
                 holder.binding.item3.visibility = View.INVISIBLE
                 holder.binding.item2.visibility = View.INVISIBLE
                 holder.binding.item1.setOnClickListener {
@@ -63,6 +64,7 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
                 holder.binding.foiz1.text = topAndroidtxt
             } else if (item.students.size in 1..2) {
                 top.take(2)
+                holder.binding.tvAll.visibility = View.VISIBLE
                 holder.binding.item3.visibility = View.INVISIBLE
                 holder.binding.item1.setOnClickListener {
                     intent.putExtra("Student", top[0].fullName)
@@ -84,6 +86,7 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
                 holder.binding.foiz2.text = top2txt
             } else if (item.students.size > 2) {
                 top.take(3)
+                holder.binding.tvAll.visibility = View.VISIBLE
                 holder.binding.item1.setOnClickListener {
                     intent.putExtra("Student", top[0].fullName)
                     it.context.startActivity(intent)
@@ -112,6 +115,7 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
                 holder.binding.foiz2.text = top2txt
                 holder.binding.foiz3.text = top3txt
             } else {
+                holder.binding.tvAll.visibility = View.GONE
                 holder.binding.students.visibility = View.GONE
                 holder.binding.notStudents.visibility = View.VISIBLE
             }

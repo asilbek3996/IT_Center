@@ -63,20 +63,26 @@
                     android:id="@+id/refresh"
                     android:layout_width="24dp"
                     app:tint="@color/white"
-                    android:visibility="invisible"
                     android:layout_height="24dp"
                     android:src="@drawable/refresh" />
+                <ProgressBar
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/refreshProgress"
+                    android:indeterminateTint="@color/white"
+                    android:visibility="gone"/>
 
             </LinearLayout>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-<androidx.recyclerview.widget.RecyclerView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:layout_marginHorizontal="20dp"
-    android:id="@+id/recyclerQuiz"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="20dp"
+            android:id="@+id/recyclerQuiz"/>
+
 </LinearLayout>
 
 </FrameLayout>
