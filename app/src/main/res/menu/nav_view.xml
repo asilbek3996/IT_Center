@@ -8,7 +8,7 @@
         android:title="@string/favorite"/>
     <item android:id="@+id/game"
         android:icon="@drawable/game_svgrepo_com"
-        android:title="Game"/>
+        android:title="Quiz"/>
     <item android:id="@+id/profile"
         android:icon="@drawable/user"
         android:title="@string/profile"/>

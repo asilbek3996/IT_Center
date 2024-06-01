@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
 import com.example.itcenter.activity.CheckActivity
@@ -103,9 +104,12 @@ lateinit var binding: FragmentProfileBinding
             if (it.isNotEmpty()){
                 val pref = PrefUtils(requireContext())
                 var idRaqami = pref.getID()
+                val requestOptions = RequestOptions()
+                    .placeholder(R.drawable.user) // Standart rasm
+                    .error(R.drawable.user)
                 val firebaseAuth = FirebaseAuth.getInstance()
                     for (items in it){
-                            Glide.with(binding.img).load(items.userPhoto).into(binding.img)
+                            Glide.with(binding.img).load(items.userPhoto).apply(requestOptions).into(binding.img)
                             binding.tvFullName.text = items.fullName
                             binding.tvID.text = idRaqami.toString()
                     }

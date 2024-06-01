@@ -6,7 +6,6 @@ import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.itcenter.utils.PrefUtils
@@ -51,9 +50,9 @@ class VideoActivity : AppCompatActivity() {
                     binding.save.setOnClickListener {
                         pref.saveFavorite(Constants.favorite, video)
                         if (pref.checkFavorite(Constants.favorite, message)) {
-                            binding.save.setImageResource(R.drawable.heart)
-                        } else {
                             binding.save.setImageResource(R.drawable.favorite)
+                        } else {
+                            binding.save.setImageResource(R.drawable.heart)
                         }
                     }
 

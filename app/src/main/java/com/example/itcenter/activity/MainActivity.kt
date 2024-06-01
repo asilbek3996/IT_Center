@@ -159,6 +159,8 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         settings.visibility = View.GONE
         refresh.visibility = View.GONE
         binding.refresh.visibility = View.GONE
+        binding.refreshProgress.visibility = View.GONE
+        findViewById<TextView>(R.id.tvMain).text = "Quiz"
     }
 
     override fun showProgressBar() {

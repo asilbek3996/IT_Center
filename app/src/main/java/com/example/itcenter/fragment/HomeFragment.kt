@@ -195,6 +195,7 @@ class HomeFragment : Fragment() {
         var computerLiteracy = arrayListOf<AllStudentModel>()
         var scratch = arrayListOf<AllStudentModel>()
         var frontend = arrayListOf<AllStudentModel>()
+        var backend = arrayListOf<AllStudentModel>()
         for (student in students) {
             if (student.group == "Android") {
                 android.add(student)
@@ -212,6 +213,8 @@ class HomeFragment : Fragment() {
                 computerLiteracy.add(student)
             } else if (student.group == "Frontend") {
                 frontend.add(student)
+            } else if (student.group == "Backend") {
+                backend.add(student)
             }
         }
         var group = arrayListOf<GroupModel>()
@@ -224,7 +227,8 @@ class HomeFragment : Fragment() {
             GroupModel("C++", cpp, "C++"),
             GroupModel("Kompyuter Savodxonligi", computerLiteracy, "Literacy"),
             GroupModel("Scratch", scratch, "Scratch"),
-            GroupModel("Frontend", frontend, "Frontend")
+            GroupModel("Frontend", frontend, "Frontend"),
+            GroupModel("Backend", backend, "Backend"),
         )
         for (it in items) {
             if (it.group == pref.getStudent(Constants.group)) {

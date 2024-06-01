@@ -90,7 +90,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center"
-                    android:text="Guruhlar"
+                    android:text="Bosqichlar"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -103,7 +103,8 @@
                     <ImageView
                         android:id="@+id/topImage"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        app:tint="@color/white" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

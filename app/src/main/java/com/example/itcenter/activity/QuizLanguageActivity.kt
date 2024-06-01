@@ -2,6 +2,7 @@ package com.example.itcenter.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.itcenter.R
+import com.example.itcenter.ShowProgress
 import com.example.itcenter.adapter.AllCategoryAdapter
 import com.example.itcenter.adapter.QuizLanguage
 import com.example.itcenter.adapter.SearchCategoryAdapter
@@ -29,6 +31,18 @@ class QuizLanguageActivity : AppCompatActivity() {
             startActivity(Intent(this,QuizStartActivity::class.java))
             finish()
         }
+
+        binding.refresh.setOnClickListener {
+            loadData()
+            showProgressBar()
+        }
+        viewModel.progress.observe(this){
+            if (it) {
+                showProgressBar()
+            } else {
+                hideProgressBar()
+            }
+        }
         viewModel.allCategoryData.observe(this) {
             binding.recyclerQuiz.layoutManager = GridLayoutManager(this, 2)
             binding.recyclerQuiz.adapter = QuizLanguage(it,this)
@@ -42,5 +56,15 @@ class QuizLanguageActivity : AppCompatActivity() {
         super.onBackPressed()
         startActivity(Intent(this,QuizStartActivity::class.java))
         finish()
+    }
+
+    fun showProgressBar() {
+        binding.refreshProgress.visibility = View.VISIBLE
+        binding.refresh.visibility = View.GONE
+    }
+
+    fun hideProgressBar() {
+        binding.refreshProgress.visibility = View.GONE
+        binding.refresh.visibility = View.VISIBLE
     }
 }
