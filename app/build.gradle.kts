@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id ("kotlin-parcelize")
+    id("com.google.devtools.ksp")
+    id ("androidx.navigation.safeargs")
     id("com.google.gms.google-services")
 }
 
@@ -14,7 +17,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,7 +41,6 @@ android {
         viewBinding = true
     }
 }
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -70,9 +72,11 @@ dependencies {
     implementation ("com.squareup.retrofit2:adapter-rxjava2:2.7.2")
 
     implementation ("com.orhanobut:hawk:2.0.1")
-    implementation ("androidx.room:room-runtime:2.4.3")
-//    kapt "androidx.room:room-compiler:2.4.3"
-
+    implementation ("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    val roomVersion = "2.6.1"
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation ("androidx.multidex:multidex:2.0.1")
 
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
 
@@ -98,4 +102,5 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
+    implementation("org.greenrobot:eventbus:3.3.1")
 }

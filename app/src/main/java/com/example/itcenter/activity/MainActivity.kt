@@ -1,7 +1,6 @@
 package com.example.itcenter.activity
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.itcenter.fragment.*
 import com.example.itcenter.R
@@ -19,6 +19,7 @@ import com.example.itcenter.ShowProgress
 import com.example.itcenter.databinding.ActivityMainBinding
 import com.example.itcenter.model.viewmodel.MainViewModel
 import com.example.itcenter.utils.PrefUtils
+import org.greenrobot.eventbus.EventBus
 
 class MainActivity : AppCompatActivity(), ShowProgress.View {
     private val homeFragment = HomeFragment.newInstance()
@@ -97,11 +98,25 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 }
 
                 2 -> {
-                    // Error in loading data
                     showErrorDialog()
                 }
             }
         }
+//        viewModel.categoriesData.observe(this){
+//            if (it!=null) {
+//                viewModel.insertAllDBCategory(it)
+//                EventBus.getDefault().post(loadData())
+//            }
+//        }
+        viewModel.studentData.observe(this) {
+            Toast.makeText(this, "${it.size}", Toast.LENGTH_SHORT).show()
+            if (it!=null) {
+                viewModel.insertAllDBStudents(it)
+                Toast.makeText(this, "Qo'shildi", Toast.LENGTH_SHORT).show()
+                EventBus.getDefault().post(loadData())
+            }
+        }
+
         viewModel.userData.observe(this) {
             if (it.isEmpty()) {
                 Toast.makeText(this, "Sizning ID raqamingiz serverda topilmadi.", Toast.LENGTH_LONG)
@@ -119,6 +134,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         var idRaqam = pref.getID()
         viewModel.getStudent()
         viewModel.getUser(idRaqam)
+//        viewModel.getCategoris()
     }
 
     private fun showErrorDialog() {

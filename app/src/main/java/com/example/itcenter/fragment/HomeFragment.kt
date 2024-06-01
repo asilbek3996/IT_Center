@@ -1,6 +1,5 @@
 package com.example.itcenter.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -58,6 +57,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
+        loadDB()
         refresh = requireActivity().findViewById(R.id.refresh)
         refresh.setOnClickListener {
             binding.swipe.isRefreshing = true
@@ -94,7 +94,18 @@ class HomeFragment : Fragment() {
             }
         })
         viewModel.categoriesData.observe(requireActivity(), Observer {
-            categories(it)
+            var pref = PrefUtils(requireContext())
+            if (it[0].language == pref.getStudent(Constants.g)) {
+                Toast.makeText(requireContext(), "${it.size}", Toast.LENGTH_SHORT).show()
+                Glide.with(binding.imgCategory1).load(it[0].image).into(binding.imgCategory1)
+                Glide.with(binding.imgCategory2).load(it[1].image).into(binding.imgCategory2)
+                Glide.with(binding.imgCategory3).load(it[2].image).into(binding.imgCategory3)
+                binding.nameCategory1.text = it[0].language
+                binding.nameCategory2.text = it[1].language
+                binding.nameCategory3.text = it[2].language
+            } else {
+                categories(it)
+            }
         })
 
         binding.tvAll.setOnClickListener {
@@ -175,17 +186,20 @@ class HomeFragment : Fragment() {
         val pref = PrefUtils(requireContext())
         var idRaqam = pref.getID()
         viewModel.getOffers()
-        viewModel.getCategoris()
-        viewModel.getStudent()
         viewModel.getUser(idRaqam)
+        viewModel.getCategoris()
+    }
+    fun loadDB(){
+        viewModel.getAllStudents()
+//        viewModel.getAllCategory()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.clear()
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        viewModel.clear()
+//    }
 
-    private fun topTest(students: ArrayList<AllStudentModel>) {
+    private fun topTest(students: List<AllStudentModel>) {
         val pref = PrefUtils(requireContext())
         var android = arrayListOf<AllStudentModel>()
         var python = arrayListOf<AllStudentModel>()
@@ -254,6 +268,7 @@ class HomeFragment : Fragment() {
             }
         }
         item.addAll(item2)
+//        viewModel.insertAllDBCategory(item)
         Glide.with(binding.imgCategory1).load(item[0].image).into(binding.imgCategory1)
         Glide.with(binding.imgCategory2).load(item[1].image).into(binding.imgCategory2)
         Glide.with(binding.imgCategory3).load(item[2].image).into(binding.imgCategory3)

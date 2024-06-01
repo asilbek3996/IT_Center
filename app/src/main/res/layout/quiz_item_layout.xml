@@ -46,15 +46,6 @@
                         android:scaleType="fitCenter"/>
                 </androidx.cardview.widget.CardView>
             </FrameLayout>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="match_parent"
-                app:civ_border_color="#fff"
-                android:padding="6dp"
-                app:civ_border_width="2dp"
-                android:src="@drawable/ahmad_aka"
-                android:layout_margin="20dp"/>
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"

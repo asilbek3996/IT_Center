@@ -13,7 +13,7 @@ import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.DarslarModel
 
-class SearchStudentAdapter(var items: ArrayList<AllStudentModel>): RecyclerView.Adapter<SearchStudentAdapter.ItemHolder>() {
+class SearchStudentAdapter(var items: List<AllStudentModel>): RecyclerView.Adapter<SearchStudentAdapter.ItemHolder>() {
     inner class ItemHolder(val binding: AlStudentItemLayoutBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {

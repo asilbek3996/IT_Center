@@ -45,12 +45,11 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.signInWithEmailAndPassword(email!!, password!!).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 if (firebaseAuth.currentUser!!.isEmailVerified) {
-
-                    var pref = PrefUtils(this)
-                    var student = AllStudentModel(0,email,"","","x","",0,"")
-                    pref.setStudent(student)
-                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                    finish()
+//                    var pref = PrefUtils(this)
+//                    var student = AllStudentModel(0,email,"","","x","",0,"")
+//                    pref.setStudent(student)
+//                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+//                    finish()
                 } else {
                     Utility.showToast(
                         this@LoginActivity,

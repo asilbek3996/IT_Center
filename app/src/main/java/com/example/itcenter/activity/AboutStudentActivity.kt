@@ -53,7 +53,7 @@ class AboutStudentActivity : AppCompatActivity() {
     }
 
     fun loadData(){
-        viewModel.getStudent()
+        viewModel.getAllStudents()
     }
     fun filter(text: String){
         viewModel.studentData.observe(this, Observer {

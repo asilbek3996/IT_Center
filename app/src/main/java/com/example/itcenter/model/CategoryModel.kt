@@ -1,8 +1,17 @@
 package com.example.itcenter.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "category")
 data class CategoryModel(
-    val id: Int,
-    val image: String,
-    val language: String,
-    val levelImage: String
+    @PrimaryKey(autoGenerate = true)
+    val uid: Int,
+    var _id: String,
+    var id: Int,
+    var image: String,
+    var levelImage: String,
+    var language: String,
+    var createdAt: String,
+    var updatedAt: String
 )

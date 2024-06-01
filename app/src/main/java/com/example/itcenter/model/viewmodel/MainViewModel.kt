@@ -9,6 +9,11 @@ import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
 import com.example.itcenter.model.QuestionModel
+import com.example.itcenter.room.AppDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel: ViewModel() {
     val repository = Repository()
@@ -19,11 +24,12 @@ class MainViewModel: ViewModel() {
     val shimmer = MutableLiveData<Int>()
     val adsData = MutableLiveData<ArrayList<ImageItem>>()
     val allCategoryData = MutableLiveData<List<AllCategoryModel>>()
-    val categoriesData = MutableLiveData<ArrayList<CategoryModel>>()
-    val studentData = MutableLiveData<ArrayList<AllStudentModel>>()
+    val categoriesData = MutableLiveData<List<CategoryModel>>()
+    val studentData = MutableLiveData<List<AllStudentModel>>()
     val userData = MutableLiveData<ArrayList<AllStudentModel>>()
     val lessonsData = MutableLiveData<ArrayList<DarslarModel>>()
     val questionData = MutableLiveData<ArrayList<QuestionModel>>()
+
 
     fun getOffers() {
         repository.getAds(error, progress, adsData)
@@ -49,4 +55,29 @@ class MainViewModel: ViewModel() {
     fun clear() {
         repository.clearDisposable()
     }
+
+    fun insertAllDBStudents(items: List<AllStudentModel>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            AppDatabase.getDatabase().getStudentDao().deleteAll()
+            AppDatabase.getDatabase().getStudentDao().insertAllStudent(items)
+        }
+    }
+    fun getAllStudents(){
+        CoroutineScope(Dispatchers.Main).launch {
+            studentData.value = withContext(Dispatchers.IO){AppDatabase.getDatabase().getStudentDao().getAllStudents()}
+        }
+    }
+//    fun insertAllDBCategory(items: List<CategoryModel>) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            if (items!=null) {
+//                AppDatabase.getDatabase().getCategoryDao().deleteAllCategory()
+//                AppDatabase.getDatabase().getCategoryDao().insertAll(items)
+//            }
+//        }
+//    }
+//    fun getAllCategory(){
+//        CoroutineScope(Dispatchers.Main).launch {
+//            categoriesData.value = withContext(Dispatchers.IO){AppDatabase.getDatabase().getCategoryDao().getAllCategory()}
+//        }
+//    }
 }

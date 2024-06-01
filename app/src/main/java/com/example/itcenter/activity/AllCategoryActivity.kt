@@ -1,9 +1,7 @@
 package com.example.itcenter.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -11,14 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.itcenter.adapter.AllCategoryAdapter
 import com.example.itcenter.adapter.SearchCategoryAdapter
-import com.example.itcenter.api.NetworkManager
 import com.example.itcenter.databinding.ActivityAllCategoryBinding
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.viewmodel.MainViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.Locale
 
 class AllCategoryActivity : AppCompatActivity() {
     lateinit var binding: ActivityAllCategoryBinding
@@ -80,13 +73,13 @@ override fun onCreate(savedInstanceState: Bundle?) {
         })
 
 
-        viewModel.allCategoryData.observe(this) {
+        viewModel.categoriesData.observe(this) {
             binding.recyclerAllCategory.layoutManager = GridLayoutManager(this, 3)
             binding.recyclerAllCategory.adapter = AllCategoryAdapter(it)
         }
 }
     fun loadData(){
-        viewModel.getAllCategories()
+        viewModel.getCategoris()
     }
 
     fun filter(text: String){

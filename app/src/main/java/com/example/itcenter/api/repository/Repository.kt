@@ -63,7 +63,7 @@ class Repository() {
         )
 
     }
-    fun getCategories(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<CategoryModel>>){
+    fun getCategories(error: MutableLiveData<String>, success:MutableLiveData<List<CategoryModel>>){
         compositeDisposable.add(NetworkManager.getApiService().getCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -82,7 +82,7 @@ class Repository() {
         )
 
     }
-    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>,progress: MutableLiveData<Boolean>,shimmer: MutableLiveData<Int>){
+    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<List<AllStudentModel>>,progress: MutableLiveData<Boolean>,shimmer: MutableLiveData<Int>){
         progress.value = true
         shimmer.value = 0
         compositeDisposable.add(NetworkManager.getApiService().getStudent()

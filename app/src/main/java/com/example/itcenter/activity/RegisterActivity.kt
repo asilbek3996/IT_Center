@@ -134,11 +134,11 @@ class RegisterActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 if (firebaseAuth.currentUser!!.isEmailVerified) {
 
-                    var pref = PrefUtils(this)
-                    var student = AllStudentModel(0,email,"","","x","",0,"")
-                    pref.setStudent(student)
-                    startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
-                    finish()
+//                    var pref = PrefUtils(this)
+//                    var student = AllStudentModel(0,email,"","","x","",0,"")
+//                    pref.setStudent(student)
+//                    startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
+//                    finish()
                 } else {
                     Utility.showToast(
                         this@RegisterActivity,

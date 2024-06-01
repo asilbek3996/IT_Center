@@ -3,17 +3,13 @@ package com.example.itcenter.adapter
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.itcenter.activity.DarslarActivity
 import com.example.itcenter.activity.LevelActivity
 import com.example.itcenter.databinding.AllCategoryItemLayoutBinding
-import com.example.itcenter.databinding.CategoryItemLayoutBinding
-import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.CategoryModel
 
-class AllCategoryAdapter(var items: List<AllCategoryModel>): RecyclerView.Adapter<AllCategoryAdapter.ItemHolder>() {
+class AllCategoryAdapter(var items: List<CategoryModel>): RecyclerView.Adapter<AllCategoryAdapter.ItemHolder>() {
     inner class ItemHolder(val binding: AllCategoryItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
