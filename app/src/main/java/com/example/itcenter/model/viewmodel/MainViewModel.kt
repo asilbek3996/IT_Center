@@ -32,20 +32,20 @@ class MainViewModel: ViewModel() {
 
 
     fun getOffers() {
-        repository.getAds(error, progress, adsData)
+        repository.getAds(error, adsData,progress,shimmer)
     }
     fun getAllCategories() {
-        repository.getAllCategories(error, allCategoryData, progress)
+        repository.getAllCategories(error, allCategoryData)
     }
-    fun getCategoris() {
+    fun getCategories() {
         repository.getCategories(error, categoriesData)
     }
     fun getStudent() {
-        repository.getStudent(error, studentData, progress,shimmer)
+        repository.getStudent(error, studentData)
     }
-    fun getUser(id: Int) {
-        repository.getUser(id,error, userData, progress)
-    }
+//    fun getUser(id: String) {
+//        repository.getUser(id,error, userData, progress,shimmer)
+//    }
     fun getLessons() {
         repository.getLessons(error, lessonsData, progress)
     }
@@ -67,12 +67,11 @@ class MainViewModel: ViewModel() {
             studentData.value = withContext(Dispatchers.IO){AppDatabase.getDatabase().getStudentDao().getAllStudents()}
         }
     }
+
 //    fun insertAllDBCategory(items: List<CategoryModel>) {
 //        CoroutineScope(Dispatchers.IO).launch {
-//            if (items!=null) {
 //                AppDatabase.getDatabase().getCategoryDao().deleteAllCategory()
 //                AppDatabase.getDatabase().getCategoryDao().insertAll(items)
-//            }
 //        }
 //    }
 //    fun getAllCategory(){

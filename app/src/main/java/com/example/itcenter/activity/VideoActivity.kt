@@ -6,6 +6,7 @@ import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.itcenter.utils.PrefUtils
@@ -32,11 +33,6 @@ class VideoActivity : AppCompatActivity() {
                     binding.webView.webChromeClient = MyChrome()
                     binding.webView.webViewClient = WebViewClient()
                     binding.webView.loadUrl(video.videoLink)
-//                    var text =""
-//                    for (j in 1..10) {
-//                        for () {
-//                        }
-//                    }
                     var txt = video.homework
                     binding.tvSubtitr.text = txt
                     val pref = PrefUtils(this)
@@ -49,10 +45,15 @@ class VideoActivity : AppCompatActivity() {
 
                     binding.save.setOnClickListener {
                         pref.saveFavorite(Constants.favorite, video)
+                        Toast.makeText(
+                            this,
+                            "${pref.checkFavorite(Constants.favorite, message)}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         if (pref.checkFavorite(Constants.favorite, message)) {
-                            binding.save.setImageResource(R.drawable.favorite)
-                        } else {
                             binding.save.setImageResource(R.drawable.heart)
+                        } else {
+                            binding.save.setImageResource(R.drawable.favorite)
                         }
                     }
 

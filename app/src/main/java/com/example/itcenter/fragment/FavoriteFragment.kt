@@ -23,14 +23,8 @@ import com.example.itcenter.utils.Constants
 
 class FavoriteFragment : Fragment(), ItemClickedListener {
     lateinit var binding: FragmentFavoriteBinding
-    lateinit var viewModel: MainViewModel
     private lateinit var adapter: SaveAdapter
-    lateinit var refresh: ImageView
     var items= arrayListOf<DarslarModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,34 +36,6 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadData()
-        favorite()
-        refresh = requireActivity().findViewById(R.id.refresh)
-        refresh.setOnClickListener {
-            items.clear()
-            binding.swipe.isRefreshing = true
-            loadData()
-            (activity as? ShowProgress.View)?.showProgressBar()
-        }
-        binding.swipe.setOnRefreshListener {
-            loadData()
-            items.clear()
-        }
-        viewModel.progress.observe(requireActivity(), Observer {
-            binding.swipe.isRefreshing = it
-            if (it) {
-                (activity as? ShowProgress.View)?.showProgressBar()
-            } else {
-                (activity as? ShowProgress.View)?.hideProgressBar()
-            }
-        })
-
-    }
-    override fun onItemClicked(position: DarslarModel) {
-        items.clear()
-        favorite()
-    }
-    fun favorite(){
         val pref = PrefUtils(requireContext())
         if (pref.getFavorite(Constants.favorite)?.isNotEmpty() == true) {
             items = pref.getFavorite(Constants.favorite)!!
@@ -77,14 +43,17 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
         binding.favoriteRecyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         adapter = SaveAdapter(items,this,this)
         binding.favoriteRecyclerView.adapter = adapter
+
     }
-    fun loadData(){
-        viewModel.getLessons()
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.clear()
+    override fun onItemClicked(position: DarslarModel) {
         items.clear()
+        val pref = PrefUtils(requireContext())
+        if (pref.getFavorite(Constants.favorite)?.isNotEmpty() == true) {
+            items = pref.getFavorite(Constants.favorite)!!
+        }
+        binding.favoriteRecyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        adapter = SaveAdapter(items,this,this)
+        binding.favoriteRecyclerView.adapter = adapter
     }
     companion object {
         @JvmStatic

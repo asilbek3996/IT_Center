@@ -92,6 +92,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardToolbar" />
 
+
     <androidx.cardview.widget.CardView
         android:id="@+id/bnvCard"
         android:layout_width="match_parent"

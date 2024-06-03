@@ -41,7 +41,8 @@ class QuizLevelAdapter(var items: List<QuizLevelModel>, private val context: Con
         holder.itemView.setOnClickListener {
             if (item.id<=level){
                 val intent = Intent(context, QuizActivity::class.java)
-                intent.putExtra("level",item.id)
+                intent.putExtra("level",item.id.toString())
+                intent.putExtra("language",language)
                 context.startActivity(intent)
                 if (context is Activity) {
                     context.finish()

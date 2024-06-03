@@ -79,7 +79,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         }
 }
     fun loadData(){
-        viewModel.getCategoris()
+        viewModel.getCategories()
     }
 
     fun filter(text: String){

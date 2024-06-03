@@ -26,7 +26,7 @@ class QuizLevelActivity : AppCompatActivity(),level {
         super.onCreate(savedInstanceState)
         binding = ActivityQuizLevelBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val message = intent.getStringExtra("Language")
+        val message = intent.getStringExtra("language")
         val list = listOf(
             QuizLevelModel(1,"1-bosqich"),
             QuizLevelModel(2,"2-bosqich"),

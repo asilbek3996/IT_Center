@@ -6,7 +6,7 @@ data class QuestionModel(
     val id: Int,
     val question: String?,
     val language: String?,
-    var level: Int,
+    var level: String,
     val a: String?,
     val b: String?,
     val c: String?,

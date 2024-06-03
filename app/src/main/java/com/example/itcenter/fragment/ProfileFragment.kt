@@ -100,42 +100,40 @@ lateinit var binding: FragmentProfileBinding
             requireActivity().finish()
         }
 
-        viewModel.userData.observe(requireActivity()){
-            if (it.isNotEmpty()){
-                val pref = PrefUtils(requireContext())
-                var idRaqami = pref.getID()
-                val requestOptions = RequestOptions()
-                    .placeholder(R.drawable.user) // Standart rasm
-                    .error(R.drawable.user)
-                val firebaseAuth = FirebaseAuth.getInstance()
-                    for (items in it){
-                            Glide.with(binding.img).load(items.userPhoto).apply(requestOptions).into(binding.img)
-                            binding.tvFullName.text = items.fullName
-                            binding.tvID.text = idRaqami.toString()
-                    }
-            }else {
-                Toast.makeText(
-                    requireContext(),
-                    "Sizning ID raqamingiz serverda topilmadi.",
-                    Toast.LENGTH_LONG
-                )
-                    .show()
-                val pref = PrefUtils(requireContext())
-                pref.clear()
-                startActivity(Intent(requireActivity(), CheckActivity::class.java))
-                requireActivity().finish()
-            }
-        }
+//        viewModel.userData.observe(requireActivity()){
+//            if (it.isNotEmpty()){
+//                val pref = PrefUtils(requireContext())
+//                var idRaqami = pref.getID()
+//                val requestOptions = RequestOptions()
+//                    .placeholder(R.drawable.user) // Standart rasm
+//                    .error(R.drawable.user)
+//                val firebaseAuth = FirebaseAuth.getInstance()
+//                    for (items in it){
+//                            Glide.with(binding.img).load(items.userPhoto).apply(requestOptions).into(binding.img)
+//                            binding.tvFullName.text = items.fullName
+//                            binding.tvID.text = idRaqami.toString()
+//                    }
+//            }else {
+//                Toast.makeText(
+//                    requireContext(),
+//                    "Sizning ID raqamingiz serverda topilmadi.",
+//                    Toast.LENGTH_LONG
+//                )
+//                    .show()
+//                val pref = PrefUtils(requireContext())
+//                pref.clear()
+//                startActivity(Intent(requireActivity(), CheckActivity::class.java))
+//                requireActivity().finish()
+//            }
+//        }
     }
 fun loadData(){
     val pref = PrefUtils(requireContext())
-    var idRaqami = pref.getID()
-    viewModel.getUser(idRaqami)
+    var idRaqami = pref.get_ID()
+//    if (idRaqami != null) {
+//        viewModel.getUser(idRaqami)
+//    }
 }
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.clear()
-    }
     companion object {
         @JvmStatic
         fun newInstance() = ProfileFragment()

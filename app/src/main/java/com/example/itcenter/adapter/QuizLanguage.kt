@@ -43,7 +43,7 @@ class QuizLanguage(var items: List<AllCategoryModel>, private val context: Conte
         holder.binding.tvQuizItem.text = item.language
         holder.itemView.setOnClickListener {
             val intent = Intent(context, QuizLevelActivity::class.java)
-            intent.putExtra("Language", item.language)
+            intent.putExtra("language", item.language)
             context.startActivity(intent)
             if (context is Activity) {
                 context.finish()

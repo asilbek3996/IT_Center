@@ -1,5 +1,6 @@
 package com.example.itcenter.fragment
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -42,7 +43,7 @@ class HomeFragment : Fragment() {
     var item = arrayListOf<CategoryModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -57,7 +58,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
-        loadDB()
         refresh = requireActivity().findViewById(R.id.refresh)
         refresh.setOnClickListener {
             binding.swipe.isRefreshing = true
@@ -76,6 +76,18 @@ class HomeFragment : Fragment() {
             }
         })
 
+        viewModel.shimmer.observe(requireActivity()) { status ->
+            when (status) {
+                1 -> {
+                    binding.swipe.visibility = View.VISIBLE
+                    binding.shimmerLayout.visibility = View.GONE
+                }
+
+                2 -> {
+                    showErrorDialog()
+                }
+            }
+        }
 
         setUpTransformer()
         viewModel.adsData.observe(requireActivity(), Observer {
@@ -94,18 +106,7 @@ class HomeFragment : Fragment() {
             }
         })
         viewModel.categoriesData.observe(requireActivity(), Observer {
-            var pref = PrefUtils(requireContext())
-            if (it[0].language == pref.getStudent(Constants.g)) {
-                Toast.makeText(requireContext(), "${it.size}", Toast.LENGTH_SHORT).show()
-                Glide.with(binding.imgCategory1).load(it[0].image).into(binding.imgCategory1)
-                Glide.with(binding.imgCategory2).load(it[1].image).into(binding.imgCategory2)
-                Glide.with(binding.imgCategory3).load(it[2].image).into(binding.imgCategory3)
-                binding.nameCategory1.text = it[0].language
-                binding.nameCategory2.text = it[1].language
-                binding.nameCategory3.text = it[2].language
-            } else {
                 categories(it)
-            }
         })
 
         binding.tvAll.setOnClickListener {
@@ -131,11 +132,10 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
         viewModel.studentData.observe(requireActivity(), Observer {
-            topTest(it)
-        })
-
-        viewModel.userData.observe(requireActivity()) {
-            if (it.isEmpty()) {
+            val pref = PrefUtils(requireContext())
+            var idRaqam = pref.getID()
+            var user = it.filter { it.id==idRaqam }
+            if (user.isEmpty()) {
                 Toast.makeText(
                     requireContext(),
                     "Sizning ID raqamingiz serverda topilmadi.",
@@ -147,14 +147,23 @@ class HomeFragment : Fragment() {
                 startActivity(Intent(requireActivity(), CheckActivity::class.java))
                 requireActivity().finish()
             }
-        }
+            topTest(it)
+        })
     }
 
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()
     }
-
+    private fun showErrorDialog() {
+        AlertDialog.Builder(requireActivity())
+            .setMessage("Serverga ulanishda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring")
+            .setPositiveButton("Qayta urinib ko'ring") { dialog, _ ->
+                loadData()
+                dialog.dismiss()
+            }
+            .show()
+    }
     override fun onPause() {
         super.onPause()
 
@@ -183,21 +192,10 @@ class HomeFragment : Fragment() {
     }
 
     fun loadData() {
-        val pref = PrefUtils(requireContext())
-        var idRaqam = pref.getID()
         viewModel.getOffers()
-        viewModel.getUser(idRaqam)
-        viewModel.getCategoris()
-    }
-    fun loadDB(){
+        viewModel.getCategories()
         viewModel.getAllStudents()
-//        viewModel.getAllCategory()
     }
-
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        viewModel.clear()
-//    }
 
     private fun topTest(students: List<AllStudentModel>) {
         val pref = PrefUtils(requireContext())
@@ -268,7 +266,6 @@ class HomeFragment : Fragment() {
             }
         }
         item.addAll(item2)
-//        viewModel.insertAllDBCategory(item)
         Glide.with(binding.imgCategory1).load(item[0].image).into(binding.imgCategory1)
         Glide.with(binding.imgCategory2).load(item[1].image).into(binding.imgCategory2)
         Glide.with(binding.imgCategory3).load(item[2].image).into(binding.imgCategory3)

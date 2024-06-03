@@ -38,10 +38,10 @@ class QuizActivity : AppCompatActivity(), score {
     private var receivedList: MutableList<QuestionModel> = mutableListOf()
     private var correctAnswersCount = 0
     private var wrongAnswersCount = 0
-    private var score = 0
-    private var level = 0
-    private var level2 = 0
+    private var score = 0.0
+    var level = "1"
     private var javob = "0"
+    private var lan = ""
     private lateinit var timer: CountDownTimer
     lateinit var viewModel: MainViewModel
 
@@ -52,7 +52,11 @@ class QuizActivity : AppCompatActivity(), score {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
-        level = intent.getIntExtra("level",1)
+        level = intent.getStringExtra("level").toString()
+        var language = intent.getStringExtra("language")
+        if (language != null) {
+            lan(language,true)
+        }
         binding.framelayout.visibility = android.view.View.VISIBLE
         binding.framelayout.startAnimation(fadeInAnimation)
         binding.questionList.visibility = android.view.View.VISIBLE
@@ -62,7 +66,8 @@ class QuizActivity : AppCompatActivity(), score {
         window.statusBarColor = ContextCompat.getColor(this@QuizActivity, R.color.grey)
         viewModel.questionData.observe(this){
             for (i in it){
-                if (i.level == level){
+                var l = i.language?.trimEnd()
+                if (i.level == level && l==language){
                    receivedList.add(i)
                 }
             }
@@ -89,10 +94,14 @@ class QuizActivity : AppCompatActivity(), score {
 
                 rightArrow.setOnClickListener {
                     if (progressBar.progress == count) {
-                        navigateToScoreActivity(level)
+                        if (language != null) {
+                            navigateToScoreActivity(level,language)
+                        }
                         return@setOnClickListener
                     }
-                    moveToNextQuestion()
+                    if (language != null) {
+                        moveToNextQuestion(language)
+                    }
                 }
             }
 
@@ -102,12 +111,12 @@ class QuizActivity : AppCompatActivity(), score {
         viewModel.getQuestions()
     }
 
-    private fun moveToNextQuestion() {
+    private fun moveToNextQuestion(language: String) {
         val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
         if (position < receivedList.size - 1) {
             position++
-            binding.progressBar.progress = position + 1
+            binding.progressBar.progress += 1
             binding.questionNumberTxt.text = "Savollar ${binding.progressBar.progress}/${receivedList.size}"
             binding.questionTxt.text = receivedList[position].question
             binding.framelayout.startAnimation(fadeInAnimation) // Animatsiya framelayout uchun
@@ -115,7 +124,7 @@ class QuizActivity : AppCompatActivity(), score {
             loadAnswers()
             resetAndStartTimer()  // Reset and start the timer for the new question
         } else {
-            navigateToScoreActivity(level)
+            navigateToScoreActivity(level,language)
         }
     }
 
@@ -130,25 +139,28 @@ class QuizActivity : AppCompatActivity(), score {
             receivedList[position].clickedAnswer = ""
 //            users.add(receivedList[position].clickedAnswer.toString())
         }
-        var score = 100/receivedList.size
+        var score = 100.0/receivedList.size
         val questionAdapter = QuestionAdapter(
             receivedList[position].right.toString(), users, score, this
         )
 
         questionAdapter.differ.submitList(users)
         binding.questionList.apply {
-            layoutManager = GridLayoutManager(this@QuizActivity, 2)
+//            layoutManager = GridLayoutManager(this@QuizActivity, 2)
+            layoutManager = LinearLayoutManager(this@QuizActivity)
             adapter = questionAdapter
         }
     }
 
-    private fun navigateToScoreActivity(level: Int) {
+    private fun navigateToScoreActivity(level: String,language: String) {
         timer.cancel()
+        Toast.makeText(this, "$language", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@QuizActivity, ScoreActivity::class.java).apply {
             putExtra("right", correctAnswersCount)
             putExtra("wrong", wrongAnswersCount)
             putExtra("Score", score)
             putExtra("level", level)
+            putExtra("language", language)
         }
         startActivity(intent)
         finish()
@@ -173,7 +185,8 @@ class QuizActivity : AppCompatActivity(), score {
                 if (javob == "0"){
                     timeOut()
                 }else {
-                    moveToNextQuestion()  // Move to the next question when the timer finishes
+                    var l = lan("0",false)
+                    moveToNextQuestion(l)  // Move to the next question when the timer finishes
                     javob = "0"
                 }
             }
@@ -203,18 +216,25 @@ class QuizActivity : AppCompatActivity(), score {
         correctAnswersCount = 0
         wrongAnswersCount = 0
         position = -1
-        moveToNextQuestion()
+        var l = lan("0",false)
+        moveToNextQuestion(l)
         loadAnswers()
     }
-    override fun amount(number: Int, clickedAnswer: String, rightAnswer: Int, wrongAnswer: Int) {
+    override fun amount(number: Double, clickedAnswer: String, rightAnswer: Int, wrongAnswer: Int) {
             correctAnswersCount +=rightAnswer
             wrongAnswersCount += wrongAnswer
             score += number
-            receivedList[3].clickedAnswer = clickedAnswer
+            receivedList[position].clickedAnswer = clickedAnswer
         if (rightAnswer == 1){
             javob = "ok"
         }else{
             javob = "no"
         }
+    }
+    fun lan(language: String,c:Boolean):String{
+        if (c){
+            lan = language
+        }
+        return lan
     }
 }

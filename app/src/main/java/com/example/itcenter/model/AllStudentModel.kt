@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class AllStudentModel(
     @PrimaryKey(autoGenerate = true)
     val uid: Int,
+    val _id: String,
     var id: Int,
     var fullName: String,
     var birthday: String,
@@ -17,5 +18,5 @@ data class AllStudentModel(
     var certificate: Boolean,
     var graduated: Boolean,
     var userPercentage: Int,
-    var userPhoto: String
+    var userPhoto: String?
 )

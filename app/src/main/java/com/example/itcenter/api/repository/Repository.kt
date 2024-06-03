@@ -14,25 +14,28 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
-class Repository() {
+class Repository {
     val compositeDisposable = CompositeDisposable()
     fun clearDisposable() {
         compositeDisposable.clear()
     }
-    fun getAds(error: MutableLiveData<String>, progress:MutableLiveData<Boolean>, success:MutableLiveData<ArrayList<ImageItem>>){
+    fun getAds(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<ImageItem>>, progress: MutableLiveData<Boolean>, shimmer: MutableLiveData<Int>){
         progress.value = true
+        shimmer.value = 0
         compositeDisposable.add(NetworkManager.getApiService().getAds()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<ArrayList<ImageItem>>(){
                 override fun onNext(t: ArrayList<ImageItem>) {
-                    progress.value = false
                     success.value = t
+                    progress.value = false
+                    shimmer.value = 1
                 }
 
                 override fun onError(e: Throwable) {
-                    progress.value = false
                     error.value = e.localizedMessage
+                    progress.value = false
+                    shimmer.value = 2
                 }
 
                 override fun onComplete() {
@@ -41,19 +44,16 @@ class Repository() {
         )
 
     }
-    fun getAllCategories(error: MutableLiveData<String>, success:MutableLiveData<List<AllCategoryModel>>,progress: MutableLiveData<Boolean>){
-        progress.value = true
+    fun getAllCategories(error: MutableLiveData<String>, success:MutableLiveData<List<AllCategoryModel>>){
         compositeDisposable.add(NetworkManager.getApiService().getAllCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<List<AllCategoryModel>>(){
                 override fun onNext(t: List<AllCategoryModel>) {
-                    progress.value = false
                     success.value = t
                 }
 
                 override fun onError(e: Throwable) {
-                    progress.value = false
                     error.value = e.localizedMessage
                 }
 
@@ -82,22 +82,16 @@ class Repository() {
         )
 
     }
-    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<List<AllStudentModel>>,progress: MutableLiveData<Boolean>,shimmer: MutableLiveData<Int>){
-        progress.value = true
-        shimmer.value = 0
+    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<List<AllStudentModel>>){
         compositeDisposable.add(NetworkManager.getApiService().getStudent()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>(){
-                override fun onNext(t: ArrayList<AllStudentModel>) {
-                    progress.value = false
-                    shimmer.value = 1
+            .subscribeWith(object : DisposableObserver<List<AllStudentModel>>(){
+                override fun onNext(t: List<AllStudentModel>) {
                     success.value = t
                 }
 
                 override fun onError(e: Throwable) {
-                    progress.value = false
-                    shimmer.value = 2
                     error.value = e.localizedMessage
                 }
 
@@ -108,28 +102,31 @@ class Repository() {
 
     }
 
-    fun getUser(id: Int, error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>,progress: MutableLiveData<Boolean>){
-        progress.value = true
-        compositeDisposable.add(NetworkManager.getApiService().getUser(id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>(){
-                override fun onNext(t: ArrayList<AllStudentModel>) {
-                    progress.value = false
-                    success.value = t
-                }
-
-                override fun onError(e: Throwable) {
-                    progress.value = false
-                    error.value = e.localizedMessage
-                }
-
-                override fun onComplete() {
-                }
-            })
-        )
-
-    }
+//    fun getUser(id: String, error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>,progress: MutableLiveData<Boolean>,shimmer: MutableLiveData<Int>){
+//        progress.value = true
+//        shimmer.value = 0
+//        compositeDisposable.add(NetworkManager.getApiService().getUser(id)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>(){
+//                override fun onNext(t: ArrayList<AllStudentModel>) {
+//                    progress.value = false
+//                    shimmer.value = 1
+//                    success.value = t
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                    progress.value = false
+//                    shimmer.value = 3
+//                    error.value = e.localizedMessage
+//                }
+//
+//                override fun onComplete() {
+//                }
+//            })
+//        )
+//
+//    }
     fun getLessons(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<DarslarModel>>,progress: MutableLiveData<Boolean>){
         progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getLessons()

@@ -72,6 +72,6 @@ class LevelActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-        viewModel.getCategoris()
+        viewModel.getCategories()
     }
 }

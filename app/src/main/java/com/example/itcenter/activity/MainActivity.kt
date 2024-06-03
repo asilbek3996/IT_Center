@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
     private val favoriteFragment = FavoriteFragment.newInstance()
     private val quizFragment = QuizFragment.newInstance()
     private val profileFragment = ProfileFragment.newInstance()
-    private val loadingFragment = LoadingFragment.newInstance()
+    var activeFragment:Fragment = homeFragment
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var progressBar: ProgressBar
@@ -34,8 +34,6 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
     private lateinit var settings: ImageView
     private lateinit var viewModel: MainViewModel
 
-    private val handler = Handler()
-    private var fragmentSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +48,17 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id.flContainer, loadingFragment, loadingFragment.tag).commit()
+            .add(R.id.flContainer, homeFragment, homeFragment.tag).hide(homeFragment).commit()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.flContainer, favoriteFragment, favoriteFragment.tag).hide(favoriteFragment)
+            .commit()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.flContainer, quizFragment, quizFragment.tag).hide(quizFragment).commit()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.flContainer, profileFragment, profileFragment.tag).hide(profileFragment)
+            .commit()
+
+        supportFragmentManager.beginTransaction().show(activeFragment).commit()
 
         refresh.setOnClickListener {
             loadData()
@@ -59,48 +67,48 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         }
 
         binding.bottomNavigationView.setOnItemSelectedListener {
-            fragmentSelected = true
-            val fragment = when (it.itemId) {
-                R.id.home -> {
-                    updateUIForHome()
-                    homeFragment
-                }
-
-                R.id.favorite -> {
-                    updateUIForOther("Tanlanganlar")
-                    favoriteFragment
-                }
-
-                R.id.game -> {
-                    updateUIForQuiz()
-                    quizFragment
-                }
-
-                R.id.profile -> {
-                    updateUIForOther("Hisob")
-                    profileFragment
-                }
-
-                else -> null
+            if (it.itemId == R.id.actionHome) {
+                    supportFragmentManager.beginTransaction().hide(activeFragment)
+                        .show(homeFragment)
+                        .commit()
+                    activeFragment = homeFragment
+                    binding.tvMain.text = "Asosiy"
+                binding.crown1.visibility = View.GONE
+                binding.crown2.visibility = View.GONE
+                settings.visibility = View.VISIBLE
+                refresh.visibility = View.VISIBLE
+            } else if (it.itemId == R.id.actionFavorite) {
+                supportFragmentManager.beginTransaction().hide(activeFragment)
+                    .show(favoriteFragment).commit()
+                activeFragment = favoriteFragment
+                binding.tvMain.text = "Tanlanganlar"
+                binding.crown1.visibility = View.GONE
+                binding.crown2.visibility = View.GONE
+                settings.visibility = View.VISIBLE
+                refresh.visibility = View.VISIBLE
+            } else if (it.itemId == R.id.actionGame) {
+                supportFragmentManager.beginTransaction().hide(activeFragment).show(quizFragment)
+                    .commit()
+                activeFragment = quizFragment
+                binding.tvMain.text = "Quiz"
+                binding.crown1.visibility = View.VISIBLE
+                binding.crown2.visibility = View.VISIBLE
+                settings.visibility = View.GONE
+                refresh.visibility = View.GONE
+                binding.refresh.visibility = View.GONE
+                binding.refreshProgress.visibility = View.GONE
+            } else if (it.itemId == R.id.actionProfile) {
+                supportFragmentManager.beginTransaction().hide(activeFragment).show(profileFragment)
+                    .commit()
+                activeFragment = profileFragment
+                binding.tvMain.text = "Hisob"
+                binding.crown1.visibility = View.GONE
+                binding.crown2.visibility = View.GONE
+                settings.visibility = View.VISIBLE
+                refresh.visibility = View.VISIBLE
             }
-            fragment?.let { switchFragment(it) }
+
             true
-        }
-
-        viewModel.shimmer.observe(this) { status ->
-            when (status) {
-                1 -> {
-                    handler.postDelayed({
-                        if (!fragmentSelected) {
-                            switchFragment(homeFragment)
-                        }
-                    }, 1000)
-                }
-
-                2 -> {
-                    showErrorDialog()
-                }
-            }
         }
 //        viewModel.categoriesData.observe(this){
 //            if (it!=null) {
@@ -109,74 +117,37 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
 //            }
 //        }
         viewModel.studentData.observe(this) {
-            Toast.makeText(this, "${it.size}", Toast.LENGTH_SHORT).show()
             if (it!=null) {
                 viewModel.insertAllDBStudents(it)
-                Toast.makeText(this, "Qo'shildi", Toast.LENGTH_SHORT).show()
                 EventBus.getDefault().post(loadData())
             }
         }
 
-        viewModel.userData.observe(this) {
-            if (it.isEmpty()) {
-                Toast.makeText(this, "Sizning ID raqamingiz serverda topilmadi.", Toast.LENGTH_LONG)
-                    .show()
-            var pref = PrefUtils(this)
-            pref.clear()
-            startActivity(Intent(this, CheckActivity::class.java))
-            finish()
-            }
-        }
+//        viewModel.userData.observe(this) {
+//            if (it.isEmpty()) {
+//                Toast.makeText(this, "Sizning ID raqamingiz serverda topilmadi.", Toast.LENGTH_LONG)
+//                    .show()
+//            var pref = PrefUtils(this)
+//            pref.clear()
+//            startActivity(Intent(this, CheckActivity::class.java))
+//            finish()
+//            }
+//        }
     }
 
     private fun loadData() {
         var pref = PrefUtils(this)
-        var idRaqam = pref.getID()
+        var idRaqam = pref.get_ID()
         viewModel.getStudent()
-        viewModel.getUser(idRaqam)
-//        viewModel.getCategoris()
-    }
-
-    private fun showErrorDialog() {
-        AlertDialog.Builder(this)
-            .setMessage("Serverga ulanishda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring")
-            .setPositiveButton("Qayta urinib ko'ring") { dialog, _ ->
-                loadData()
-                dialog.dismiss()
-            }
-            .show()
+//        if (idRaqam != null) {
+//            viewModel.getUser(idRaqam)
+//        }
     }
 
     private fun switchFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.flContainer, fragment, fragment.tag)
+        supportFragmentManager.beginTransaction().hide(activeFragment).show(fragment)
             .commit()
-    }
-
-    private fun updateUIForHome() {
-        binding.crown1.visibility = View.GONE
-        binding.crown2.visibility = View.GONE
-        settings.visibility = View.VISIBLE
-        refresh.visibility = View.VISIBLE
-        findViewById<TextView>(R.id.tvMain).text = "Asosiy"
-    }
-
-    private fun updateUIForOther(text: String) {
-        binding.crown1.visibility = View.GONE
-        binding.crown2.visibility = View.GONE
-        settings.visibility = View.VISIBLE
-        refresh.visibility = View.VISIBLE
-        findViewById<TextView>(R.id.tvMain).text = text
-    }
-
-    private fun updateUIForQuiz() {
-        binding.crown1.visibility = View.VISIBLE
-        binding.crown2.visibility = View.VISIBLE
-        settings.visibility = View.GONE
-        refresh.visibility = View.GONE
-        binding.refresh.visibility = View.GONE
-        binding.refreshProgress.visibility = View.GONE
-        findViewById<TextView>(R.id.tvMain).text = "Quiz"
+        activeFragment = fragment
     }
 
     override fun showProgressBar() {

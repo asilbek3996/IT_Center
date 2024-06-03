@@ -32,17 +32,17 @@ class PrefUtils(context: Context) {
     // Saqlangan arrayni olish funksiyasi
     fun getFavorite(key: String): ArrayList<DarslarModel>? {
         val json = sharedPreferences.getString(key, null) ?: return null
-        val type = object : TypeToken<List<DarslarModel>>() {}.type
-        val intList: List<DarslarModel> = gson.fromJson(json, type)
-        val arrayList: ArrayList<DarslarModel> = ArrayList(intList)
-        return arrayList
+        val type = object : TypeToken<ArrayList<DarslarModel>>() {}.type
+        val intList: ArrayList<DarslarModel> = gson.fromJson(json, type)
+        return ArrayList(intList)
     }
     fun checkFavorite(key: String,value: Int): Boolean{
         val intArray = getFavorite(key)?.toMutableList() ?: mutableListOf()
-        return intArray.filter { it.id==value }.firstOrNull() != null
+        return intArray.firstOrNull { it.id == value } != null
     }
     fun setStudent(student: AllStudentModel){
         editor.putInt(Constants.ID, student.id)
+        editor.putString(Constants._ID, student._id)
         editor.putString(Constants.fullName, student.fullName)
         editor.putString(Constants.group, student.group)
         editor.putString(Constants.g, student.group)
@@ -54,6 +54,9 @@ class PrefUtils(context: Context) {
     }
     fun getID(): Int {
         return sharedPreferences.getInt(Constants.ID,-1)
+    }
+    fun get_ID(): String? {
+        return sharedPreferences.getString(Constants._ID,"123")
     }
     fun getStudent(key: String): String? {
         return sharedPreferences.getString(key,null)

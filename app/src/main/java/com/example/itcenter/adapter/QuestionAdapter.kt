@@ -11,12 +11,12 @@ import com.example.itcenter.R
 import com.example.itcenter.databinding.ViewholderQuestionBinding
 
 interface score {
-    fun amount(number: Int, clickedAnswer: String,rightAnswer: Int,wrongAnswer: Int)
+    fun amount(number: Double, clickedAnswer: String,rightAnswer: Int,wrongAnswer: Int)
 }
 class QuestionAdapter(
     val correctAnswer: String,
     val users: MutableList<String> = mutableListOf(),
-    val score: Int,
+    val score: Double,
     var returnScore: score
 ) : RecyclerView.Adapter<QuestionAdapter.Viewholder>() {
 
@@ -147,7 +147,7 @@ class QuestionAdapter(
                         R.color.white
                     )
                 )
-                returnScore.amount(0, str,0,1)
+                returnScore.amount(0.0, str,0,1)
             }
         }
         if (differ.currentList.size==5) holder.itemView.setOnClickListener(null)
