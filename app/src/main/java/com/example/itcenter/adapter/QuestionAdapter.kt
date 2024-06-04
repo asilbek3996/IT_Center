@@ -33,16 +33,16 @@ class QuestionAdapter(
             binding.answerTxt.text = differ.currentList[position]
 
         if (position == 0) {
-            binding.textTxt.text = "A"
+            binding.textTxt.text = "A:"
             binding.answerTxt.text = differ.currentList[position]
         } else if (position == 1) {
-            binding.textTxt.text = "B"
+            binding.textTxt.text = "B:"
             binding.answerTxt.text = differ.currentList[position]
         } else if (position == 2) {
-            binding.textTxt.text = "C"
+            binding.textTxt.text = "C:"
             binding.answerTxt.text = differ.currentList[position]
         } else if (position == 3) {
-            binding.textTxt.text = "D"
+            binding.textTxt.text = "D:"
             binding.answerTxt.text = differ.currentList[position]
         }
         var currentPos = 0

@@ -1,5 +1,6 @@
 package com.example.itcenter.model.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.itcenter.api.repository.Repository
@@ -30,7 +31,12 @@ class MainViewModel: ViewModel() {
     val lessonsData = MutableLiveData<ArrayList<DarslarModel>>()
     val questionData = MutableLiveData<ArrayList<QuestionModel>>()
 
+    private val _buttonClicked = MutableLiveData<Event<Boolean>>()
+    val buttonClicked: LiveData<Event<Boolean>> get() = _buttonClicked
 
+    fun setButtonClicked(clicked: Boolean) {
+        _buttonClicked.value = Event(clicked)
+    }
     fun getOffers() {
         repository.getAds(error, adsData,progress,shimmer)
     }
@@ -43,9 +49,6 @@ class MainViewModel: ViewModel() {
     fun getStudent() {
         repository.getStudent(error, studentData)
     }
-//    fun getUser(id: String) {
-//        repository.getUser(id,error, userData, progress,shimmer)
-//    }
     fun getLessons() {
         repository.getLessons(error, lessonsData, progress)
     }
@@ -67,16 +70,4 @@ class MainViewModel: ViewModel() {
             studentData.value = withContext(Dispatchers.IO){AppDatabase.getDatabase().getStudentDao().getAllStudents()}
         }
     }
-
-//    fun insertAllDBCategory(items: List<CategoryModel>) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//                AppDatabase.getDatabase().getCategoryDao().deleteAllCategory()
-//                AppDatabase.getDatabase().getCategoryDao().insertAll(items)
-//        }
-//    }
-//    fun getAllCategory(){
-//        CoroutineScope(Dispatchers.Main).launch {
-//            categoriesData.value = withContext(Dispatchers.IO){AppDatabase.getDatabase().getCategoryDao().getAllCategory()}
-//        }
-//    }
 }

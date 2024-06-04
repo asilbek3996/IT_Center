@@ -13,12 +13,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itcenter.R
 import com.example.itcenter.adapter.DarsAdapter
+import com.example.itcenter.adapter.SearchStudentAdapter
 import com.example.itcenter.databinding.ActivityDarslarBinding
+import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.viewmodel.MainViewModel
 import com.example.itcenter.utils.Constants
@@ -26,8 +29,9 @@ import com.example.itcenter.utils.PrefUtils
 
 class DarslarActivity : AppCompatActivity() {
     lateinit var binding: ActivityDarslarBinding
-    var check: Boolean =false
     lateinit var viewModel: MainViewModel
+    lateinit var adapter: DarsAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDarslarBinding.inflate(layoutInflater)
@@ -37,18 +41,11 @@ class DarslarActivity : AppCompatActivity() {
         val message = intent.getStringExtra("Til")
         val level = intent.getStringExtra("level")
         val group = pref.getStudent(Constants.g)
-        var kotlin = arrayListOf<DarslarModel>()
         binding.tvLanguage.text = message
         viewModel.getLessons()
         if (message == group || level == "free") {
-            viewModel.lessonsData.observe(this){
-                for (darslar in it) {
-                if (darslar.languageName == message && darslar.level == level) {
-                    kotlin.add(darslar)
-                }
-            }
-                binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-                binding.recyclerDars.adapter = DarsAdapter(kotlin)
+            if (message != null && level != null) {
+                loadData(message,level)
             }
             binding.back.setOnClickListener {
                 finish()
@@ -71,6 +68,15 @@ class DarslarActivity : AppCompatActivity() {
                             binding.searchview.setQuery("", false)
                         }
                     }
+                    if (newText.isNullOrEmpty()) {
+                        if (level != null && message!=null) {
+                            loadData(message,level)
+                        }
+                    } else {
+                        if (level != null && message!=null) {
+                            filter(newText,message,level)
+                        }
+                    }
                     return true
                 }
             })
@@ -82,7 +88,39 @@ class DarslarActivity : AppCompatActivity() {
                 showAlertDialog(text, message!!)
         }
         }
+fun loadData(message: String,level: String){
+    var kotlin = arrayListOf<DarslarModel>()
+    viewModel.lessonsData.observe(this){
+        for (darslar in it) {
+            if (darslar.languageName == message && darslar.level == level) {
+                kotlin.add(darslar)
+            }
+        }
+        adapter = DarsAdapter(kotlin)
+        binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        binding.recyclerDars.adapter = adapter
+    }
+}
+    fun filter(message: String,languge:String,level:String){
+        var kotlin = arrayListOf<DarslarModel>()
+        viewModel.lessonsData.observe(this, Observer {
+            var item = arrayListOf<DarslarModel>()
 
+            for (language in it){
+                if (language.lessonName.toLowerCase().contains(message.toLowerCase())){
+                    item.add(language)
+                }
+            }
+            for (darslar in item) {
+                if (darslar.languageName == languge && darslar.level == level) {
+                    kotlin.add(darslar)
+                }
+            }
+            adapter.filter(kotlin)
+            binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+            binding.recyclerDars.adapter = adapter
+        })
+    }
     private fun toggleLayoutVisibility() {
         // SearchViewning joriy visibility holatini aniqlash
         val currentVisibility = binding.search.visibility
@@ -115,4 +153,5 @@ class DarslarActivity : AppCompatActivity() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
+
 }

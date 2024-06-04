@@ -139,7 +139,6 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:layout_marginRight="16dp"
-                    android:text="fullName"
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -163,7 +162,6 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:layout_marginRight="16dp"
-                    android:text="24 years old"
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -187,7 +185,6 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:layout_marginRight="16dp"
-                    android:text="Group"
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -211,7 +208,6 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:layout_marginRight="16dp"
-                    android:text="Android devs1"
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -234,16 +230,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="100"
-                    android:layout_marginRight="2dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginRight="16dp"
-                    android:text="%"
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
             </LinearLayout>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -64,53 +65,71 @@ class QuizActivity : AppCompatActivity(), score {
 
         val window: Window = this@QuizActivity.window
         window.statusBarColor = ContextCompat.getColor(this@QuizActivity, R.color.grey)
-        viewModel.questionData.observe(this){
-            for (i in it){
+        viewModel.questionData.observe(this) {
+            for (i in it) {
                 var l = i.language?.trimEnd()
-                if (i.level == level && l==language){
-                   receivedList.add(i)
+                if (i.level == level && l == language) {
+                    receivedList.add(i)
                 }
             }
-            Toast.makeText(this, "${it.size}", Toast.LENGTH_SHORT).show()
+            if (receivedList.isNotEmpty()) {
             val count = receivedList.size
-            val pref = PrefUtils(this)
-            val name = pref.getStudent(Constants.fullName)
-            val txt = "Salom $name"
-            binding.tvMain.text = txt
+                val pref = PrefUtils(this)
+                val name = pref.getStudent(Constants.fullName)
+                val txt = "Salom $name"
+                binding.tvMain.text = txt
 
-            binding.back.setOnClickListener {
-                startActivity(Intent(this, QuizLevelActivity::class.java))
-                finish()
-            }
+                binding.back.setOnClickListener {
+                    startActivity(Intent(this, QuizLevelActivity::class.java))
+                    finish()
+                }
 
-            binding.apply {
-                questionNumberTxt.text = "Savollar 1/$count"
-                progressBar.progress = 1
+                binding.apply {
+                    questionNumberTxt.text = "Savollar 1/$count"
+                    progressBar.progress = 1
 
-            questionTxt.text = receivedList[position].question
+                    questionTxt.text = receivedList[position].question
 
-                loadAnswers()
-                progressBar.max = count
+                    loadAnswers()
+                    progressBar.max = count
 
-                rightArrow.setOnClickListener {
-                    if (progressBar.progress == count) {
-                        if (language != null) {
-                            navigateToScoreActivity(level,language)
+                    rightArrow.setOnClickListener {
+                        javob = "0"
+                        if (progressBar.progress == count) {
+                            if (language != null) {
+                                navigateToScoreActivity(level, language)
+                            }
+                            return@setOnClickListener
                         }
-                        return@setOnClickListener
-                    }
-                    if (language != null) {
-                        moveToNextQuestion(language)
+                        if (language != null) {
+                            moveToNextQuestion(language)
+                        }
                     }
                 }
-            }
 
-            // Start the timer for the first question
-            resetAndStartTimer()
+                // Start the timer for the first question
+                resetAndStartTimer()
+            }else{
+                if (language != null) {
+                    showAlertDialog(language,level)
+                }
+            }
         }
+
         viewModel.getQuestions()
     }
-
+    private fun showAlertDialog(language: String,level:String) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setMessage("$language ${level}-bosqichda hali testlar mavjud emas keyinroq urinib ko'ring")
+        alertDialogBuilder.setNegativeButton("Ortga qaytish", DialogInterface.OnClickListener { dialog, which ->
+            dialog.dismiss()
+            startActivity(Intent(this,QuizLevelActivity::class.java))
+            finish()
+        })
+        alertDialogBuilder.setCancelable(false)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
     private fun moveToNextQuestion(language: String) {
         val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
@@ -137,7 +156,6 @@ class QuizActivity : AppCompatActivity(), score {
 
         if (receivedList[position].clickedAnswer != null) {
             receivedList[position].clickedAnswer = ""
-//            users.add(receivedList[position].clickedAnswer.toString())
         }
         var score = 100.0/receivedList.size
         val questionAdapter = QuestionAdapter(
@@ -146,7 +164,6 @@ class QuizActivity : AppCompatActivity(), score {
 
         questionAdapter.differ.submitList(users)
         binding.questionList.apply {
-//            layoutManager = GridLayoutManager(this@QuizActivity, 2)
             layoutManager = LinearLayoutManager(this@QuizActivity)
             adapter = questionAdapter
         }
@@ -168,8 +185,11 @@ class QuizActivity : AppCompatActivity(), score {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        timer.cancel()  // Cancel the timer when back button is pressed
-        startActivity(Intent(this, QuizLevelActivity::class.java))
+        timer.cancel()
+        val intent = Intent(this, QuizLevelActivity::class.java)
+        var l = lan("0",false)
+        intent.putExtra("language",l)
+        startActivity(intent)
         finish()
     }
 
@@ -185,9 +205,9 @@ class QuizActivity : AppCompatActivity(), score {
                 if (javob == "0"){
                     timeOut()
                 }else {
+                    javob = "0"
                     var l = lan("0",false)
                     moveToNextQuestion(l)  // Move to the next question when the timer finishes
-                    javob = "0"
                 }
             }
         }

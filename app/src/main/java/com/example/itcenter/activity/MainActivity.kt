@@ -29,8 +29,6 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
     var activeFragment:Fragment = homeFragment
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var progressBar: ProgressBar
-    private lateinit var refresh: ImageView
     private lateinit var settings: ImageView
     private lateinit var viewModel: MainViewModel
 
@@ -41,9 +39,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         loadData()
-        progressBar = findViewById(R.id.refreshProgress)
         settings = findViewById(R.id.settings)
-        refresh = findViewById(R.id.refresh)
         settings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
@@ -59,11 +55,9 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
             .commit()
 
         supportFragmentManager.beginTransaction().show(activeFragment).commit()
-
-        refresh.setOnClickListener {
-            loadData()
-            progressBar.visibility = View.VISIBLE
-            refresh.visibility = View.GONE
+        binding.refreshMain.setOnClickListener {
+            // Tugma bosilganda holatini ViewModelga uzatish
+            viewModel.setButtonClicked(true)
         }
 
         binding.bottomNavigationView.setOnItemSelectedListener {
@@ -76,7 +70,8 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.crown1.visibility = View.GONE
                 binding.crown2.visibility = View.GONE
                 settings.visibility = View.VISIBLE
-                refresh.visibility = View.VISIBLE
+                binding.refreshMain.visibility = View.VISIBLE
+                binding.refreshProgressMain.visibility = View.GONE
             } else if (it.itemId == R.id.actionFavorite) {
                 supportFragmentManager.beginTransaction().hide(activeFragment)
                     .show(favoriteFragment).commit()
@@ -85,7 +80,9 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.crown1.visibility = View.GONE
                 binding.crown2.visibility = View.GONE
                 settings.visibility = View.VISIBLE
-                refresh.visibility = View.VISIBLE
+                binding.refreshMain.visibility = View.VISIBLE
+                binding.refreshProgressMain.visibility = View.GONE
+                favoriteFragment.updateData()
             } else if (it.itemId == R.id.actionGame) {
                 supportFragmentManager.beginTransaction().hide(activeFragment).show(quizFragment)
                     .commit()
@@ -94,9 +91,8 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.crown1.visibility = View.VISIBLE
                 binding.crown2.visibility = View.VISIBLE
                 settings.visibility = View.GONE
-                refresh.visibility = View.GONE
-                binding.refresh.visibility = View.GONE
-                binding.refreshProgress.visibility = View.GONE
+                binding.refreshMain.visibility = View.GONE
+                binding.refreshProgressMain.visibility = View.GONE
             } else if (it.itemId == R.id.actionProfile) {
                 supportFragmentManager.beginTransaction().hide(activeFragment).show(profileFragment)
                     .commit()
@@ -105,62 +101,39 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.crown1.visibility = View.GONE
                 binding.crown2.visibility = View.GONE
                 settings.visibility = View.VISIBLE
-                refresh.visibility = View.VISIBLE
+                binding.refreshMain.visibility = View.VISIBLE
+                binding.refreshProgressMain.visibility = View.GONE
             }
 
             true
         }
-//        viewModel.categoriesData.observe(this){
-//            if (it!=null) {
-//                viewModel.insertAllDBCategory(it)
-//                EventBus.getDefault().post(loadData())
-//            }
-//        }
         viewModel.studentData.observe(this) {
             if (it!=null) {
                 viewModel.insertAllDBStudents(it)
                 EventBus.getDefault().post(loadData())
             }
         }
+viewModel.progress.observe(this){
+    if (it){
+        showProgressBar()
+    }else{
+        hideProgressBar()
 
-//        viewModel.userData.observe(this) {
-//            if (it.isEmpty()) {
-//                Toast.makeText(this, "Sizning ID raqamingiz serverda topilmadi.", Toast.LENGTH_LONG)
-//                    .show()
-//            var pref = PrefUtils(this)
-//            pref.clear()
-//            startActivity(Intent(this, CheckActivity::class.java))
-//            finish()
-//            }
-//        }
+    }
+}
     }
 
     private fun loadData() {
-        var pref = PrefUtils(this)
-        var idRaqam = pref.get_ID()
         viewModel.getStudent()
-//        if (idRaqam != null) {
-//            viewModel.getUser(idRaqam)
-//        }
-    }
-
-    private fun switchFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().hide(activeFragment).show(fragment)
-            .commit()
-        activeFragment = fragment
     }
 
     override fun showProgressBar() {
-        progressBar.visibility = View.VISIBLE
-        refresh.visibility = View.GONE
+        binding.refreshProgressMain.visibility = View.VISIBLE
+        binding.refreshMain.visibility = View.GONE
     }
 
     override fun hideProgressBar() {
-        progressBar.visibility = View.GONE
-        refresh.visibility = View.VISIBLE
-    }
-
-    override fun navigateToHomeFragment() {
-        switchFragment(homeFragment)
+        binding.refreshProgressMain.visibility = View.GONE
+        binding.refreshMain.visibility = View.VISIBLE
     }
 }

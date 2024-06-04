@@ -10,10 +10,11 @@ import com.example.itcenter.R
 import com.example.itcenter.activity.AboutStudentActivity
 import com.example.itcenter.activity.VideoActivity
 import com.example.itcenter.databinding.DarslarBinding
+import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.utils.PrefUtils
 
-class DarsAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<DarsAdapter.ItemHolder>() {
+class DarsAdapter(var items: ArrayList<DarslarModel>): RecyclerView.Adapter<DarsAdapter.ItemHolder>() {
     inner class ItemHolder(val binding: DarslarBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
@@ -52,5 +53,9 @@ class DarsAdapter(val items: ArrayList<DarslarModel>): RecyclerView.Adapter<Dars
         }
         var txt = position+1
         holder.binding.tvName.text = "${txt}-dars. ${item.lessonName}"
+    }
+    fun filter(filter: ArrayList<DarslarModel>) {
+        items = filter
+        notifyDataSetChanged()
     }
 }

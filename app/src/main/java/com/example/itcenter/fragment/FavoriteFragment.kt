@@ -36,6 +36,9 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        updateData()
+    }
+    fun updateData(){
         val pref = PrefUtils(requireContext())
         if (pref.getFavorite(Constants.favorite)?.isNotEmpty() == true) {
             items = pref.getFavorite(Constants.favorite)!!
@@ -43,7 +46,6 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
         binding.favoriteRecyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         adapter = SaveAdapter(items,this,this)
         binding.favoriteRecyclerView.adapter = adapter
-
     }
     override fun onItemClicked(position: DarslarModel) {
         items.clear()

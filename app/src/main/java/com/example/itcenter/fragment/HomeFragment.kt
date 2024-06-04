@@ -39,7 +39,6 @@ class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     var handler = Handler()
     lateinit var viewModel: MainViewModel
-    lateinit var refresh: ImageView
     var item = arrayListOf<CategoryModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,15 +57,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
-        refresh = requireActivity().findViewById(R.id.refresh)
-        refresh.setOnClickListener {
-            binding.swipe.isRefreshing = true
-            loadData()
-            (activity as? ShowProgress.View)?.showProgressBar()
-        }
-        binding.swipe.setOnRefreshListener {
-            loadData()
-        }
+        viewModel.buttonClicked.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let { clicked ->
+                if (clicked) {
+                    binding.swipe.isRefreshing = true
+                    loadData()
+                    (activity as? ShowProgress.View)?.showProgressBar()
+                }
+            }
+        })
         viewModel.progress.observe(requireActivity(), Observer {
             binding.swipe.isRefreshing = it
             if (it) {
@@ -78,77 +77,92 @@ class HomeFragment : Fragment() {
 
         viewModel.shimmer.observe(requireActivity()) { status ->
             when (status) {
+                0 -> {
+                    binding.swipe.visibility = View.GONE
+                    binding.shimmerLayout.visibility = View.VISIBLE
+                }
                 1 -> {
                     binding.swipe.visibility = View.VISIBLE
+                    binding.main.visibility = View.VISIBLE
                     binding.shimmerLayout.visibility = View.GONE
+
+
+                    binding.swipe.setOnRefreshListener {
+                        loadData()
+                    }
+
+
+                    setUpTransformer()
+                    viewModel.adsData.observe(requireActivity(), Observer {
+                        binding.viewPager.adapter = ImageAdapter(it, binding.viewPager)
+                        binding.viewPager.offscreenPageLimit = 3
+                        binding.viewPager.clipToPadding = false
+                        binding.viewPager.clipChildren = false
+                        binding.viewPager.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+                    })
+                    binding.viewPager.registerOnPageChangeCallback(object :
+                        ViewPager2.OnPageChangeCallback() {
+                        override fun onPageSelected(position: Int) {
+                            super.onPageSelected(position)
+                            handler.removeCallbacks(runnable)
+                            handler.postDelayed(runnable, 2000)
+                        }
+                    })
+                    viewModel.categoriesData.observe(requireActivity(), Observer {
+                        categories(it)
+                    })
+
+                    binding.tvAll.setOnClickListener {
+                        startActivity(Intent(requireContext(), AllCategoryActivity::class.java))
+                    }
+                    val intent = Intent(requireContext(), LevelActivity::class.java)
+                    binding.category1.setOnClickListener {
+                        intent.apply {
+                            putExtra("Til", item[0].language)
+                        }
+                        startActivity(intent)
+                    }
+                    binding.category2.setOnClickListener {
+                        intent.apply {
+                            putExtra("Til", item[1].language)
+                        }
+                        startActivity(intent)
+                    }
+                    binding.category3.setOnClickListener {
+                        intent.apply {
+                            putExtra("Til", item[2].language)
+                        }
+                        startActivity(intent)
+                    }
+                    viewModel.studentData.observe(requireActivity(), Observer {
+                        val pref = PrefUtils(requireContext())
+                        var idRaqam = pref.getID()
+                        var user = it.filter { it.id==idRaqam }
+                        if (user.isEmpty()) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Sizning ID raqamingiz serverda topilmadi.",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                            val pref = PrefUtils(requireContext())
+                            pref.clear()
+                            startActivity(Intent(requireActivity(), CheckActivity::class.java))
+                            requireActivity().finish()
+                        }
+                        topTest(it)
+                    })
+
+                    Toast.makeText(requireActivity(), "keldi", Toast.LENGTH_SHORT).show()
                 }
 
                 2 -> {
+                    binding.swipe.visibility = View.GONE
+                    binding.shimmerLayout.visibility = View.VISIBLE
                     showErrorDialog()
                 }
             }
         }
-
-        setUpTransformer()
-        viewModel.adsData.observe(requireActivity(), Observer {
-            binding.viewPager.adapter = ImageAdapter(it, binding.viewPager)
-            binding.viewPager.offscreenPageLimit = 3
-            binding.viewPager.clipToPadding = false
-            binding.viewPager.clipChildren = false
-            binding.viewPager.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-        })
-        binding.viewPager.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                handler.removeCallbacks(runnable)
-                handler.postDelayed(runnable, 2000)
-            }
-        })
-        viewModel.categoriesData.observe(requireActivity(), Observer {
-                categories(it)
-        })
-
-        binding.tvAll.setOnClickListener {
-            startActivity(Intent(requireContext(), AllCategoryActivity::class.java))
-        }
-        val intent = Intent(requireContext(), LevelActivity::class.java)
-        binding.category1.setOnClickListener {
-            intent.apply {
-                putExtra("Til", item[0].language)
-            }
-            startActivity(intent)
-        }
-        binding.category2.setOnClickListener {
-            intent.apply {
-                putExtra("Til", item[1].language)
-            }
-            startActivity(intent)
-        }
-        binding.category3.setOnClickListener {
-            intent.apply {
-                putExtra("Til", item[2].language)
-            }
-            startActivity(intent)
-        }
-        viewModel.studentData.observe(requireActivity(), Observer {
-            val pref = PrefUtils(requireContext())
-            var idRaqam = pref.getID()
-            var user = it.filter { it.id==idRaqam }
-            if (user.isEmpty()) {
-                Toast.makeText(
-                    requireContext(),
-                    "Sizning ID raqamingiz serverda topilmadi.",
-                    Toast.LENGTH_LONG
-                )
-                    .show()
-                val pref = PrefUtils(requireContext())
-                pref.clear()
-                startActivity(Intent(requireActivity(), CheckActivity::class.java))
-                requireActivity().finish()
-            }
-            topTest(it)
-        })
     }
 
     companion object {

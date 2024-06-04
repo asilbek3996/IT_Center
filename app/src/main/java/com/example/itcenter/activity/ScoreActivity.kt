@@ -10,6 +10,7 @@ import com.example.itcenter.utils.PrefUtils
 class ScoreActivity : AppCompatActivity() {
     var score: Double = 0.0
     lateinit var binding: ActivityScoreBinding
+    lateinit var lan:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityScoreBinding.inflate(layoutInflater)
@@ -19,6 +20,9 @@ class ScoreActivity : AppCompatActivity() {
         var wrong=intent.getIntExtra("wrong",0)
         var level1=intent.getStringExtra("level")
         var language=intent.getStringExtra("language")
+        if (language != null) {
+            lan= language
+        }
         binding.totalRight.text = right.toString()
         binding.totalWrong.text = wrong.toString()
         var s: String
@@ -38,15 +42,25 @@ class ScoreActivity : AppCompatActivity() {
         }
         pref.setQuizLevel(level)
         binding.backMain.setOnClickListener {
-                startActivity(Intent(this@ScoreActivity,QuizLevelActivity::class.java))
-                finish()
+            val intent = Intent(this, QuizLevelActivity::class.java)
+            intent.putExtra("language",language)
+            startActivity(intent)
+            finish()
         }
         binding.refresh.setOnClickListener {
             val intent = Intent(this, QuizActivity::class.java)
             intent.putExtra("level",level1)
             intent.putExtra("language",language)
-            it.context.startActivity(intent)
+            startActivity(intent)
+            finish()
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, QuizLevelActivity::class.java)
+        intent.putExtra("language",lan)
+        startActivity(intent)
+        finish()
+    }
 }

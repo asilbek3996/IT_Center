@@ -1539,6 +1539,7 @@
         android:visibility="gone"
         android:id="@+id/swipe">
         <LinearLayout
+            android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">

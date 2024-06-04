@@ -38,7 +38,6 @@ class AboutStudentActivity : AppCompatActivity() {
                 hideProgressBar()
             }
         })
-        binding.tvFullName.text = message
         filter(message.toString())
         loadData()
     }
@@ -62,8 +61,8 @@ class AboutStudentActivity : AppCompatActivity() {
                     binding.age.text = student.birthday
                     Glide.with(binding.userPhoto).load(student.userPhoto).into(binding.userPhoto)
                     binding.fullName.text = student.fullName
-                    var txt = student.userPercentage
-                    binding.percentage.text = txt.toString()
+                    var txt = "${student.userPercentage}%"
+                    binding.percentage.text = txt
                     binding.direction.text = student.group
                 }
             }

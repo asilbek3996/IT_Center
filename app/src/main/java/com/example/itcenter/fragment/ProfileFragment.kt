@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -28,7 +29,6 @@ import com.google.firebase.auth.FirebaseAuth
 class ProfileFragment : Fragment() {
 lateinit var binding: FragmentProfileBinding
     lateinit var viewModel: MainViewModel
-    lateinit var refresh: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
@@ -51,15 +51,19 @@ lateinit var binding: FragmentProfileBinding
         binding.settings.setOnClickListener {
             startActivity(Intent(requireActivity(),SettingsActivity::class.java))
         }
-        refresh = requireActivity().findViewById(R.id.refresh)
-        refresh.setOnClickListener {
-            binding.swipe.isRefreshing = true
-            loadData()
-            (activity as? ShowProgress.View)?.showProgressBar()
-        }
+        viewModel.buttonClicked.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let { clicked ->
+                if (clicked) {
+                    binding.swipe.isRefreshing = true
+                    loadData()
+                    (activity as? ShowProgress.View)?.showProgressBar()
+                }
+            }
+        })
         binding.swipe.setOnRefreshListener {
             loadData()
         }
+
         viewModel.progress.observe(requireActivity()) {
             binding.swipe.isRefreshing = it
             if (it) {
@@ -84,12 +88,14 @@ lateinit var binding: FragmentProfileBinding
                     Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.youtube")))
             }
         }
+
         binding.support.setOnClickListener {
             val link = "https://t.me/dangara_itcenterbot" // Sizning linkingizni o'zgartiring
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
             startActivity(intent)
             requireActivity().finish()
         }
+
         binding.logOut.setOnClickListener {
             if (idRaqami == -1){
                 firebaseAuth.signOut()
@@ -100,39 +106,34 @@ lateinit var binding: FragmentProfileBinding
             requireActivity().finish()
         }
 
-//        viewModel.userData.observe(requireActivity()){
-//            if (it.isNotEmpty()){
-//                val pref = PrefUtils(requireContext())
-//                var idRaqami = pref.getID()
-//                val requestOptions = RequestOptions()
-//                    .placeholder(R.drawable.user) // Standart rasm
-//                    .error(R.drawable.user)
-//                val firebaseAuth = FirebaseAuth.getInstance()
-//                    for (items in it){
-//                            Glide.with(binding.img).load(items.userPhoto).apply(requestOptions).into(binding.img)
-//                            binding.tvFullName.text = items.fullName
-//                            binding.tvID.text = idRaqami.toString()
-//                    }
-//            }else {
-//                Toast.makeText(
-//                    requireContext(),
-//                    "Sizning ID raqamingiz serverda topilmadi.",
-//                    Toast.LENGTH_LONG
-//                )
-//                    .show()
-//                val pref = PrefUtils(requireContext())
-//                pref.clear()
-//                startActivity(Intent(requireActivity(), CheckActivity::class.java))
-//                requireActivity().finish()
-//            }
-//        }
+        viewModel.studentData.observe(requireActivity()){
+            if (it.isNotEmpty()){
+                val pref = PrefUtils(requireContext())
+                var idRaqami = pref.getID()
+                val requestOptions = RequestOptions()
+                    .placeholder(R.drawable.user) // Standart rasm
+                    .error(R.drawable.user)
+                    for (items in it){
+                            Glide.with(binding.img).load(items.userPhoto).apply(requestOptions).into(binding.img)
+                            binding.tvFullName.text = items.fullName
+                            binding.tvID.text = idRaqami.toString()
+                    }
+            }else {
+                Toast.makeText(
+                    requireContext(),
+                    "Sizning ID raqamingiz serverda topilmadi.",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                val pref = PrefUtils(requireContext())
+                pref.clear()
+                startActivity(Intent(requireActivity(), CheckActivity::class.java))
+                requireActivity().finish()
+            }
+        }
     }
 fun loadData(){
-    val pref = PrefUtils(requireContext())
-    var idRaqami = pref.get_ID()
-//    if (idRaqami != null) {
-//        viewModel.getUser(idRaqami)
-//    }
+    viewModel.getAllStudents()
 }
     companion object {
         @JvmStatic

@@ -58,7 +58,7 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/refresh"
+                android:id="@+id/refreshMain"
                 android:layout_width="24dp"
                 app:tint="@color/white"
                 android:layout_height="24dp"
@@ -76,7 +76,7 @@
             <ProgressBar
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:id="@+id/refreshProgress"
+                android:id="@+id/refreshProgressMain"
                 android:indeterminateTint="@color/white"
                 android:visibility="gone"/>
 

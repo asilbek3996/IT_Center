@@ -18,7 +18,7 @@ import com.example.itcenter.utils.PrefUtils
 interface ItemClickedListener {
     fun onItemClicked(position: DarslarModel)
 }
-class SaveAdapter(private val items: List<DarslarModel>, private val fragment: Fragment, private val listener: ItemClickedListener) : RecyclerView.Adapter<SaveAdapter.SaveViewHolder>() {
+class SaveAdapter(private val items: ArrayList<DarslarModel>, private val fragment: Fragment, private val listener: ItemClickedListener) : RecyclerView.Adapter<SaveAdapter.SaveViewHolder>() {
 
     inner class SaveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // ViewHolder ichidagi UI elementlar
