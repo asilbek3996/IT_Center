@@ -11,6 +11,7 @@ import com.example.itcenter.adapter.AllCategoryAdapter
 import com.example.itcenter.adapter.SearchCategoryAdapter
 import com.example.itcenter.databinding.ActivityAllCategoryBinding
 import com.example.itcenter.model.AllCategoryModel
+import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.viewmodel.MainViewModel
 
 class AllCategoryActivity : AppCompatActivity() {
@@ -39,7 +40,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
     viewModel.progress.observe(this, Observer {
         binding.swipe.isRefreshing = it
     })
-    viewModel.allCategoryData.observe(this@AllCategoryActivity){
+    viewModel.categoriesData.observe(this@AllCategoryActivity){
         adapter = SearchCategoryAdapter(it)
         binding.recyclerSearchCategory.layoutManager = GridLayoutManager(this@AllCategoryActivity, 3)
         binding.recyclerSearchCategory.adapter = adapter
@@ -83,8 +84,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
     }
 
     fun filter(text: String){
-        val filters: ArrayList<AllCategoryModel> = ArrayList()
-        viewModel.allCategoryData.observe(this, Observer {
+        val filters: ArrayList<CategoryModel> = ArrayList()
+        viewModel.categoriesData.observe(this, Observer {
             for (language in it){
                 if (language.language.toLowerCase().contains(text.toLowerCase())){
                     filters.add(language)

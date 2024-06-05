@@ -3,7 +3,7 @@ package com.example.itcenter.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -43,14 +43,14 @@ class QuizLanguageActivity : AppCompatActivity() {
                 hideProgressBar()
             }
         }
-        viewModel.allCategoryData.observe(this) {
+        viewModel.categoriesData.observe(this) {
             binding.recyclerQuiz.layoutManager = GridLayoutManager(this, 2)
             binding.recyclerQuiz.adapter = QuizLanguage(it,this)
         }
     }
 
     fun loadData(){
-        viewModel.getAllCategories()
+        viewModel.getAllDBCategory()
     }
     override fun onBackPressed() {
         super.onBackPressed()

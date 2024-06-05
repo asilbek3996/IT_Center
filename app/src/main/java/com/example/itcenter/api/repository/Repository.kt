@@ -67,8 +67,8 @@ class Repository {
         compositeDisposable.add(NetworkManager.getApiService().getCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object : DisposableObserver<ArrayList<CategoryModel>>(){
-                override fun onNext(t: ArrayList<CategoryModel>) {
+            .subscribeWith(object : DisposableObserver<List<CategoryModel>>(){
+                override fun onNext(t: List<CategoryModel>) {
                     success.value = t
                 }
 
@@ -82,17 +82,20 @@ class Repository {
         )
 
     }
-    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<List<AllStudentModel>>){
+    fun getStudent(error: MutableLiveData<String>, success:MutableLiveData<List<AllStudentModel>>,progress: MutableLiveData<Boolean>){
+        progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getStudent()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<List<AllStudentModel>>(){
                 override fun onNext(t: List<AllStudentModel>) {
                     success.value = t
+                    progress.value = false
                 }
 
                 override fun onError(e: Throwable) {
                     error.value = e.localizedMessage
+                    progress.value = false
                 }
 
                 override fun onComplete() {

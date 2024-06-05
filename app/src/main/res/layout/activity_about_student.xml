@@ -53,7 +53,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center"
-                    android:text="To'liq ism"
+                    android:text="Foydalanuvchi"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />

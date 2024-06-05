@@ -26,21 +26,25 @@ class SplashActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         var pref = PrefUtils(this)
         val idRaqami = pref.getID()
+        viewModel.getStudent()
         binding.animationViews.postDelayed({
                         if (idRaqami!=-1){
-                            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                            finish()
+                            viewModel.studentData.observe(this){
+                                var id = it.filter { it.id==idRaqami }
+                                if (id.isEmpty()) {
+                                    val pref = PrefUtils(this)
+                                    pref.clear()
+                                    startActivity(Intent(this, CheckActivity::class.java))
+                                    this.finish()
+                                }else{
+                                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                                    finish()
+                                }
+                            }
                         }else{
-                            val currentUser = FirebaseAuth.getInstance().currentUser
-                            if (currentUser == null) {
-                                pref.clear()
                                 startActivity(Intent(this@SplashActivity, CheckActivity::class.java))
                                 finish()
-                            } else {
-                                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                                finish()
-                            }
-            }
+                        }
         },2950)
     }
 

@@ -1,6 +1,7 @@
 package com.example.itcenter.activity
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -13,11 +14,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.itcenter.fragment.*
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
 import com.example.itcenter.databinding.ActivityMainBinding
 import com.example.itcenter.model.viewmodel.MainViewModel
+import com.example.itcenter.utils.Constants
 import com.example.itcenter.utils.PrefUtils
 import org.greenrobot.eventbus.EventBus
 
@@ -26,7 +29,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
     private val favoriteFragment = FavoriteFragment.newInstance()
     private val quizFragment = QuizFragment.newInstance()
     private val profileFragment = ProfileFragment.newInstance()
-    var activeFragment:Fragment = homeFragment
+    var activeFragment: Fragment = homeFragment
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var settings: ImageView
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        var pref = PrefUtils(this)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         loadData()
         settings = findViewById(R.id.settings)
@@ -62,16 +66,18 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             if (it.itemId == R.id.actionHome) {
-                    supportFragmentManager.beginTransaction().hide(activeFragment)
-                        .show(homeFragment)
-                        .commit()
-                    activeFragment = homeFragment
-                    binding.tvMain.text = "Asosiy"
+                supportFragmentManager.beginTransaction().hide(activeFragment)
+                    .show(homeFragment)
+                    .commit()
+                activeFragment = homeFragment
+                binding.tvMain.text = "Asosiy"
                 binding.crown1.visibility = View.GONE
                 binding.crown2.visibility = View.GONE
                 settings.visibility = View.VISIBLE
                 binding.refreshMain.visibility = View.VISIBLE
                 binding.refreshProgressMain.visibility = View.GONE
+                binding.favoriteRemove.visibility = View.GONE
+                binding.refreshDialog.visibility = View.VISIBLE
             } else if (it.itemId == R.id.actionFavorite) {
                 supportFragmentManager.beginTransaction().hide(activeFragment)
                     .show(favoriteFragment).commit()
@@ -80,8 +86,8 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.crown1.visibility = View.GONE
                 binding.crown2.visibility = View.GONE
                 settings.visibility = View.VISIBLE
-                binding.refreshMain.visibility = View.VISIBLE
-                binding.refreshProgressMain.visibility = View.GONE
+                binding.refreshDialog.visibility = View.GONE
+                binding.favoriteRemove.visibility = View.VISIBLE
                 favoriteFragment.updateData()
             } else if (it.itemId == R.id.actionGame) {
                 supportFragmentManager.beginTransaction().hide(activeFragment).show(quizFragment)
@@ -91,8 +97,8 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.crown1.visibility = View.VISIBLE
                 binding.crown2.visibility = View.VISIBLE
                 settings.visibility = View.GONE
-                binding.refreshMain.visibility = View.GONE
-                binding.refreshProgressMain.visibility = View.GONE
+                binding.refreshDialog.visibility = View.GONE
+                binding.favoriteRemove.visibility = View.GONE
             } else if (it.itemId == R.id.actionProfile) {
                 supportFragmentManager.beginTransaction().hide(activeFragment).show(profileFragment)
                     .commit()
@@ -103,28 +109,65 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 settings.visibility = View.VISIBLE
                 binding.refreshMain.visibility = View.VISIBLE
                 binding.refreshProgressMain.visibility = View.GONE
+                binding.refreshDialog.visibility = View.VISIBLE
+                binding.favoriteRemove.visibility = View.GONE
             }
 
             true
         }
+        binding.favoriteRemove.setOnClickListener {
+            if (pref.getFavorite(Constants.favorite).isNullOrEmpty()) {
+                Toast.makeText(
+                    this,
+                    "Siz hali hech qaysi videoni tanlamadingiz",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                clearFavorite()
+            }
+        }
         viewModel.studentData.observe(this) {
-            if (it!=null) {
+            if (it != null) {
                 viewModel.insertAllDBStudents(it)
                 EventBus.getDefault().post(loadData())
             }
         }
-viewModel.progress.observe(this){
-    if (it){
-        showProgressBar()
-    }else{
-        hideProgressBar()
-
+        viewModel.categoriesData.observe(this) {
+            viewModel.insertAllDBCategories(it)
+        }
+        viewModel.progress.observe(this) {
+            if (it) {
+                showProgressBar()
+            } else {
+                hideProgressBar()
+            }
+        }
     }
-}
+
+    fun clearFavorite() {
+        var pref = PrefUtils(this@MainActivity)
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setMessage("Tanlanganlarni tozalab yuborasizmi")
+        alertDialogBuilder.setPositiveButton(
+            "Ha"
+        ) { dialog, which ->
+            pref.clearFavorite()
+            favoriteFragment.updateData()
+            dialog.dismiss()
+        }
+        alertDialogBuilder.setNegativeButton(
+            "Yo'q"
+        ) { dialog, which ->
+            dialog.dismiss()
+        }
+        alertDialogBuilder.setCancelable(false)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     private fun loadData() {
         viewModel.getStudent()
+        viewModel.getCategories()
     }
 
     override fun showProgressBar() {
@@ -136,4 +179,9 @@ viewModel.progress.observe(this){
         binding.refreshProgressMain.visibility = View.GONE
         binding.refreshMain.visibility = View.VISIBLE
     }
+
+    override fun refresh() {
+        loadData()
+    }
+
 }

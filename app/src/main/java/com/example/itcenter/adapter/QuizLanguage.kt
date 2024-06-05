@@ -17,7 +17,7 @@ import com.example.itcenter.databinding.QuizItemLayoutBinding
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.CategoryModel
 
-class QuizLanguage(var items: List<AllCategoryModel>, private val context: Context): RecyclerView.Adapter<QuizLanguage.ItemHolder>() {
+class QuizLanguage(var items: List<CategoryModel>, private val context: Context): RecyclerView.Adapter<QuizLanguage.ItemHolder>() {
     inner class ItemHolder(val binding: QuizItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 

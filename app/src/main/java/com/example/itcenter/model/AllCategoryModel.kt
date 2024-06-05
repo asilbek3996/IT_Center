@@ -1,7 +1,10 @@
 package com.example.itcenter.model
 
 data class AllCategoryModel(
-    val id: Int,
-    val image: String,
-    val language: String
+    var id: Int,
+    var image: String,
+    var levelImage: String,
+    var language: String,
+    var createdAt: String,
+    var updatedAt: String
 )

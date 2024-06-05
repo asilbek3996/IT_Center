@@ -43,10 +43,6 @@ class CheckActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         showAlertDialog()
-        binding.signUp.setOnClickListener {
-            startActivity(Intent(this,RegisterActivity::class.java))
-            finish()
-        }
         binding.btnLogin.setOnClickListener {
                 loginUser()
         }

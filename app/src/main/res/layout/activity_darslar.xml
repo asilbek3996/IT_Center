@@ -37,7 +37,6 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/appcompat_buttonss"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
                 android:visibility="gone">
 
                 <androidx.appcompat.widget.SearchView

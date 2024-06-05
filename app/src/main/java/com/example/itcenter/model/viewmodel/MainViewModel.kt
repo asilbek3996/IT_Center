@@ -47,7 +47,7 @@ class MainViewModel: ViewModel() {
         repository.getCategories(error, categoriesData)
     }
     fun getStudent() {
-        repository.getStudent(error, studentData)
+        repository.getStudent(error, studentData,progress)
     }
     fun getLessons() {
         repository.getLessons(error, lessonsData, progress)
@@ -68,6 +68,17 @@ class MainViewModel: ViewModel() {
     fun getAllStudents(){
         CoroutineScope(Dispatchers.Main).launch {
             studentData.value = withContext(Dispatchers.IO){AppDatabase.getDatabase().getStudentDao().getAllStudents()}
+        }
+    }
+    fun insertAllDBCategories(items: List<CategoryModel>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            AppDatabase.getDatabase().getCategoryDao().deleteAllCategory()
+            AppDatabase.getDatabase().getCategoryDao().insertAll(items)
+        }
+    }
+    fun getAllDBCategory(){
+        CoroutineScope(Dispatchers.Main).launch {
+            categoriesData.value = withContext(Dispatchers.IO){AppDatabase.getDatabase().getCategoryDao().getAllCategory()}
         }
     }
 }

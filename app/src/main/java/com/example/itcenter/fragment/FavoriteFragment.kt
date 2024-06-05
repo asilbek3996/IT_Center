@@ -42,6 +42,9 @@ class FavoriteFragment : Fragment(), ItemClickedListener {
         val pref = PrefUtils(requireContext())
         if (pref.getFavorite(Constants.favorite)?.isNotEmpty() == true) {
             items = pref.getFavorite(Constants.favorite)!!
+        }else{
+            pref.clearFavorite()
+            items = pref.getFavorite(Constants.favorite)!!
         }
         binding.favoriteRecyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         adapter = SaveAdapter(items,this,this)

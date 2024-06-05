@@ -80,7 +80,9 @@ class QuizActivity : AppCompatActivity(), score {
                 binding.tvMain.text = txt
 
                 binding.back.setOnClickListener {
-                    startActivity(Intent(this, QuizLevelActivity::class.java))
+                    val intent = Intent(this, QuizLevelActivity::class.java)
+                    intent.putExtra("language",language)
+                    startActivity(intent)
                     finish()
                 }
 

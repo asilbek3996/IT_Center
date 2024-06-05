@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 data class CategoryModel(
     @PrimaryKey(autoGenerate = true)
     val uid: Int,
-    var _id: String,
     var id: Int,
     var image: String,
     var levelImage: String,

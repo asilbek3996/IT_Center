@@ -17,11 +17,9 @@ interface Api {
     @GET("category")
     fun getAllCategories(): Observable<List<AllCategoryModel>>
     @GET("category")
-    fun getCategories(): Observable<ArrayList<CategoryModel>>
+    fun getCategories(): Observable<List<CategoryModel>>
     @GET("students")
     fun getStudent(): Observable<List<AllStudentModel>>
-//    @GET("students/{id}")
-//    fun getUser(@Path("id")id: String): Observable<ArrayList<AllStudentModel>>
     @GET("lessons")
     fun getLessons(): Observable<ArrayList<DarslarModel>>
     @GET("questions")

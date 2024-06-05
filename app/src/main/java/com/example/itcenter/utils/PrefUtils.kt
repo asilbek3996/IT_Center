@@ -30,6 +30,14 @@ class PrefUtils(context: Context) {
     }
 
     // Saqlangan arrayni olish funksiyasi
+    fun clearFavorite(){
+        val intArray = getFavorite(Constants.favorite)?.toMutableList() ?: mutableListOf()
+            intArray.clear()
+            val json = gson.toJson(intArray)
+            editor.putString(Constants.favorite, json)
+            editor.apply()
+    }
+    // Saqlangan arrayni olish funksiyasi
     fun getFavorite(key: String): ArrayList<DarslarModel>? {
         val json = sharedPreferences.getString(key, null) ?: return null
         val type = object : TypeToken<ArrayList<DarslarModel>>() {}.type

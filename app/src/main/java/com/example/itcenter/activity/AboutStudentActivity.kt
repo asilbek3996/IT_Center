@@ -27,32 +27,13 @@ class AboutStudentActivity : AppCompatActivity() {
         binding.back.setOnClickListener {
             finish()
         }
-        binding.refresh.setOnClickListener {
-            loadData()
-            showProgressBar()
-        }
-        viewModel.progress.observe(this, Observer {
-            if (it) {
-                showProgressBar()
-            } else {
-                hideProgressBar()
-            }
-        })
         filter(message.toString())
         loadData()
     }
 
-    private fun hideProgressBar() {
-        binding.refresh.visibility = View.VISIBLE
-        binding.refreshProgress.visibility = View.GONE
-    }
-    private fun showProgressBar() {
-        binding.refresh.visibility = View.GONE
-        binding.refreshProgress.visibility = View.VISIBLE
-    }
 
     fun loadData(){
-        viewModel.getStudent()
+        viewModel.getAllStudents()
     }
     fun filter(text: String){
         viewModel.studentData.observe(this, Observer {

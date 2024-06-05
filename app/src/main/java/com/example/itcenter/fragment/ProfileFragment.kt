@@ -1,7 +1,9 @@
 package com.example.itcenter.fragment
 
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -18,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
 import com.example.itcenter.activity.CheckActivity
+import com.example.itcenter.activity.RegisterActivity
 import com.example.itcenter.activity.SettingsActivity
 import com.example.itcenter.databinding.FragmentProfileBinding
 import com.example.itcenter.model.AllStudentModel
@@ -27,18 +30,19 @@ import com.example.itcenter.utils.PrefUtils
 import com.google.firebase.auth.FirebaseAuth
 
 class ProfileFragment : Fragment() {
-lateinit var binding: FragmentProfileBinding
+    lateinit var binding: FragmentProfileBinding
     lateinit var viewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentProfileBinding.inflate(inflater,container,false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -49,43 +53,27 @@ lateinit var binding: FragmentProfileBinding
         var idRaqami = pref.getID()
         val firebaseAuth = FirebaseAuth.getInstance()
         binding.settings.setOnClickListener {
-            startActivity(Intent(requireActivity(),SettingsActivity::class.java))
+            startActivity(Intent(requireActivity(), SettingsActivity::class.java))
         }
-        viewModel.buttonClicked.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let { clicked ->
-                if (clicked) {
-                    binding.swipe.isRefreshing = true
-                    loadData()
-                    (activity as? ShowProgress.View)?.showProgressBar()
-                }
-            }
-        })
-        binding.swipe.setOnRefreshListener {
-            loadData()
-        }
-
-        viewModel.progress.observe(requireActivity()) {
-            binding.swipe.isRefreshing = it
-            if (it) {
-                (activity as? ShowProgress.View)?.showProgressBar()
-            } else {
-                (activity as? ShowProgress.View)?.hideProgressBar()
-            }
-        }
-
 
         binding.rating.setOnClickListener {
-            val uri: Uri =Uri.parse("market://details?id=com.google.android.youtube")
+            val uri: Uri = Uri.parse("market://details?id=com.google.android.youtube")
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
 
-            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
-                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            goToMarket.addFlags(
+                Intent.FLAG_ACTIVITY_NO_HISTORY or
+                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+            )
             try {
                 startActivity(goToMarket)
-            }catch (e: ActivityNotFoundException){
-                startActivity(Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.youtube")))
+            } catch (e: ActivityNotFoundException) {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.youtube")
+                    )
+                )
             }
         }
 
@@ -97,44 +85,60 @@ lateinit var binding: FragmentProfileBinding
         }
 
         binding.logOut.setOnClickListener {
-            if (idRaqami == -1){
-                firebaseAuth.signOut()
-            }else{
-                pref.clear()
-            }
-            startActivity(Intent(requireActivity(),CheckActivity::class.java))
-            requireActivity().finish()
+            showAlertDialog()
         }
-
-        viewModel.studentData.observe(requireActivity()){
-            if (it.isNotEmpty()){
-                val pref = PrefUtils(requireContext())
-                var idRaqami = pref.getID()
-                val requestOptions = RequestOptions()
-                    .placeholder(R.drawable.user) // Standart rasm
-                    .error(R.drawable.user)
-                    for (items in it){
-                            Glide.with(binding.img).load(items.userPhoto).apply(requestOptions).into(binding.img)
-                            binding.tvFullName.text = items.fullName
-                            binding.tvID.text = idRaqami.toString()
+        viewModel.studentData.observe(requireActivity()) {
+            if (it != null && it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
+                    val pref = PrefUtils(requireContext())
+                    var idRaqami = pref.getID()
+                    val requestOptions = RequestOptions()
+                        .placeholder(R.drawable.user) // Standart rasm
+                        .error(R.drawable.user)
+                    for (items in it) {
+                        Glide.with(binding.img).load(items.userPhoto).apply(requestOptions)
+                            .into(binding.img)
+                        binding.tvFullName.text = items.fullName
+                        binding.tvID.text = idRaqami.toString()
                     }
-            }else {
-                Toast.makeText(
-                    requireContext(),
-                    "Sizning ID raqamingiz serverda topilmadi.",
-                    Toast.LENGTH_LONG
-                )
-                    .show()
-                val pref = PrefUtils(requireContext())
-                pref.clear()
-                startActivity(Intent(requireActivity(), CheckActivity::class.java))
-                requireActivity().finish()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Sizning ID raqamingiz serverda topilmadi.",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                    val pref = PrefUtils(requireContext())
+                    pref.clear()
+                    startActivity(Intent(requireActivity(), CheckActivity::class.java))
+                    requireActivity().finish()
+                }
+            } else {
+                loadData()
             }
         }
     }
-fun loadData(){
-    viewModel.getAllStudents()
-}
+
+    fun loadData() {
+        viewModel.getAllStudents()
+    }
+    private fun showAlertDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireActivity())
+        alertDialogBuilder.setMessage("Hisobingizdan chiqmoqchimisiz")
+        alertDialogBuilder.setPositiveButton("Ha", DialogInterface.OnClickListener { dialog, which ->
+            val pref = PrefUtils(requireContext())
+            pref.clear()
+            startActivity(Intent(requireActivity(), CheckActivity::class.java))
+            requireActivity().finish()
+            dialog.dismiss()
+        })
+        alertDialogBuilder.setNegativeButton("Yo'q", DialogInterface.OnClickListener { dialog, which ->
+            dialog.dismiss()
+        })
+        alertDialogBuilder.setCancelable(false)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
     companion object {
         @JvmStatic
         fun newInstance() = ProfileFragment()

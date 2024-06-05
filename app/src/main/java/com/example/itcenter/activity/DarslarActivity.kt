@@ -45,7 +45,7 @@ class DarslarActivity : AppCompatActivity() {
         viewModel.getLessons()
         if (message == group || level == "free") {
             if (message != null && level != null) {
-                loadData(message,level)
+                loadData(message, level)
             }
             binding.back.setOnClickListener {
                 finish()
@@ -55,7 +55,6 @@ class DarslarActivity : AppCompatActivity() {
             }
             binding.searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    // Bu metodni qo'shmaymiz
                     return false
                 }
 
@@ -69,45 +68,48 @@ class DarslarActivity : AppCompatActivity() {
                         }
                     }
                     if (newText.isNullOrEmpty()) {
-                        if (level != null && message!=null) {
-                            loadData(message,level)
+                        if (level != null && message != null) {
+                            loadData(message, level)
                         }
                     } else {
-                        if (level != null && message!=null) {
-                            filter(newText,message,level)
+                        if (level != null && message != null) {
+                            filter(newText, message, level)
                         }
                     }
                     return true
                 }
             })
-        }else if (group == "x"){
-                var txt = "Siz hech qaysi guruhda o'qimaysiz"
-                showAlertDialog(txt, message!!)
-        }else{
-                var text = "Siz $group guruhida o'qiysiz "
-                showAlertDialog(text, message!!)
+        } else if (group == "x") {
+            var txt = "Siz hech qaysi guruhda o'qimaysiz"
+            showAlertDialog(txt, message!!)
+        } else {
+            var text = "Siz $group guruhida o'qiysiz "
+            showAlertDialog(text, message!!)
         }
-        }
-fun loadData(message: String,level: String){
-    var kotlin = arrayListOf<DarslarModel>()
-    viewModel.lessonsData.observe(this){
-        for (darslar in it) {
-            if (darslar.languageName == message && darslar.level == level) {
-                kotlin.add(darslar)
-            }
-        }
-        adapter = DarsAdapter(kotlin)
-        binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-        binding.recyclerDars.adapter = adapter
     }
-}
-    fun filter(message: String,languge:String,level:String){
+
+    fun loadData(message: String, level: String) {
+        var kotlin = arrayListOf<DarslarModel>()
+        viewModel.lessonsData.observe(this) {
+            for (darslar in it) {
+                if (darslar.languageName == message && darslar.level == level) {
+                    kotlin.add(darslar)
+                }
+            }
+            adapter = DarsAdapter(kotlin)
+            binding.recyclerDars.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            binding.recyclerDars.adapter = adapter
+        }
+    }
+
+    fun filter(message: String, languge: String, level: String) {
         var kotlin = arrayListOf<DarslarModel>()
         viewModel.lessonsData.observe(this, Observer {
             var item = arrayListOf<DarslarModel>()
 
-            for (language in it){
-                if (language.lessonName.toLowerCase().contains(message.toLowerCase())){
+            for (language in it) {
+                if (language.lessonName.toLowerCase().contains(message.toLowerCase())) {
                     item.add(language)
                 }
             }
@@ -117,10 +119,12 @@ fun loadData(message: String,level: String){
                 }
             }
             adapter.filter(kotlin)
-            binding.recyclerDars.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+            binding.recyclerDars.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             binding.recyclerDars.adapter = adapter
         })
     }
+
     private fun toggleLayoutVisibility() {
         // SearchViewning joriy visibility holatini aniqlash
         val currentVisibility = binding.search.visibility
@@ -136,19 +140,23 @@ fun loadData(message: String,level: String){
         }
     }
 
-    private fun showAlertDialog(text: String,cource:String) {
+    private fun showAlertDialog(text: String, cource: String) {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setMessage("$text $cource darslari sizga ochiq emas.\nAgar $cource darslari sizga qiziq bo'lsa telegram botimiz orqali uni sotib olishingiz mumkin.")
-        alertDialogBuilder.setPositiveButton("Sotib olish", DialogInterface.OnClickListener { dialog, which ->
-            val link = "https://t.me/dangara_itcenterbot" // Sizning linkingizni o'zgartiring
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
-            startActivity(intent)
-            finish()
-        })
-        alertDialogBuilder.setNegativeButton("Ortga qaytish", DialogInterface.OnClickListener { dialog, which ->
-            dialog.dismiss()
-            finish()
-        })
+        alertDialogBuilder.setPositiveButton(
+            "Sotib olish",
+            DialogInterface.OnClickListener { dialog, which ->
+                val link = "https://t.me/dangara_itcenterbot" // Sizning linkingizni o'zgartiring
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                startActivity(intent)
+                finish()
+            })
+        alertDialogBuilder.setNegativeButton(
+            "Ortga qaytish",
+            DialogInterface.OnClickListener { dialog, which ->
+                dialog.dismiss()
+                finish()
+            })
         alertDialogBuilder.setCancelable(false)
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
