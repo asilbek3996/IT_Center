@@ -4,11 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import com.example.itcenter.api.NetworkManager
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.AllStudentModel
-import com.example.itcenter.model.BaseResponse
 import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
+import com.example.itcenter.model.Notification
 import com.example.itcenter.model.QuestionModel
+import com.orhanobut.hawk.Hawk
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -104,32 +105,39 @@ class Repository {
         )
 
     }
+    private var previousQuestions: ArrayList<AllStudentModel> = loadQuestionsFromCache()
+    fun getStudent2(error: MutableLiveData<String>, success:MutableLiveData<List<AllStudentModel>>){
+        compositeDisposable.add(NetworkManager.getApiService().getStudent2()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>(){
+                override fun onNext(t: ArrayList<AllStudentModel>) {
+                        val newOnly = t.filter { it !in previousQuestions }
+                        if (newOnly.isNotEmpty()) {
+                            success.value = newOnly
+                            previousQuestions = t
+                            saveQuestionsToCache(t)
+                        }
+                }
 
-//    fun getUser(id: String, error: MutableLiveData<String>, success:MutableLiveData<ArrayList<AllStudentModel>>,progress: MutableLiveData<Boolean>,shimmer: MutableLiveData<Int>){
-//        progress.value = true
-//        shimmer.value = 0
-//        compositeDisposable.add(NetworkManager.getApiService().getUser(id)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>(){
-//                override fun onNext(t: ArrayList<AllStudentModel>) {
-//                    progress.value = false
-//                    shimmer.value = 1
-//                    success.value = t
-//                }
-//
-//                override fun onError(e: Throwable) {
-//                    progress.value = false
-//                    shimmer.value = 3
-//                    error.value = e.localizedMessage
-//                }
-//
-//                override fun onComplete() {
-//                }
-//            })
-//        )
-//
-//    }
+                override fun onError(e: Throwable) {
+                    error.value = e.localizedMessage
+                }
+
+                override fun onComplete() {
+                }
+            })
+        )
+
+    }
+
+    private fun loadQuestionsFromCache(): ArrayList<AllStudentModel> {
+        return Hawk.get("cached_questions", ArrayList())
+    }
+
+    private fun saveQuestionsToCache(questions: ArrayList<AllStudentModel>) {
+        Hawk.put("cached_questions", questions)
+    }
     fun getLessons(error: MutableLiveData<String>, success:MutableLiveData<ArrayList<DarslarModel>>,progress: MutableLiveData<Boolean>){
         progress.value = true
         compositeDisposable.add(NetworkManager.getApiService().getLessons()
@@ -170,5 +178,23 @@ class Repository {
             })
         )
 
+    }
+    fun getNotification(error: MutableLiveData<String>, success: MutableLiveData<ArrayList<Notification>>) {
+        compositeDisposable.add(NetworkManager.getApiService().getNotification()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableObserver<ArrayList<Notification>>() {
+                    override fun onNext(t: ArrayList<Notification>) {
+                        success.value = t
+                    }
+
+                    override fun onError(e: Throwable) {
+                        error.value = e.localizedMessage
+                    }
+
+                    override fun onComplete() {
+                    }
+                })
+        )
     }
     }

@@ -11,4 +11,5 @@ object Constants {
     const val quizLevel = "ql"
     const val lesson = "lesson"
     const val g = "g"
+    const val notification = "notification"
 }

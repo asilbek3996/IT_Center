@@ -31,10 +31,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/settings"
+                android:id="@+id/notification"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_baseline_settings_24"
+                android:src="@drawable/notification"
                 app:tint="@color/white" />
             <ImageView
                 android:id="@+id/crown1"

@@ -44,7 +44,7 @@ class DarsAdapter(var items: ArrayList<DarslarModel>): RecyclerView.Adapter<Dars
                 it.context.startActivity(intent)
             }
         }else {
-            holder.binding.time.setImageResource(R.drawable.time)
+            holder.binding.time.setImageResource(R.drawable.clock)
             holder.itemView.setOnClickListener {
                 val intent = Intent(it.context, VideoActivity::class.java)
                 intent.putExtra("video", item.id)

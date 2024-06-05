@@ -157,28 +157,10 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
+            }else{
+                loadData()
             }
-//            }else{
-//                if (a<1){
-//                loadData()
-//                    a=1
-//                }else{
-//                    a=0
-//                    Toast.makeText(
-//                        requireContext(),
-//                        "Sizning ID raqamingiz serverda topilmadi.222222222",
-//                        Toast.LENGTH_LONG
-//                    )
-//                        .show()
-//                    val pref = PrefUtils(requireContext())
-//                    pref.clear()
-//                    startActivity(Intent(requireActivity(), CheckActivity::class.java))
-//                    requireActivity().finish()
-//                }
-//            }
         })
-
-
     }
 
     companion object {

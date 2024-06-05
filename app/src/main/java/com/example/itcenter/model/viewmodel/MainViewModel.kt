@@ -1,18 +1,23 @@
 package com.example.itcenter.model.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.itcenter.activity.MainActivity
 import com.example.itcenter.api.repository.Repository
 import com.example.itcenter.model.AllCategoryModel
 import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.CategoryModel
 import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
+import com.example.itcenter.model.Notification
 import com.example.itcenter.model.QuestionModel
 import com.example.itcenter.room.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,6 +35,7 @@ class MainViewModel: ViewModel() {
     val userData = MutableLiveData<ArrayList<AllStudentModel>>()
     val lessonsData = MutableLiveData<ArrayList<DarslarModel>>()
     val questionData = MutableLiveData<ArrayList<QuestionModel>>()
+    val notificationData = MutableLiveData<List<AllStudentModel>>()
 
     private val _buttonClicked = MutableLiveData<Event<Boolean>>()
     val buttonClicked: LiveData<Event<Boolean>> get() = _buttonClicked
@@ -80,5 +86,22 @@ class MainViewModel: ViewModel() {
         CoroutineScope(Dispatchers.Main).launch {
             categoriesData.value = withContext(Dispatchers.IO){AppDatabase.getDatabase().getCategoryDao().getAllCategory()}
         }
+    }
+
+
+    init {
+        startPolling()
+    }
+
+    private fun startPolling() {
+        viewModelScope.launch(Dispatchers.IO) {
+            while (true) {
+                getNotification()
+                delay(1000)
+            }
+        }
+    }
+    fun getNotification() {
+        repository.getStudent2(error, notificationData)
     }
 }

@@ -1,8 +1,14 @@
 package com.example.itcenter.activity
 
+import android.Manifest
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -10,7 +16,12 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +30,8 @@ import com.example.itcenter.fragment.*
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
 import com.example.itcenter.databinding.ActivityMainBinding
+import com.example.itcenter.model.AllStudentModel
+import com.example.itcenter.model.Notification
 import com.example.itcenter.model.viewmodel.MainViewModel
 import com.example.itcenter.utils.Constants
 import com.example.itcenter.utils.PrefUtils
@@ -32,7 +45,6 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
     var activeFragment: Fragment = homeFragment
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var settings: ImageView
     private lateinit var viewModel: MainViewModel
 
 
@@ -43,10 +55,20 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         var pref = PrefUtils(this)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         loadData()
-        settings = findViewById(R.id.settings)
-        settings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+        var notification = findViewById<ImageView>(R.id.notification)
+        binding.notification.setOnClickListener {
+            startActivity(Intent(this, NotificationsActivity::class.java))
         }
+        viewModel.notificationData.observe(this, Observer { messages ->
+            messages?.let {
+                if (it.isNotEmpty()) {
+                    val latestMessage = it[0]
+                    Toast.makeText(this, "${it.size}", Toast.LENGTH_SHORT).show()
+                    sendNotification(latestMessage)
+                }
+            }
+        })
+        viewModel.getNotification()
         supportFragmentManager.beginTransaction()
             .add(R.id.flContainer, homeFragment, homeFragment.tag).hide(homeFragment).commit()
         supportFragmentManager.beginTransaction()
@@ -73,7 +95,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.tvMain.text = "Asosiy"
                 binding.crown1.visibility = View.GONE
                 binding.crown2.visibility = View.GONE
-                settings.visibility = View.VISIBLE
+                notification.visibility = View.VISIBLE
                 binding.refreshMain.visibility = View.VISIBLE
                 binding.refreshProgressMain.visibility = View.GONE
                 binding.favoriteRemove.visibility = View.GONE
@@ -85,7 +107,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.tvMain.text = "Tanlanganlar"
                 binding.crown1.visibility = View.GONE
                 binding.crown2.visibility = View.GONE
-                settings.visibility = View.VISIBLE
+                notification.visibility = View.VISIBLE
                 binding.refreshDialog.visibility = View.GONE
                 binding.favoriteRemove.visibility = View.VISIBLE
                 favoriteFragment.updateData()
@@ -96,7 +118,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.tvMain.text = "Quiz"
                 binding.crown1.visibility = View.VISIBLE
                 binding.crown2.visibility = View.VISIBLE
-                settings.visibility = View.GONE
+                notification.visibility = View.GONE
                 binding.refreshDialog.visibility = View.GONE
                 binding.favoriteRemove.visibility = View.GONE
             } else if (it.itemId == R.id.actionProfile) {
@@ -106,7 +128,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
                 binding.tvMain.text = "Hisob"
                 binding.crown1.visibility = View.GONE
                 binding.crown2.visibility = View.GONE
-                settings.visibility = View.VISIBLE
+                notification.visibility = View.VISIBLE
                 binding.refreshMain.visibility = View.VISIBLE
                 binding.refreshProgressMain.visibility = View.GONE
                 binding.refreshDialog.visibility = View.VISIBLE
@@ -144,6 +166,56 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         }
     }
 
+    private fun sendNotification(message: AllStudentModel) {
+        val intent = Intent(this, NotificationDetailActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            getIntExtra("notification",message.id)
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent,
+            PendingIntent.FLAG_IMMUTABLE)
+
+        val channelId = "new_message_channel_id"
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.notification)
+            .setContentTitle(message.fullName)
+            .setContentText(message.group)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        val notificationManager = NotificationManagerCompat.from(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "New Message Channel",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED) {
+                // Ruxsat so'rash
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }else{
+                Toast.makeText(this, "berilgan", Toast.LENGTH_SHORT).show()
+                notificationManager.notify(0, notificationBuilder.build())
+            }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Toast.makeText(this, "berildi", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "berilmadi", Toast.LENGTH_SHORT).show()
+        }
+    }
     fun clearFavorite() {
         var pref = PrefUtils(this@MainActivity)
         val alertDialogBuilder = AlertDialog.Builder(this)

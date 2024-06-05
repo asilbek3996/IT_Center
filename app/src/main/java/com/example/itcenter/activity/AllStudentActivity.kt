@@ -88,7 +88,7 @@ class AllStudentActivity : AppCompatActivity() {
 
     }
     fun loadData(){
-        viewModel.getStudent()
+        viewModel.getAllStudents()
     }
     fun getStudent(students: List<AllStudentModel>, message: String){
         var item = arrayListOf<AllStudentModel>()
