@@ -28,5 +28,5 @@ interface Api {
     @GET("questions")
     fun getQuestions(): Observable<ArrayList<QuestionModel>>
     @GET("notification")
-    fun getNotification(): Observable<ArrayList<Notification>>
+    fun getNotification(): Observable<ArrayList<AllStudentModel>>
 }

@@ -176,7 +176,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
 
         val channelId = "new_message_channel_id"
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.notification)
+            .setSmallIcon(R.drawable.it_center_logo)
             .setContentTitle(message.fullName)
             .setContentText(message.group)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

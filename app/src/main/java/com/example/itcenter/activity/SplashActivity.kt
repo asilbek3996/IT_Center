@@ -31,7 +31,7 @@ class SplashActivity : AppCompatActivity() {
                         if (idRaqami!=-1){
                             viewModel.studentData.observe(this){
                                 var id = it.filter { it.id==idRaqami }
-                                if (id.isEmpty()) {
+                                if (id.isNullOrEmpty()) {
                                     val pref = PrefUtils(this)
                                     pref.clear()
                                     startActivity(Intent(this, CheckActivity::class.java))

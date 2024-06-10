@@ -14,6 +14,7 @@ import com.example.itcenter.activity.NotificationDetailActivity
 import com.example.itcenter.databinding.NotificationItemLayoutBinding
 import com.example.itcenter.databinding.ViewholderQuestionBinding
 import com.example.itcenter.model.AllStudentModel
+import com.example.itcenter.model.Notification
 
 class NotificationAdapter(var items: ArrayList<AllStudentModel>) : RecyclerView.Adapter<NotificationAdapter.Viewholder>() {
     private lateinit var binding: NotificationItemLayoutBinding

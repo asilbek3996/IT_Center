@@ -5,9 +5,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itcenter.R
+import com.example.itcenter.adapter.NotificationAdapter
 import com.example.itcenter.databinding.ActivityNotificationsBinding
 import com.example.itcenter.model.AllStudentModel
+import com.example.itcenter.model.Notification
+import com.example.itcenter.utils.Constants
 import com.orhanobut.hawk.Hawk
 
 class NotificationsActivity : AppCompatActivity() {
@@ -16,15 +20,16 @@ class NotificationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNotificationsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        binding.notificationRecycler.layoutManager = LinearLayoutManager(this)
+        binding.notificationRecycler.adapter = NotificationAdapter(allNotification())
     }
 
-    private fun saveQuestionsToCache(questions: AllStudentModel) {
+    private fun saveNotification(questions: Notification) {
         var notification = allNotification()
-        Hawk.put("cached_questions", questions)
+        Hawk.put(Constants.notification, questions)
     }
 
-    private fun allNotification(): List<AllStudentModel> {
-        return Hawk.get("cached_questions", emptyList())
+    private fun allNotification(): ArrayList<AllStudentModel> {
+        return Hawk.get(Constants.notification, ArrayList())
     }
 }

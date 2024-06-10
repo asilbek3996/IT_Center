@@ -50,8 +50,6 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         loadData()
         val pref = PrefUtils(requireContext())
-        var idRaqami = pref.getID()
-        val firebaseAuth = FirebaseAuth.getInstance()
         binding.settings.setOnClickListener {
             startActivity(Intent(requireActivity(), SettingsActivity::class.java))
         }
@@ -78,7 +76,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.support.setOnClickListener {
-            val link = "https://t.me/dangara_itcenterbot" // Sizning linkingizni o'zgartiring
+            val link = "https://t.me/ITCenter_support_bot" // Sizning linkingizni o'zgartiring
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
             startActivity(intent)
             requireActivity().finish()

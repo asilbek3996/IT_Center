@@ -9,6 +9,7 @@ import com.example.itcenter.model.DarslarModel
 import com.example.itcenter.model.ImageItem
 import com.example.itcenter.model.Notification
 import com.example.itcenter.model.QuestionModel
+import com.example.itcenter.utils.Constants
 import com.orhanobut.hawk.Hawk
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -179,13 +180,20 @@ class Repository {
         )
 
     }
-    fun getNotification(error: MutableLiveData<String>, success: MutableLiveData<ArrayList<Notification>>) {
+
+    private var previousNotification: ArrayList<AllStudentModel> = loadNotification()
+    fun getNotification(error: MutableLiveData<String>, success: MutableLiveData<List<AllStudentModel>>) {
         compositeDisposable.add(NetworkManager.getApiService().getNotification()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<ArrayList<Notification>>() {
-                    override fun onNext(t: ArrayList<Notification>) {
-                        success.value = t
+                .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>() {
+                    override fun onNext(t: ArrayList<AllStudentModel>) {
+                        val newOnly = t.filter { it !in previousNotification }
+                        if (newOnly.isNotEmpty()) {
+                            success.value = newOnly
+                            previousNotification = t
+                            saveNotification(t)
+                        }
                     }
 
                     override fun onError(e: Throwable) {
@@ -196,5 +204,13 @@ class Repository {
                     }
                 })
         )
+    }
+
+    private fun loadNotification(): ArrayList<AllStudentModel> {
+        return Hawk.get(Constants.notification, ArrayList())
+    }
+
+    private fun saveNotification(questions: ArrayList<AllStudentModel>) {
+        Hawk.put(Constants.notification, questions)
     }
     }

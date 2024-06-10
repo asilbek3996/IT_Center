@@ -102,6 +102,6 @@ class MainViewModel: ViewModel() {
         }
     }
     fun getNotification() {
-        repository.getStudent2(error, notificationData)
+        repository.getNotification(error, notificationData)
     }
 }
