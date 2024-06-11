@@ -1,8 +1,15 @@
 package com.example.itcenter.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,16 +27,62 @@ class NotificationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNotificationsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loadAdapter()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED) {
+                // Ruxsat so'rash
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }else{
+                checkNotification()
+            }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            checkNotification()
+        }
+    }
+    fun checkNotification(){
+        var a = allNotification()
+        var check = 0
+        var check2 = 0
+        for (i in a){
+            if (!i.isRead){
+                check++
+            }else{
+                check2++
+            }
+        }
+        Toast.makeText(this, "${check}    ${check2}", Toast.LENGTH_SHORT).show()
+        if (check>0) {
+            binding.ntRead.visibility = View.VISIBLE
+            if (check < 100) {
+                binding.tvNotification.text = check.toString()
+            } else {
+                binding.tvNotification.text = "+99"
+            }
+        }
+    }
+    private fun allNotification(): ArrayList<Notification> {
+        return Hawk.get(Constants.notification, ArrayList())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadAdapter()
+        checkNotification()
+    }
+
+    fun loadAdapter(){
+        var a= allNotification()
+        Toast.makeText(this, "${a.size}", Toast.LENGTH_SHORT).show()
         binding.notificationRecycler.layoutManager = LinearLayoutManager(this)
         binding.notificationRecycler.adapter = NotificationAdapter(allNotification())
-    }
-
-    private fun saveNotification(questions: Notification) {
-        var notification = allNotification()
-        Hawk.put(Constants.notification, questions)
-    }
-
-    private fun allNotification(): ArrayList<AllStudentModel> {
-        return Hawk.get(Constants.notification, ArrayList())
     }
 }

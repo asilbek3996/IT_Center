@@ -18,6 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ITCenter"
         tools:targetApi="31">
+
+        <service android:name=".NotificationService" android:foregroundServiceType="dataSync" />
         <activity
             android:name=".activity.NotificationDetailActivity"
             android:exported="false" />

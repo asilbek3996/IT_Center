@@ -1,5 +1,7 @@
 package com.example.itcenter.api.repository
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import com.example.itcenter.api.NetworkManager
 import com.example.itcenter.model.AllCategoryModel
@@ -181,18 +183,46 @@ class Repository {
 
     }
 
-    private var previousNotification: ArrayList<AllStudentModel> = loadNotification()
-    fun getNotification(error: MutableLiveData<String>, success: MutableLiveData<List<AllStudentModel>>) {
+    private var previousNotification: ArrayList<Notification> = loadNotification()
+    fun getNotification(error: MutableLiveData<String>, success: MutableLiveData<List<Notification>>) {
         compositeDisposable.add(NetworkManager.getApiService().getNotification()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<ArrayList<AllStudentModel>>() {
-                    override fun onNext(t: ArrayList<AllStudentModel>) {
+                .subscribeWith(object : DisposableObserver<ArrayList<Notification>>() {
+                    override fun onNext(t: ArrayList<Notification>) {
+                        if (t.isEmpty()) {
+                            Hawk.deleteAll()
+                            previousNotification.clear()
+                            return
+                        }
                         val newOnly = t.filter { it !in previousNotification }
+
                         if (newOnly.isNotEmpty()) {
                             success.value = newOnly
-                            previousNotification = t
-                            saveNotification(t)
+
+                            // Oldingi xabarlar holatini saqlab qolish
+                            val previousReadIds = previousNotification.filter { it.isRead }.map { it.id }.toSet()
+                            val updatedNotifications = t.map { notification ->
+                                if (notification.id in previousReadIds) {
+                                    notification.copy(isRead = true)
+                                } else {
+                                    notification
+                                }
+                            }
+
+                            // O'qilgan va o'qilmagan xabarlarni ajratish
+                            val readNotifications = updatedNotifications.filter { it.isRead }
+                            val notReadNotifications = updatedNotifications.filter { !it.isRead }
+
+                            // Yangi ma'lumotlarni saqlash
+                            val allNotifications = ArrayList<Notification>().apply {
+                                addAll(notReadNotifications)
+                                addAll(readNotifications)
+                            }
+
+                            previousNotification.clear()
+                            previousNotification.addAll(allNotifications)
+                            saveNotification(allNotifications)
                         }
                     }
 
@@ -206,11 +236,13 @@ class Repository {
         )
     }
 
-    private fun loadNotification(): ArrayList<AllStudentModel> {
+    private fun loadNotification(): ArrayList<Notification> {
         return Hawk.get(Constants.notification, ArrayList())
     }
 
-    private fun saveNotification(questions: ArrayList<AllStudentModel>) {
+    private fun saveNotification(questions: ArrayList<Notification>) {
+        Hawk.deleteAll()
         Hawk.put(Constants.notification, questions)
     }
+
     }

@@ -26,6 +26,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.itcenter.fragment.*
 import com.example.itcenter.R
 import com.example.itcenter.ShowProgress
@@ -35,7 +38,9 @@ import com.example.itcenter.model.Notification
 import com.example.itcenter.model.viewmodel.MainViewModel
 import com.example.itcenter.utils.Constants
 import com.example.itcenter.utils.PrefUtils
+import com.orhanobut.hawk.Hawk
 import org.greenrobot.eventbus.EventBus
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), ShowProgress.View {
     private val homeFragment = HomeFragment.newInstance()
@@ -59,16 +64,18 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         binding.notification.setOnClickListener {
             startActivity(Intent(this, NotificationsActivity::class.java))
         }
-        viewModel.notificationData.observe(this, Observer { messages ->
-            messages?.let {
-                if (it.isNotEmpty()) {
-                    val latestMessage = it[0]
-                    Toast.makeText(this, "${it.size}", Toast.LENGTH_SHORT).show()
-                    sendNotification(latestMessage)
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED) {
+                // Ruxsat so'rash
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }else{
+                checkNotification()
             }
-        })
-        viewModel.getNotification()
+        }
+
         supportFragmentManager.beginTransaction()
             .add(R.id.flContainer, homeFragment, homeFragment.tag).hide(homeFragment).commit()
         supportFragmentManager.beginTransaction()
@@ -166,7 +173,7 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         }
     }
 
-    private fun sendNotification(message: AllStudentModel) {
+    private fun sendNotification(message: Notification) {
         val intent = Intent(this, NotificationDetailActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             getIntExtra("notification",message.id)
@@ -177,8 +184,8 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         val channelId = "new_message_channel_id"
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.it_center_logo)
-            .setContentTitle(message.fullName)
-            .setContentText(message.group)
+            .setContentTitle(message.title)
+            .setContentText(message.comment)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -207,13 +214,35 @@ class MainActivity : AppCompatActivity(), ShowProgress.View {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkNotification()
+    }
+    fun checkNotification(){
+        var a = allNotification()
+        var check = 0
+        for (i in a){
+            if (!i.isRead){
+               check++
+            }
+        }
+        if (check>0) {
+            binding.ntRead.visibility = View.VISIBLE
+            if (check < 100) {
+                binding.tvNotification.text = check.toString()
+            } else {
+                binding.tvNotification.text = "+99"
+            }
+        }
+    }
+    private fun allNotification(): ArrayList<Notification> {
+        return Hawk.get(Constants.notification, ArrayList())
+    }
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            Toast.makeText(this, "berildi", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "berilmadi", Toast.LENGTH_SHORT).show()
+            checkNotification()
         }
     }
     fun clearFavorite() {

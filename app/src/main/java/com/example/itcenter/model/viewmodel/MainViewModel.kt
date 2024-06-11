@@ -35,7 +35,7 @@ class MainViewModel: ViewModel() {
     val userData = MutableLiveData<ArrayList<AllStudentModel>>()
     val lessonsData = MutableLiveData<ArrayList<DarslarModel>>()
     val questionData = MutableLiveData<ArrayList<QuestionModel>>()
-    val notificationData = MutableLiveData<List<AllStudentModel>>()
+    val notificationData = MutableLiveData<List<Notification>>()
 
     private val _buttonClicked = MutableLiveData<Event<Boolean>>()
     val buttonClicked: LiveData<Event<Boolean>> get() = _buttonClicked
@@ -88,20 +88,20 @@ class MainViewModel: ViewModel() {
         }
     }
 
-
-    init {
-        startPolling()
-    }
-
-    private fun startPolling() {
-        viewModelScope.launch(Dispatchers.IO) {
-            while (true) {
-                getNotification()
-                delay(1000)
-            }
-        }
-    }
-    fun getNotification() {
-        repository.getNotification(error, notificationData)
-    }
+//
+//    init {
+//        startPolling()
+//    }
+//
+//    private fun startPolling() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            while (true) {
+//                getNotification()
+//                delay(1000)
+//            }
+//        }
+//    }
+//    fun getNotification() {
+//        repository.getNotification(error, notificationData)
+//    }
 }

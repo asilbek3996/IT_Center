@@ -29,7 +29,7 @@ class StudentAdapter(var items: List<AllStudentModel>): RecyclerView.Adapter<Stu
             .load(item.userPhoto)
             .into(holder.binding.img)
         holder.binding.name.text = item.fullName
-        holder.binding.progress.progress = item.userPercentage
+        holder.binding.progress.progress = item.userPercentage!!
         var txt = item.userPercentage
         holder.binding.foiz.text = txt.toString()
         holder.itemView.setOnClickListener {

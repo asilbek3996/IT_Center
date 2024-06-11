@@ -9,6 +9,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.itcenter.R
 import com.example.itcenter.databinding.ActivityNotificationDetailBinding
 import com.example.itcenter.model.AllStudentModel
+import com.example.itcenter.model.Notification
+import com.example.itcenter.utils.Constants
 import com.orhanobut.hawk.Hawk
 
 class NotificationDetailActivity : AppCompatActivity() {
@@ -18,22 +20,23 @@ class NotificationDetailActivity : AppCompatActivity() {
         binding = ActivityNotificationDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         var message = intent.getIntExtra("notification",-1)
-//        saveQuestionsToCache(message)
-        var a = a()
-        Toast.makeText(this, "${a.size}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "$message", Toast.LENGTH_SHORT).show()
+        saveQuestionsToCache(message)
     }
-//    private fun saveQuestionsToCache(id: Int) {
-//        var notification = allNotification()
-//        var a = a()
-//        var notificationRead = notification.filter { it.id == id }
-//        a.add(notificationRead)
-//        Hawk.put("read_notification", a)
-//    }
+    private fun saveQuestionsToCache(id: Int) {
+        var notification = allNotification()
+        Toast.makeText(this, "${id}", Toast.LENGTH_SHORT).show()
+        for (item in notification) {
+            if (item.id == id) {
+                item.isRead = true
+                Toast.makeText(this, "${item.id}", Toast.LENGTH_SHORT).show()
+                break
+            }
+        }
+        Hawk.put(Constants.notification, notification)
+    }
 
-    private fun allNotification(): ArrayList<AllStudentModel> {
-        return Hawk.get("cached_questions", ArrayList())
-    }
-    private fun a(): ArrayList<AllStudentModel> {
-        return Hawk.get("read_notification", ArrayList())
+    private fun allNotification(): ArrayList<Notification> {
+        return Hawk.get(Constants.notification, ArrayList())
     }
 }

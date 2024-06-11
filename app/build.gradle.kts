@@ -103,4 +103,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation("org.greenrobot:eventbus:3.3.1")
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
+
 }

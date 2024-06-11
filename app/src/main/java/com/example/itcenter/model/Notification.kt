@@ -4,5 +4,6 @@ data class Notification(
     val id: Int,
     val title: String,
     val comment: String,
-    val image: String
+    val image: String,
+    var isRead: Boolean = false
 )

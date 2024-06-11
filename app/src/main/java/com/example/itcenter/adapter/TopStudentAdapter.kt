@@ -59,7 +59,7 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
                 }
                 Glide.with(holder.binding.img1).load(top[0].userPhoto).into(holder.binding.img1)
                 holder.binding.name1.text = top[0].fullName
-                holder.binding.progress1.progress = top[0].userPercentage
+                holder.binding.progress1.progress = top[0].userPercentage!!
                 var topAndroidtxt = top[0].userPercentage.toString()
                 holder.binding.foiz1.text = topAndroidtxt
             } else if (item.students.size in 1..2) {
@@ -78,8 +78,8 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
                 Glide.with(holder.binding.img2).load(top[1].userPhoto).into(holder.binding.img2)
                 holder.binding.name1.text = top[0].fullName
                 holder.binding.name2.text = top[1].fullName
-                holder.binding.progress1.progress = top[0].userPercentage
-                holder.binding.progress2.progress = top[1].userPercentage
+                holder.binding.progress1.progress = top[0].userPercentage!!
+                holder.binding.progress2.progress = top[1].userPercentage!!
                 var top1txt = top[0].userPercentage.toString()
                 var top2txt = top[1].userPercentage.toString()
                 holder.binding.foiz1.text = top1txt
@@ -105,9 +105,9 @@ class TopStudentAdapter(var items: List<GroupModel>): RecyclerView.Adapter<TopSt
                 holder.binding.name1.text = top[0].fullName
                 holder.binding.name2.text = top[1].fullName
                 holder.binding.name3.text = top[2].fullName
-                holder.binding.progress1.progress = top[0].userPercentage
-                holder.binding.progress2.progress = top[1].userPercentage
-                holder.binding.progress3.progress = top[2].userPercentage
+                holder.binding.progress1.progress = top[0].userPercentage!!
+                holder.binding.progress2.progress = top[1].userPercentage!!
+                holder.binding.progress3.progress = top[2].userPercentage!!
                 var top1txt = top[0].userPercentage.toString()
                 var top2txt = top[1].userPercentage.toString()
                 var top3txt = top[2].userPercentage.toString()

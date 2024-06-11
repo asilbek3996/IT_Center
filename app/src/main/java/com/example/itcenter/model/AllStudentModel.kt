@@ -7,16 +7,18 @@ import androidx.room.PrimaryKey
 data class AllStudentModel(
     @PrimaryKey(autoGenerate = true)
     val uid: Int,
-    val _id: String,
     var id: Int,
-    var fullName: String,
-    var birthday: String,
-    var address: String,
-    var group: String,
-    var personalPhone: String,
-    var homePhone: String,
-    var certificate: Boolean,
-    var graduated: Boolean,
-    var userPercentage: Int,
-    var userPhoto: String?
+    var fullName       : String,
+    var birthday       : String?,
+    var address        : String?,
+    var group          : String?,
+    var personalPhone  : String?,
+    var homePhone      : String?,
+    var certificate    : Boolean?,
+    var graduated      : Boolean?,
+    var userPercentage : Int?,
+    var userPhoto      : String?,
+    var quizLevel      : Int?,
+    var videoLevel     : Int?,
+    var groupName      : String? = "java"
 )

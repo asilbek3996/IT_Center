@@ -1,9 +1,11 @@
 package com.example.itcenter.adapter
 
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -15,8 +17,9 @@ import com.example.itcenter.databinding.NotificationItemLayoutBinding
 import com.example.itcenter.databinding.ViewholderQuestionBinding
 import com.example.itcenter.model.AllStudentModel
 import com.example.itcenter.model.Notification
+import com.orhanobut.hawk.Hawk
 
-class NotificationAdapter(var items: ArrayList<AllStudentModel>) : RecyclerView.Adapter<NotificationAdapter.Viewholder>() {
+class NotificationAdapter(var items: ArrayList<Notification>) : RecyclerView.Adapter<NotificationAdapter.Viewholder>() {
     private lateinit var binding: NotificationItemLayoutBinding
     inner class Viewholder : RecyclerView.ViewHolder(binding.root)
 
@@ -32,12 +35,18 @@ class NotificationAdapter(var items: ArrayList<AllStudentModel>) : RecyclerView.
 
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
         var item = items[position]
-        binding.notificationTxt.text = item.fullName
+        if (item.isRead){
+            binding.card.setCardBackgroundColor(Color.RED)
+        }else{
+            binding.card.setCardBackgroundColor(Color.GREEN)
+        }
+        binding.notificationTxt.text = item.title
         val intent = Intent(holder.itemView.context, NotificationDetailActivity::class.java)
         holder.itemView.setOnClickListener {
-            intent.getIntExtra("notification",item.id)
+            intent.putExtra("notification",item.id)
             it.context.startActivity(intent)
         }
     }
+
 
 }

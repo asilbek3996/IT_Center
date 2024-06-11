@@ -54,7 +54,6 @@ class PrefUtils(context: Context) {
 
     fun setStudent(student: AllStudentModel) {
         editor.putInt(Constants.ID, student.id)
-        editor.putString(Constants._ID, student._id)
         editor.putString(Constants.fullName, student.fullName)
         editor.putString(Constants.group, student.group)
         editor.putString(Constants.g, student.group)
